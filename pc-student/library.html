@@ -1,0 +1,1012 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>宝藏资料库 · 学风建设 · 学生端</title>
+<style>
+:root{
+  --primary:#3087CC;
+  --primary-light:#E3F1F9;
+  --primary-dark:#006DAD;
+  --primary-50:#F4FAFE;
+  --text-1:#3C444F;
+  --text-2:#696F7D;
+  --text-3:#9096A2;
+  --text-4:#ABB0BA;
+  --border:#E5E8EE;
+  --border-light:#EFF1F5;
+  --bg:#F4F6FA;
+  --success:#1BB975;
+  --success-bg:#E8FCF4;
+  --success-border:#A7F3D0;
+  --warning:#F29100;
+  --warning-bg:#FFF5E5;
+  --warning-border:#FFE0B3;
+  --danger:#DF2027;
+  --danger-bg:#FCE8EA;
+  --danger-border:#F6BCBE;
+  --shadow-sm:0 1px 3px rgba(15,32,55,.05);
+  --shadow-md:0 6px 20px rgba(15,32,55,.06);
+  --shadow-lg:0 12px 32px rgba(15,32,55,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:"OPPOSans","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;color:var(--text-1);background:var(--bg);font-size:14px;-webkit-font-smoothing:antialiased;}
+body{min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+svg{display:block;flex-shrink:0;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-thumb{background:#D9DDE3;border-radius:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ===== Layout ===== */
+.layout{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:240px 1fr;gap:24px;padding:0 24px;}
+.s-sidebar{position:sticky;top:24px;align-self:start;height:calc(100vh - 48px);overflow-y:auto;padding-top:24px;}
+.brand-stu{display:flex;align-items:center;gap:10px;margin-bottom:24px;}
+.brand-stu .logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#3087CC,#006DAD);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 6px 16px rgba(48,135,204,.28);}
+.brand-stu strong{font-size:14px;font-weight:600;display:block;}
+.brand-stu span{font-size:10px;color:var(--text-3);letter-spacing:.4px;display:block;margin-top:2px;}
+.user-stu{background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;border-radius:14px;padding:14px;margin-bottom:18px;position:relative;overflow:hidden;box-shadow:0 12px 28px rgba(48,135,204,.3);}
+.user-stu::before{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 70%);right:-30px;top:-40px;}
+.user-stu .row{display:flex;align-items:center;gap:10px;position:relative;}
+.user-stu .ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#FFD68F,#F29100);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;border:2px solid rgba(255,255,255,.4);}
+.user-stu strong{font-size:14px;font-weight:600;display:block;}
+.user-stu p{font-size:11px;opacity:.85;margin-top:2px;}
+.user-stu .stars{margin-top:8px;display:inline-flex;gap:2px;align-items:center;font-size:11px;opacity:.85;}
+.user-stu .stars svg{width:12px;height:12px;color:#FFD43B;}
+.user-stu .progress{margin-top:10px;height:4px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden;}
+.user-stu .progress .fill{height:100%;background:linear-gradient(90deg,#FFD68F,#FFC53D);border-radius:2px;}
+.s-nav{display:flex;flex-direction:column;gap:2px;}
+.s-nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:var(--text-2);font-size:13px;cursor:pointer;transition:all .15s;text-decoration:none;}
+.s-nav-item:hover{background:#fff;color:var(--text-1);}
+.s-nav-item.active{background:var(--primary-light);color:var(--primary);font-weight:500;box-shadow:var(--shadow-sm);}
+.s-nav-item.active svg{color:var(--primary);}
+.s-nav-item .badge{margin-left:auto;background:linear-gradient(135deg,#FF6B6B,#DF2027);color:#fff;font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;}
+.s-quick{background:#fff;border-radius:14px;padding:14px;margin-top:18px;border:1px solid var(--border-light);}
+.s-quick h6{font-size:12px;font-weight:600;color:var(--text-3);margin-bottom:10px;}
+.s-quick .item{display:flex;align-items:center;gap:8px;padding:8px;border-radius:7px;cursor:pointer;font-size:12px;color:var(--text-2);}
+.s-quick .item:hover{background:var(--primary-50);color:var(--primary);}
+.s-main{padding:24px 0 60px;min-width:0;}
+
+/* ===== Topbar ===== */
+.s-topbar{background:#fff;border-radius:14px;padding:8px 14px;display:flex;align-items:center;gap:14px;margin-bottom:18px;box-shadow:var(--shadow-sm);}
+.s-search{flex:1;height:38px;background:var(--bg);border-radius:10px;display:flex;align-items:center;padding:0 12px;gap:8px;border:1px solid transparent;transition:all .15s;}
+.s-search:focus-within{border-color:var(--primary);background:#fff;}
+.s-search input{flex:1;border:none;outline:none;background:transparent;font-size:13px;color:var(--text-1);font-family:inherit;}
+.s-search input::placeholder{color:var(--text-4);}
+.s-search .kbd{font-size:11px;color:var(--text-4);background:#fff;padding:2px 6px;border-radius:4px;border:1px solid var(--border);}
+.s-topbar .icon-btn{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-2);background:var(--bg);position:relative;transition:all .15s;}
+.s-topbar .icon-btn:hover{background:var(--primary-light);color:var(--primary);}
+.s-topbar .icon-btn .red-dot{position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--danger);border:2px solid var(--bg);}
+
+/* ===== Hero ===== */
+.hero-stu{background:linear-gradient(135deg,#7C5BC1,#B59CE5);color:#fff;border-radius:18px;padding:24px 26px;position:relative;overflow:hidden;margin-bottom:18px;box-shadow:0 18px 40px rgba(124,91,193,.18);}
+.hero-stu::before{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);right:-80px;top:-100px;}
+.hero-stu::after{content:"";position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,213,143,.18),transparent 60%);right:80px;bottom:-100px;}
+.hero-stu .row{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;gap:16px;}
+.hero-stu h2{font-size:24px;font-weight:700;}
+.hero-stu p{font-size:13px;opacity:.85;margin-top:6px;line-height:1.6;}
+.hero-stu .actions{display:flex;gap:10px;flex-shrink:0;}
+.hero-stu .btn{background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.3);color:#fff;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;}
+.hero-stu .btn:hover{background:rgba(255,255,255,.3);}
+.hero-stu .btn.primary{background:#fff;color:#7C5BC1;border-color:#fff;}
+
+/* ===== KPI ===== */
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.kpi-card{background:#fff;border-radius:14px;padding:16px;border:1px solid var(--border-light);}
+.kpi-card .ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.kpi-card .label{font-size:11px;color:var(--text-3);}
+.kpi-card .num{font-size:20px;font-weight:700;margin-top:4px;}
+.kpi-card .num small{font-size:11px;font-weight:400;color:var(--text-3);margin-left:2px;}
+
+/* ===== Pill Tab (courses.html style) ===== */
+.seg{display:flex;gap:0;border-radius:10px;background:#fff;border:1px solid var(--border-light);padding:4px;width:fit-content;margin-bottom:18px;}
+.seg button{height:34px;padding:0 22px;border-radius:7px;font-size:13px;font-weight:500;color:var(--text-2);cursor:pointer;transition:all .15s;background:none;border:none;font-family:inherit;white-space:nowrap;}
+.seg button.active{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(48,135,204,.22);}
+.seg button .tab-cnt{opacity:.65;font-size:11px;margin-left:4px;background:rgba(255,255,255,.2);padding:1px 6px;border-radius:20px;}
+.seg button.active .tab-cnt{opacity:.9;background:rgba(255,255,255,.22);}
+.seg button:not(.active) .tab-cnt{background:var(--bg);color:var(--text-3);}
+
+/* ===== Tab content ===== */
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* ===== Filter bar ===== */
+.lib-filter{
+  background:#fff;border-radius:14px;padding:14px 18px;margin-bottom:14px;
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  box-shadow:var(--shadow-sm);
+}
+.lib-filter .field{display:flex;align-items:center;gap:6px;}
+.lib-filter label{font-size:12px;color:var(--text-2);white-space:nowrap;}
+.f-select,.f-input{height:32px;padding:0 10px;border:1px solid var(--border);border-radius:7px;font-size:12px;color:var(--text-1);background:#fff;outline:none;font-family:inherit;transition:all .15s;}
+.f-select{min-width:110px;}
+.f-input{min-width:130px;}
+.f-select:focus,.f-input:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(48,135,204,.1);}
+.lib-filter .spacer{flex:1;}
+.btn-qr{height:32px;padding:0 12px;border-radius:7px;font-size:12px;border:1px solid var(--border);background:#fff;color:var(--text-2);cursor:pointer;font-family:inherit;transition:all .15s;}
+.btn-qr:hover{border-color:var(--primary);color:var(--primary);}
+.btn-qy{height:32px;padding:0 14px;border-radius:7px;font-size:12px;color:#fff;background:var(--primary);border:1px solid var(--primary);cursor:pointer;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
+.btn-qy:hover{background:var(--primary-dark);}
+
+/* ===== Table ===== */
+.table-wrap{background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--shadow-sm);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{background:#F8FAFC;color:var(--text-2);font-weight:500;font-size:12px;text-align:left;padding:12px 16px;border-bottom:1px solid var(--border-light);white-space:nowrap;}
+tbody td{padding:12px 16px;border-bottom:1px solid var(--border-light);color:var(--text-1);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:#FAFBFD;}
+.td-title{max-width:260px;}
+.td-title .t{font-weight:500;}
+.td-title .s{font-size:11px;color:var(--text-3);margin-top:3px;}
+
+/* ===== Row actions ===== */
+.row-acts{display:inline-flex;gap:4px;align-items:center;}
+.row-acts .act{height:26px;padding:0 10px;border-radius:5px;font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:3px;color:var(--text-2);border:1px solid var(--border-light);background:#fff;transition:all .15s;cursor:pointer;}
+.row-acts .act:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light);}
+.row-acts .act.act-primary{color:var(--primary);border-color:#BFDDF6;background:var(--primary-light);}
+.row-acts .act.act-primary:hover{background:var(--primary);color:#fff;}
+
+/* ===== Tags ===== */
+.tag-stu{display:inline-flex;align-items:center;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:500;}
+.tag-blue{background:var(--primary-light);color:var(--primary);}
+.tag-green{background:var(--success-bg);color:var(--success);}
+.tag-orange{background:var(--warning-bg);color:var(--warning);}
+.tag-grey{background:#F1F4F8;color:var(--text-3);}
+.tag-purple{background:#F0EBFA;color:#7C5BC1;}
+.tag-red{background:var(--danger-bg);color:var(--danger);}
+
+/* Ftype badge */
+.ft-badge{display:inline-flex;align-items:center;justify-content:center;width:32px;height:22px;border-radius:5px;font-size:9px;font-weight:700;color:#fff;vertical-align:middle;margin-right:6px;flex-shrink:0;}
+.ft-pdf{background:linear-gradient(135deg,#DF2027,#FF6B6B);}
+.ft-ppt{background:linear-gradient(135deg,#F29100,#FFAA33);}
+.ft-doc{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.ft-xls{background:linear-gradient(135deg,#1BB975,#34D399);}
+
+/* ===== Table foot ===== */
+.table-foot{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border-light);}
+.t-count{font-size:12px;color:var(--text-3);}
+.pager{display:flex;align-items:center;gap:4px;}
+.pager button{min-width:28px;height:28px;padding:0 7px;border-radius:6px;font-size:12px;color:var(--text-2);font-family:inherit;cursor:pointer;border:none;background:none;transition:all .15s;}
+.pager button:hover:not(:disabled){background:#F4F6FA;}
+.pager button.active{background:var(--primary);color:#fff;}
+.pager button:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ===== Empty ===== */
+.empty-tip{padding:44px 0;text-align:center;color:var(--text-3);}
+.empty-tip svg{margin:0 auto 12px;color:var(--text-4);}
+.empty-tip p{font-size:13px;}
+
+/* ===== Buttons ===== */
+.btn-stu{height:38px;padding:0 22px;border-radius:8px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;border:1px solid transparent;font-family:inherit;transition:all .15s;}
+.btn-primary-stu{background:var(--primary);color:#fff;}
+.btn-primary-stu:hover{background:var(--primary-dark);}
+.btn-ghost-stu{background:#fff;color:var(--text-2);border-color:var(--border);}
+.btn-ghost-stu:hover{border-color:var(--primary);color:var(--primary);}
+.btn-purple-stu{background:#7C5BC1;color:#fff;}
+.btn-purple-stu:hover{background:#6347A8;}
+
+/* ===== Forms ===== */
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.f-item{display:flex;flex-direction:column;}
+.f-item label{font-size:12px;color:var(--text-2);margin-bottom:6px;font-weight:500;}
+.f-item label .req{color:var(--danger);}
+.f-item input,.f-item select,.f-item textarea{width:100%;height:38px;padding:0 12px;border-radius:8px;border:1px solid var(--border);font-size:13px;background:#fff;outline:none;font-family:inherit;color:var(--text-1);transition:all .15s;}
+.f-item textarea{height:auto;padding:10px 12px;resize:vertical;line-height:1.6;}
+.f-item input:focus,.f-item select:focus,.f-item textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(48,135,204,.12);}
+.f-item-full{margin-bottom:14px;}
+.upload-zone{border:2px dashed var(--border);border-radius:10px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .15s;}
+.upload-zone:hover{border-color:var(--primary);background:var(--primary-50);}
+.upload-zone svg{margin:0 auto 8px;color:var(--text-3);}
+.upload-zone p{font-size:13px;color:var(--text-2);}
+.upload-zone small{font-size:11px;color:var(--text-3);margin-top:4px;display:block;}
+
+/* ===== Modal ===== */
+.modal-mask{position:fixed;inset:0;background:rgba(15,32,55,.42);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:99;}
+.modal-mask.show{display:flex;}
+.modal-stu{width:680px;max-width:92vw;max-height:90vh;background:#fff;border-radius:16px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;overflow:hidden;transform:scale(.96);transition:transform .2s;}
+.modal-mask.show .modal-stu{transform:scale(1);}
+.modal-stu .mhead{padding:18px 22px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.modal-stu .mhead h3{font-size:16px;font-weight:600;}
+.modal-stu .mbody{padding:22px;overflow-y:auto;flex:1;}
+.modal-stu .mfoot{padding:14px 22px;border-top:1px solid var(--border-light);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0;}
+.close-btn{width:30px;height:30px;border-radius:7px;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-2);transition:all .15s;}
+.close-btn:hover{background:var(--danger-bg);color:var(--danger);}
+.modal-sm{width:480px;}
+.modal-md{width:600px;}
+
+/* ===== Detail section (library-feedback style) ===== */
+.detail-sec{margin-bottom:18px;}
+.detail-sec:last-child{margin-bottom:0;}
+.detail-sec h4{font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:6px;}
+.detail-kv{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.kv{display:flex;flex-direction:column;gap:4px;}
+.kv .k{font-size:12px;color:var(--text-3);}
+.kv .v{font-size:13px;color:var(--text-1);}
+.kv.wide{grid-column:1/-1;}
+
+/* Related file row */
+.rel-file-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-light);}
+.rel-file-row:last-child{border-bottom:none;}
+.rel-file-ic{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;flex-shrink:0;}
+.rel-file-ic.ft-pdf{background:linear-gradient(135deg,#DF2027,#FF6B6B);}
+.rel-file-ic.ft-ppt{background:linear-gradient(135deg,#F29100,#FFAA33);}
+.rel-file-ic.ft-doc{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.rel-file-ic.ft-xls{background:linear-gradient(135deg,#1BB975,#34D399);}
+
+/* ===== Preview mock ===== */
+.preview-mock{background:linear-gradient(135deg,#F8FAFC,#F1F5F9);border-radius:10px;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text-4);margin-bottom:16px;border:1px dashed var(--border);}
+
+/* ===== Share modal ===== */
+.share-link-box{background:var(--bg);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text-2);word-break:break-all;border:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.share-link-box span{flex:1;}
+
+/* ===== Toast ===== */
+.toast{position:fixed;left:50%;top:24px;transform:translate(-50%,-20px);background:#1F2733;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;display:flex;align-items:center;gap:6px;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:all .25s;z-index:1000;}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+
+@media (max-width:1100px){
+  .layout{grid-template-columns:1fr;}
+  .s-sidebar{position:static;height:auto;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="s-sidebar"></aside>
+  <main class="s-main">
+    <header class="s-topbar"></header>
+
+    <!-- Hero -->
+    <div class="hero-stu">
+      <div class="row">
+        <div>
+          <h2>宝藏资料库</h2>
+          <p>课程科目类 · 学涯规划类 · 双十佳教案 · 学霸笔记，全面精选辅学资源</p>
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="openModal('demandModal')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            提需求
+          </button>
+          <button class="btn primary" onclick="openModal('uploadModal')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            上传资料
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="ic" style="background:var(--primary-light);color:var(--primary);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div class="label">已发布资料</div>
+        <div class="num">486 <small>份</small></div>
+      </div>
+      <div class="kpi-card">
+        <div class="ic" style="background:var(--success-bg);color:var(--success);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>
+        </div>
+        <div class="label">本月下载</div>
+        <div class="num">12,468 <small>次</small></div>
+      </div>
+      <div class="kpi-card">
+        <div class="ic" style="background:var(--warning-bg);color:var(--warning);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+        </div>
+        <div class="label">我已上传</div>
+        <div class="num">3 <small>份</small></div>
+      </div>
+    </div>
+
+    <!-- ===== Pill Tabs ===== -->
+    <div class="seg" id="mainSeg">
+      <button class="active" data-tab="all">所有资料 <span class="tab-cnt" id="tc-all">486</span></button>
+      <button data-tab="hot">热门资料 <span class="tab-cnt" id="tc-hot">48</span></button>
+      <button data-tab="mine">我上传的 <span class="tab-cnt" id="tc-mine">3</span></button>
+      <button data-tab="demand">我提的需求 <span class="tab-cnt" id="tc-demand">2</span></button>
+    </div>
+
+    <!-- ==================== Tab: 所有资料 ==================== -->
+    <div class="tab-pane active" id="tab-all">
+      <div class="lib-filter">
+        <div class="field"><label>所属分类</label>
+          <select class="f-select" id="all-major"><option value="">全部</option><option>课程科目类</option><option>学涯规划类</option></select>
+        </div>
+        <div class="field"><label>资料小类</label>
+          <select class="f-select" id="all-minor"><option value="">全部</option><option>课件 PPT</option><option>笔记讲义</option><option>往年真题</option><option>电子书</option><option>双十佳教案</option><option>学习方法篇</option><option>学科竞赛篇</option><option>项目比赛篇</option></select>
+        </div>
+        <div class="field"><label>所属课程</label>
+          <input class="f-input" id="all-course" placeholder="输入课程名" />
+        </div>
+        <div class="field"><label>关键词</label>
+          <input class="f-input" id="all-keyword" placeholder="搜索关键词" />
+        </div>
+        <div class="spacer"></div>
+        <button class="btn-qr" onclick="resetFilter('all')">重置</button>
+        <button class="btn-qy" onclick="queryFilter('all')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>查询
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th style="width:36px;"></th>
+            <th>资料名称</th><th>所属分类</th><th>资料小类</th><th>所属课程</th>
+            <th style="text-align:right;">下载数</th><th style="text-align:right;">点赞数</th>
+            <th>上传时间</th><th>上传者</th><th style="min-width:80px;">操作</th>
+          </tr></thead>
+          <tbody id="all-tbody"></tbody>
+        </table>
+        <div class="table-foot">
+          <span class="t-count" id="all-count">共 0 条</span>
+          <div class="pager"><button disabled>‹</button><button class="active">1</button><button disabled>›</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== Tab: 热门资料 ==================== -->
+    <div class="tab-pane" id="tab-hot">
+      <div class="lib-filter">
+        <div class="field"><label>所属分类</label>
+          <select class="f-select" id="hot-major"><option value="">全部</option><option>课程科目类</option><option>学涯规划类</option></select>
+        </div>
+        <div class="field"><label>资料小类</label>
+          <select class="f-select" id="hot-minor"><option value="">全部</option><option>课件 PPT</option><option>笔记讲义</option><option>往年真题</option><option>电子书</option><option>双十佳教案</option></select>
+        </div>
+        <div class="field"><label>所属课程</label>
+          <input class="f-input" id="hot-course" placeholder="输入课程名" />
+        </div>
+        <div class="field"><label>关键词</label>
+          <input class="f-input" id="hot-keyword" placeholder="搜索关键词" />
+        </div>
+        <div class="spacer"></div>
+        <button class="btn-qr" onclick="resetFilter('hot')">重置</button>
+        <button class="btn-qy" onclick="queryFilter('hot')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>查询
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th style="width:36px;">排名</th>
+            <th>资料名称</th><th>所属分类</th><th>资料小类</th><th>所属课程</th>
+            <th style="text-align:right;">下载数</th><th style="text-align:right;">点赞数</th>
+            <th>上传者</th><th style="min-width:80px;">操作</th>
+          </tr></thead>
+          <tbody id="hot-tbody"></tbody>
+        </table>
+        <div class="table-foot">
+          <span class="t-count" id="hot-count">共 0 条</span>
+          <div class="pager"><button disabled>‹</button><button class="active">1</button><button disabled>›</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== Tab: 我上传的 ==================== -->
+    <div class="tab-pane" id="tab-mine">
+      <div class="lib-filter">
+        <div class="field"><label>所属分类</label>
+          <select class="f-select" id="mine-major"><option value="">全部</option><option>课程科目类</option><option>学涯规划类</option></select>
+        </div>
+        <div class="field"><label>资料小类</label>
+          <select class="f-select" id="mine-minor"><option value="">全部</option><option>课件 PPT</option><option>笔记讲义</option><option>往年真题</option><option>电子书</option></select>
+        </div>
+        <div class="field"><label>状态</label>
+          <select class="f-select" id="mine-status"><option value="">全部</option><option value="published">已发布</option><option value="down">已下架</option></select>
+        </div>
+        <div class="spacer"></div>
+        <button class="btn-qr" onclick="resetFilter('mine')">重置</button>
+        <button class="btn-qy" onclick="queryFilter('mine')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>查询
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th style="width:36px;"></th>
+            <th>资料名称</th><th>所属分类</th><th>资料小类</th>
+            <th>上传时间</th><th style="text-align:right;">下载数</th><th style="text-align:right;">点赞数</th>
+            <th>状态</th><th style="min-width:80px;">操作</th>
+          </tr></thead>
+          <tbody id="mine-tbody"></tbody>
+        </table>
+        <div class="table-foot">
+          <span class="t-count" id="mine-count">共 0 条</span>
+          <div class="pager"><button disabled>‹</button><button class="active">1</button><button disabled>›</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== Tab: 我提的需求 ==================== -->
+    <div class="tab-pane" id="tab-demand">
+      <div class="lib-filter">
+        <div class="field"><label>处理状态</label>
+          <select class="f-select" id="dm-status">
+            <option value="">全部</option>
+            <option value="pending">待处理</option>
+            <option value="notified">已发起征集</option>
+            <option value="fulfilled">已满足</option>
+            <option value="blocked">已屏蔽</option>
+          </select>
+        </div>
+        <div class="field"><label>所属分类</label>
+          <select class="f-select" id="dm-major"><option value="">全部</option><option>课程科目类</option><option>学涯规划类</option></select>
+        </div>
+        <div class="field"><label>资料名称</label>
+          <input class="f-input" id="dm-keyword" placeholder="输入关键词" />
+        </div>
+        <div class="spacer"></div>
+        <button class="btn-qr" onclick="resetFilter('demand')">重置</button>
+        <button class="btn-qy" onclick="queryFilter('demand')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>查询
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>资料名称</th><th>所属分类</th><th>资料小类</th><th>所属课程</th>
+            <th>备注说明</th><th>提交时间</th><th>处理状态</th><th style="min-width:60px;">操作</th>
+          </tr></thead>
+          <tbody id="dm-tbody"></tbody>
+        </table>
+        <div class="table-foot">
+          <span class="t-count" id="dm-count">共 0 条</span>
+          <div class="pager"><button disabled>‹</button><button class="active">1</button><button disabled>›</button></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ========================= 上传资料 Modal ========================= -->
+<div class="modal-mask" id="uploadModal">
+  <div class="modal-stu">
+    <div class="mhead">
+      <h3>上传资料</h3>
+      <button class="close-btn" onclick="closeModal('uploadModal')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <div style="background:var(--primary-50);border:1px solid #BFDDF6;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:12px;color:var(--primary-dark);line-height:1.6;display:flex;gap:8px;align-items:flex-start;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        提交后将<strong>直接发布</strong>至资料库，无需审核。请确保内容合规，不违反版权规定。
+      </div>
+      <div class="f-row">
+        <div class="f-item"><label>资料标题 <span class="req">*</span></label><input id="up-title" placeholder="请输入标题" /></div>
+        <div class="f-item"><label>所属分类 <span class="req">*</span></label>
+          <select id="up-major"><option value="">请选择</option><option>课程科目类</option><option>学涯规划类</option></select>
+        </div>
+      </div>
+      <div class="f-row">
+        <div class="f-item"><label>资料小类 <span class="req">*</span></label>
+          <select id="up-minor"><option value="">请选择</option><option>课件 PPT</option><option>笔记讲义</option><option>往年真题</option><option>电子书</option><option>双十佳教案</option><option>学霸笔记</option><option>学涯发展篇</option><option>资源获取篇</option><option>优学指导篇</option><option>学习方法篇</option><option>学科竞赛篇</option><option>项目比赛篇</option><option>自我管理篇</option></select>
+        </div>
+        <div class="f-item"><label>所属课程</label><input id="up-course" placeholder="例：高等数学A" /></div>
+      </div>
+      <div class="f-item-full"><div class="f-item">
+        <label>选择征集需求名称</label>
+        <select id="up-demand"><option value="">不关联征集需求</option></select>
+      </div></div>
+      <div class="f-row">
+        <div class="f-item"><label>来源说明</label><input id="up-source" placeholder="例：知新馆数学组陈思远整理" /></div>
+        <div class="f-item"><label>版本信息</label><input id="up-version" placeholder="例：v2026.04" /></div>
+      </div>
+      <div class="f-item-full"><div class="f-item"><label>关键词标签</label><input id="up-tags" placeholder="多个关键词以逗号分隔" /></div></div>
+      <div class="f-item-full"><div class="f-item"><label>文件介绍</label><textarea id="up-intro" rows="3" placeholder="请介绍资料内容、适用对象、与课程的关系等"></textarea></div></div>
+      <div class="f-item-full"><div class="f-item"><label>备注</label><textarea id="up-remark" rows="2" placeholder="选填：版权说明、使用限制、内部备注等"></textarea></div></div>
+      <div class="f-item-full"><div class="f-item">
+        <label>文件上传 <span class="req">*</span></label>
+        <div class="upload-zone" onclick="showToast('请选择文件')">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p>点击或拖拽文件到此处上传</p>
+          <small>单文件不超过 50MB · 支持 PDF / Word / PPT / Excel / 图片 / 音视频</small>
+        </div>
+      </div></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn-stu btn-ghost-stu" onclick="closeModal('uploadModal')">取消</button>
+      <button class="btn-stu btn-primary-stu" onclick="submitUpload()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        立即发布
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========================= 提需求 Modal ========================= -->
+<div class="modal-mask" id="demandModal">
+  <div class="modal-stu modal-md">
+    <div class="mhead">
+      <h3>提交资料需求</h3>
+      <button class="close-btn" onclick="closeModal('demandModal')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <p style="font-size:12px;color:#5C3FA3;line-height:1.6;margin-bottom:16px;padding:10px 12px;background:#F0EBFA;border-radius:8px;border:1px solid #D4C8F5;">
+        告诉我们你需要什么资料，知新馆义工团队将优先整理上传！
+      </p>
+      <div class="f-row">
+        <div class="f-item"><label>资料名称 <span class="req">*</span></label><input id="dm-title-input" placeholder="例：高数B 期末真题" /></div>
+        <div class="f-item"><label>所属分类 <span class="req">*</span></label>
+          <select id="dm-major-input"><option value="">请选择</option><option>课程科目类</option><option>学涯规划类</option></select>
+        </div>
+      </div>
+      <div class="f-row">
+        <div class="f-item"><label>资料小类</label>
+          <select id="dm-minor-input"><option value="">请选择</option><option>课件 PPT</option><option>笔记讲义</option><option>往年真题</option><option>电子书</option><option>学习方法篇</option><option>学科竞赛篇</option><option>其他</option></select>
+        </div>
+        <div class="f-item"><label>所属课程</label><input id="dm-course-input" placeholder="例：高等数学B" /></div>
+      </div>
+      <div class="f-item-full"><div class="f-item">
+        <label>联系方式（邮箱）</label>
+        <input id="dm-contact-input" type="email" placeholder="例：s2023001@csu.edu.cn，方便义工联系你跟进需求" />
+      </div></div>
+      <div class="f-item-full"><div class="f-item">
+        <label>备注说明</label>
+        <textarea id="dm-remark-input" rows="3" placeholder="补充说明：希望包含的内容范围、年份、版本等需求描述..."></textarea>
+      </div></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn-stu btn-ghost-stu" onclick="closeModal('demandModal')">取消</button>
+      <button class="btn-stu btn-purple-stu" onclick="submitDemand()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        提交需求
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========================= 资料详情 Modal（通用） ========================= -->
+<div class="modal-mask" id="resDetailModal">
+  <div class="modal-stu" style="width:720px;">
+    <div class="mhead">
+      <h3 id="resDetailTitle">资料详情</h3>
+      <button class="close-btn" onclick="closeModal('resDetailModal')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody" id="resDetailBody"></div>
+    <div class="mfoot" id="resDetailFoot"></div>
+  </div>
+</div>
+
+<!-- ========================= 我上传的 - 预览 Modal ========================= -->
+<div class="modal-mask" id="minePreviewModal">
+  <div class="modal-stu" style="width:700px;">
+    <div class="mhead">
+      <h3 id="minePreviewTitle">资料预览</h3>
+      <button class="close-btn" onclick="closeModal('minePreviewModal')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody" id="minePreviewBody"></div>
+    <div class="mfoot" id="minePreviewFoot"></div>
+  </div>
+</div>
+
+<!-- ========================= 需求详情 Modal ========================= -->
+<div class="modal-mask" id="demandDetailModal">
+  <div class="modal-stu" style="width:700px;">
+    <div class="mhead">
+      <h3 id="ddTitle">需求详情</h3>
+      <button class="close-btn" onclick="closeModal('demandDetailModal')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody" id="ddBody"></div>
+    <div class="mfoot" id="ddFoot"></div>
+  </div>
+</div>
+
+<!-- ========================= 分享 Modal ========================= -->
+<div class="modal-mask" id="shareModal">
+  <div class="modal-stu modal-sm">
+    <div class="mhead">
+      <h3>分享资料</h3>
+      <button class="close-btn" onclick="closeModal('shareModal')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:14px;">复制下方链接，发送给同学即可直接访问该资料。</p>
+      <div class="share-link-box">
+        <span id="shareLinkText">https://xf.example.edu/lib/resource/2</span>
+        <button class="btn-stu btn-primary-stu" style="height:30px;padding:0 14px;font-size:12px;" onclick="copyShareLink()">复制链接</button>
+      </div>
+      <p style="font-size:11px;color:var(--text-3);margin-top:12px;">链接有效期 7 天，仅限校内网络访问。</p>
+    </div>
+    <div class="mfoot">
+      <button class="btn-stu btn-ghost-stu" onclick="closeModal('shareModal')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== 学生端公共脚本 ======
+const STU_NAV = [
+  {id:'home',name:'首页',href:'home.html',icon:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'},
+  {id:'volunteer-apply',name:'辅学义工申请',href:'volunteer-apply.html',icon:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>'},
+  {id:'courses',name:'知新选课',href:'courses.html',icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'},
+  {id:'qa',name:'即问即答',href:'qa.html',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+  {id:'library',name:'宝藏资料库',href:'library.html',icon:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'},
+  {id:'venue',name:'场地预约',href:'venue-book.html',icon:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'},
+  {id:'profile',name:'个人中心',href:'profile.html',icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'}
+];
+function renderStuSidebar(activeId){
+  const sb=document.querySelector('.s-sidebar');if(!sb)return;
+  const navHTML=STU_NAV.map(it=>`<a class="s-nav-item ${it.id===activeId?'active':''}" href="${it.href}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${it.icon}</svg>${it.name}${it.badge?`<span class="badge">${it.badge}</span>`:''}</a>`).join('');
+  sb.innerHTML=`
+    <div class="brand-stu"><div class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 6v6c0 5 4 9 9 10 5-1 9-5 9-10V6l-9-4Z"/><path d="m9 12 2 2 4-4"/></svg></div><div><strong>学风建设系统</strong><span>学生端 v2.0</span></div></div>
+    <div class="user-stu">
+      <div class="row"><div class="ava">王</div><div><strong>王诗韵 同学</strong><p>外国语 / 英语 2023</p></div></div>
+      <div class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.3)"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg><span style="margin-left:4px;">182h / 200h</span></div>
+      <div class="progress"><div class="fill" style="width:91%;"></div></div>
+    </div>
+    <nav class="s-nav">${navHTML}</nav></div>`;
+}
+function renderStuTopbar(ph){
+  const tb=document.querySelector('.s-topbar');if(!tb)return;
+  tb.innerHTML=`<div class="s-search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input placeholder="${ph||'搜索资料、关键词、上传者...'}"/><span class="kbd">⌘K</span></div><button class="icon-btn" onclick="showToast('暂无新消息')"><span class="red-dot"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg></button><button class="icon-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>`;
+}
+
+// Toast / Modal
+function showToast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';t.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span></span>';document.body.appendChild(t);}t.querySelector('span').textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2000);}
+function openModal(id){const m=document.getElementById(id);if(m)m.classList.add('show');}
+function closeModal(id){const m=document.getElementById(id);if(m)m.classList.remove('show');}
+
+// ============ DATA ============
+const LIB_DATA=[
+  {id:1,title:'高等数学A 期末真题汇编（2020-2025）',major:'课程科目类',minor:'往年真题',course:'高等数学A',uploader:'陈思远',uploaderLabel:'陈思远 · 知新馆义工',ft:'pdf',size:'5.2MB',downloads:1890,likes:324,uploadTime:'2026-05-11',timeLabel:'2天前',status:'published',intro:'汇编 2020-2025 年高等数学A 期末真题，含解析与考点提示。',source:'知新馆数学组陈思远整理',version:'v2026.04',keywords:['高数','期末','真题'],remarks:'真题来源教务系统，仅供学习交流。'},
+  {id:2,title:'大学英语六级写作高分模版精讲',major:'课程科目类',minor:'课件 PPT',course:'大学英语六级',uploader:'王诗韵',uploaderLabel:'王诗韵 · 知新馆义工',ft:'ppt',size:'12.8MB',downloads:980,likes:210,uploadTime:'2026-05-12',timeLabel:'1天前',status:'published',intro:'六级写作结构与常用句式模版，附真题范文解析。',source:'知新馆英语组',version:'v2026.03',keywords:['六级','写作','模版'],remarks:''},
+  {id:3,title:'程序设计 · Python 实战代码集',major:'课程科目类',minor:'笔记讲义',course:'程序设计',uploader:'刘子轩',uploaderLabel:'刘子轩 · 知新馆义工',ft:'pdf',size:'8.6MB',downloads:2100,likes:412,uploadTime:'2026-05-11',timeLabel:'2天前',status:'published',intro:'课堂示例与课后习题参考代码合集。',source:'计算机学院辅学组',version:'v2025.12',keywords:['Python','代码'],remarks:'部分代码依赖 Python 3.10+。'},
+  {id:4,title:'线性代数 · 历年期末考点统计',major:'课程科目类',minor:'笔记讲义',course:'线性代数',uploader:'林楠',uploaderLabel:'林楠 · 授权学生',ft:'xls',size:'1.4MB',downloads:640,likes:156,uploadTime:'2026-05-10',timeLabel:'3天前',status:'published',intro:'历年考点频次与分值分布统计表。',source:'个人整理',version:'v1.0',keywords:['线代','考点'],remarks:''},
+  {id:5,title:'双十佳教案 · 微积分入门篇',major:'课程科目类',minor:'双十佳教案',course:'微积分',uploader:'教务处管理员',uploaderLabel:'教务处管理员',ft:'pdf',size:'10.6MB',downloads:3500,likes:502,uploadTime:'2026-05-08',timeLabel:'5天前',status:'published',intro:'学校优秀教案汇编节选。',source:'教务处',version:'2026春',keywords:['微积分','教案'],remarks:'官方发布，禁止二改销售。'},
+  {id:6,title:'大一新生入学规划锦囊',major:'学涯规划类',minor:'学涯发展篇',course:'—',uploader:'知新馆编辑组',uploaderLabel:'知新馆编辑组',ft:'doc',size:'2.8MB',downloads:4800,likes:892,uploadTime:'2026-05-06',timeLabel:'7天前',status:'published',intro:'大一全年学涯规划指南，含时间管理、资源获取、社团参与建议。',source:'知新馆',version:'v3.0',keywords:['大一','规划','入学'],remarks:''},
+  {id:7,title:'数学建模竞赛入门指南',major:'学涯规划类',minor:'学科竞赛篇',course:'—',uploader:'陈思远',uploaderLabel:'陈思远 · 知新馆义工',ft:'ppt',size:'15.4MB',downloads:720,likes:198,uploadTime:'2026-05-09',timeLabel:'4天前',status:'published',intro:'数学建模竞赛全流程介绍与备赛建议。',source:'陈思远',version:'v2026.01',keywords:['竞赛','建模'],remarks:''},
+  {id:8,title:'大学物理 · 电磁学复习笔记',major:'课程科目类',minor:'笔记讲义',course:'大学物理',uploader:'王诗韵',uploaderLabel:'王诗韵 · 知新馆义工',ft:'doc',size:'3.4MB',downloads:890,likes:234,uploadTime:'2026-05-13',timeLabel:'今天',status:'published',intro:'电场、磁场、电磁感应章节梳理与公式汇总。',source:'王诗韵',version:'v1.0',keywords:['物理','电磁'],remarks:''},
+];
+
+// 我上传的
+const MINE_DATA=[
+  {id:2,title:'大学英语六级写作高分模版精讲',major:'课程科目类',minor:'课件 PPT',ft:'ppt',uploadTime:'2026-05-12',downloads:980,likes:210,status:'published'},
+  {id:8,title:'大学物理 · 电磁学复习笔记',major:'课程科目类',minor:'笔记讲义',ft:'doc',uploadTime:'2026-05-13',downloads:890,likes:234,status:'published'},
+  {id:99,title:'高等数学B 期末备考资料包',major:'课程科目类',minor:'往年真题',ft:'pdf',uploadTime:'2026-04-28',downloads:320,likes:78,status:'down'},
+];
+
+// 我提的需求（含关联资料）
+let DEMAND_DATA=[
+  {id:'D001',title:'概率论 往年真题 2022-2025',major:'课程科目类',minor:'往年真题',course:'概率论与数理统计',remark:'希望包含解析，2022届以后的优先',submitTime:'2026-05-09',status:'notified',
+   relatedFiles:[{name:'概率论期末真题2024.pdf',ft:'pdf',uploader:'赵洪亮',uploadDate:'2026-04-20',size:'3.1 MB',downloads:86},{name:'概率论期末真题2023.pdf',ft:'pdf',uploader:'赵洪亮',uploadDate:'2026-04-21',size:'2.8 MB',downloads:72}]},
+  {id:'D002',title:'挑战杯项目答辩 PPT 模版',major:'学涯规划类',minor:'项目比赛篇',course:'—',remark:'需要简洁风格，工科类优先',submitTime:'2026-05-01',status:'fulfilled',
+   relatedFiles:[{name:'挑战杯答辩模版-简洁版.pptx',ft:'ppt',uploader:'刘思远',uploadDate:'2026-04-18',size:'5.2 MB',downloads:234}]},
+];
+let demandIdSeed=3;
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function ftBadge(ft){const c={pdf:'ft-pdf',ppt:'ft-ppt',doc:'ft-doc',xls:'ft-xls'}[ft]||'ft-pdf';return`<span class="ft-badge ${c}">${ft.toUpperCase()}</span>`;}
+function ftIC(ft,size){const c={pdf:'ft-pdf',ppt:'ft-ppt',doc:'ft-doc',xls:'ft-xls'}[ft]||'ft-pdf';const s=size||36;return`<div class="rel-file-ic ${c}" style="width:${s}px;height:${s}px;">${ft.toUpperCase()}</div>`;}
+function statusTag(st){return st==='published'?'<span class="tag-stu tag-green">已发布</span>':'<span class="tag-stu tag-grey">已下架</span>';}
+function demandStatusTag(st){const m={pending:{c:'tag-orange',l:'待处理'},notified:{c:'tag-blue',l:'已发起征集'},fulfilled:{c:'tag-green',l:'已满足'},blocked:{c:'tag-red',l:'已屏蔽'}};const d=m[st]||{c:'tag-grey',l:st};return`<span class="tag-stu ${d.c}">${d.l}</span>`;}
+
+// ============ 渲染：所有资料 ============
+function renderAll(){
+  let rows=[...LIB_DATA].sort((a,b)=>b.uploadTime.localeCompare(a.uploadTime));
+  const major=document.getElementById('all-major').value;
+  const minor=document.getElementById('all-minor').value;
+  const course=document.getElementById('all-course').value.trim();
+  const kw=document.getElementById('all-keyword').value.trim();
+  if(major)rows=rows.filter(r=>r.major===major);
+  if(minor)rows=rows.filter(r=>r.minor===minor);
+  if(course)rows=rows.filter(r=>r.course.includes(course));
+  if(kw)rows=rows.filter(r=>r.title.includes(kw)||r.keywords.some(k=>k.includes(kw)));
+  document.getElementById('all-count').textContent='共 '+rows.length+' 条';
+  document.getElementById('all-tbody').innerHTML=rows.length?rows.map(r=>`<tr>
+    <td>${ftBadge(r.ft)}</td>
+    <td class="td-title"><div class="t">${esc(r.title)}</div><div class="s">${esc(r.course)} · ${esc(r.timeLabel)}</div></td>
+    <td>${esc(r.major)}</td>
+    <td><span class="tag-stu tag-blue">${esc(r.minor)}</span></td>
+    <td>${esc(r.course)}</td>
+    <td style="text-align:right;font-weight:600;">${r.downloads.toLocaleString()}</td>
+    <td style="text-align:right;">${r.likes}</td>
+    <td style="font-size:12px;color:var(--text-2);">${esc(r.uploadTime)}</td>
+    <td style="font-size:12px;color:var(--text-2);">${esc(r.uploaderLabel)}</td>
+    <td><div class="row-acts">
+      <button class="act act-primary" onclick="openResDetail(${r.id})">查看</button>
+      <button class="act" onclick="openShareModal(${r.id})">分享</button>
+    </div></td>
+  </tr>`).join(''):`<tr><td colspan="10"><div class="empty-tip"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><p>暂无匹配资料</p></div></td></tr>`;
+}
+
+// ============ 渲染：热门资料 ============
+function renderHot(){
+  let rows=[...LIB_DATA].sort((a,b)=>b.downloads-a.downloads);
+  const major=document.getElementById('hot-major').value;
+  const minor=document.getElementById('hot-minor').value;
+  const course=document.getElementById('hot-course').value.trim();
+  const kw=document.getElementById('hot-keyword').value.trim();
+  if(major)rows=rows.filter(r=>r.major===major);
+  if(minor)rows=rows.filter(r=>r.minor===minor);
+  if(course)rows=rows.filter(r=>r.course.includes(course));
+  if(kw)rows=rows.filter(r=>r.title.includes(kw)||r.keywords.some(k=>k.includes(kw)));
+  document.getElementById('hot-count').textContent='共 '+rows.length+' 条';
+  document.getElementById('hot-tbody').innerHTML=rows.length?rows.map((r,i)=>`<tr>
+    <td style="text-align:center;font-weight:700;font-size:13px;color:${i<3?'var(--danger)':'var(--text-3)'};">${i+1}</td>
+    <td class="td-title"><div style="display:flex;align-items:center;">${ftBadge(r.ft)}<div><div class="t">${esc(r.title)}</div><div class="s">${esc(r.course)} · ${esc(r.timeLabel)}</div></div></div></td>
+    <td>${esc(r.major)}</td>
+    <td><span class="tag-stu tag-blue">${esc(r.minor)}</span></td>
+    <td>${esc(r.course)}</td>
+    <td style="text-align:right;font-weight:700;color:var(--primary);">${r.downloads.toLocaleString()}</td>
+    <td style="text-align:right;">${r.likes}</td>
+    <td style="font-size:12px;color:var(--text-2);">${esc(r.uploaderLabel)}</td>
+    <td><div class="row-acts">
+      <button class="act act-primary" onclick="openResDetail(${r.id})">查看</button>
+      <button class="act" onclick="openShareModal(${r.id})">分享</button>
+    </div></td>
+  </tr>`).join(''):`<tr><td colspan="9"><div class="empty-tip"><p>暂无匹配资料</p></div></td></tr>`;
+}
+
+// ============ 渲染：我上传的 ============
+function renderMine(){
+  let rows=[...MINE_DATA];
+  const major=document.getElementById('mine-major').value;
+  const minor=document.getElementById('mine-minor').value;
+  const status=document.getElementById('mine-status').value;
+  if(major)rows=rows.filter(r=>r.major===major);
+  if(minor)rows=rows.filter(r=>r.minor===minor);
+  if(status)rows=rows.filter(r=>r.status===status);
+  document.getElementById('mine-count').textContent='共 '+rows.length+' 条';
+  document.getElementById('mine-tbody').innerHTML=rows.length?rows.map(r=>`<tr>
+    <td>${ftBadge(r.ft)}</td>
+    <td class="td-title"><div class="t">${esc(r.title)}</div></td>
+    <td>${esc(r.major)}</td>
+    <td><span class="tag-stu tag-blue">${esc(r.minor)}</span></td>
+    <td style="font-size:12px;color:var(--text-2);">${esc(r.uploadTime)}</td>
+    <td style="text-align:right;font-weight:600;">${r.downloads.toLocaleString()}</td>
+    <td style="text-align:right;">${r.likes}</td>
+    <td>${statusTag(r.status)}</td>
+    <td><div class="row-acts">
+      <button class="act act-primary" onclick="openMinePreview(${r.id})">预览</button>
+      <button class="act" onclick="openShareModal(${r.id})">分享</button>
+    </div></td>
+  </tr>`).join(''):`<tr><td colspan="9"><div class="empty-tip"><p>暂无上传记录</p></div></td></tr>`;
+}
+
+// ============ 渲染：我提的需求 ============
+function renderDemand(){
+  let rows=[...DEMAND_DATA];
+  const status=document.getElementById('dm-status').value;
+  const major=document.getElementById('dm-major').value;
+  const kw=document.getElementById('dm-keyword').value.trim();
+  if(status)rows=rows.filter(r=>r.status===status);
+  if(major)rows=rows.filter(r=>r.major===major);
+  if(kw)rows=rows.filter(r=>r.title.includes(kw));
+  document.getElementById('dm-count').textContent='共 '+rows.length+' 条';
+  document.getElementById('dm-tbody').innerHTML=rows.length?rows.map(r=>{
+    const remark=r.remark.length>22?r.remark.slice(0,22)+'…':r.remark;
+    return`<tr>
+    <td class="td-title"><div class="t">${esc(r.title)}</div><div class="s">${r.id}</div></td>
+    <td>${esc(r.major)}</td>
+    <td><span class="tag-stu tag-purple">${esc(r.minor||'—')}</span></td>
+    <td style="font-size:12px;">${esc(r.course)}</td>
+    <td style="font-size:12px;color:var(--text-2);max-width:180px;" title="${esc(r.remark)}">${esc(remark)}</td>
+    <td style="font-size:12px;color:var(--text-2);">${esc(r.submitTime)}</td>
+    <td>${demandStatusTag(r.status)}</td>
+    <td><button class="act act-primary" style="height:26px;padding:0 10px;border-radius:5px;font-size:12px;display:inline-flex;align-items:center;color:var(--primary);border:1px solid #BFDDF6;background:var(--primary-light);cursor:pointer;" onclick="openDemandDetail('${r.id}')">详情</button></td>
+  </tr>`;
+  }).join(''):`<tr><td colspan="8"><div class="empty-tip"><p>暂无需求记录</p></div></td></tr>`;
+}
+
+// ============ 查询 & 重置 ============
+function queryFilter(tab){
+  if(tab==='all')renderAll();else if(tab==='hot')renderHot();else if(tab==='mine')renderMine();else if(tab==='demand')renderDemand();
+  showToast('已应用筛选');
+}
+function resetFilter(tab){
+  const ids={all:['all-major','all-minor','all-course','all-keyword'],hot:['hot-major','hot-minor','hot-course','hot-keyword'],mine:['mine-major','mine-minor','mine-status'],demand:['dm-status','dm-major','dm-keyword']};
+  (ids[tab]||[]).forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  queryFilter(tab);showToast('已重置');
+}
+
+// ============ Tab 切换 ============
+function switchTab(tab){
+  document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('active',b.getAttribute('data-tab')===tab));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
+}
+
+// ============ 资料详情（通用，有点赞+分享+下载）============
+function openResDetail(id){
+  const item=LIB_DATA.find(x=>x.id===id);if(!item)return;
+  const kw=(item.keywords||[]).map(k=>`<span class="tag-stu tag-blue">${esc(k)}</span>`).join('');
+  document.getElementById('resDetailTitle').textContent='资料详情';
+  document.getElementById('resDetailBody').innerHTML=`
+    <div style="background:linear-gradient(135deg,#F4FAFE,#E3F1F9);border-radius:12px;padding:14px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;">
+      <div class="rel-file-ic ft-${item.ft}" style="width:48px;height:48px;font-size:11px;">${item.ft.toUpperCase()}</div>
+      <div style="flex:1;">
+        <h3 style="font-size:15px;font-weight:600;line-height:1.45;">${esc(item.title)}</h3>
+        <div style="font-size:11px;color:var(--text-3);margin-top:5px;">${esc(item.uploaderLabel)} · ${esc(item.size)} · ${esc(item.timeLabel)}</div>
+        <div style="margin-top:8px;display:flex;gap:5px;flex-wrap:wrap;">
+          <span class="tag-stu tag-blue">${esc(item.major)}</span>
+          <span class="tag-stu tag-purple">${esc(item.minor)}</span>
+          ${statusTag(item.status)}
+        </div>
+      </div>
+    </div>
+    <div class="preview-mock">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span style="font-size:13px;">在线预览区域（${item.ft.toUpperCase()} · ${item.size}）</span>
+    </div>
+    <dl style="display:grid;grid-template-columns:88px 1fr;gap:8px 14px;background:#FAFBFD;border:1px solid var(--border-light);border-radius:10px;padding:14px;font-size:13px;margin-bottom:0;">
+      <dt style="color:var(--text-3);font-weight:500;">所属课程</dt><dd style="margin:0;">${esc(item.course||'—')}</dd>
+      <dt style="color:var(--text-3);font-weight:500;">来源说明</dt><dd style="margin:0;">${esc(item.source||'—')}</dd>
+      <dt style="color:var(--text-3);font-weight:500;">版本信息</dt><dd style="margin:0;">${esc(item.version||'—')}</dd>
+      <dt style="color:var(--text-3);font-weight:500;">关键词</dt><dd style="margin:0;display:flex;gap:5px;flex-wrap:wrap;">${kw||'—'}</dd>
+      <dt style="color:var(--text-3);font-weight:500;">文件介绍</dt><dd style="margin:0;white-space:pre-wrap;line-height:1.7;">${esc(item.intro||'—')}</dd>
+      <dt style="color:var(--text-3);font-weight:500;">备注</dt><dd style="margin:0;white-space:pre-wrap;">${esc(item.remarks||'—')}</dd>
+    </dl>`;
+  document.getElementById('resDetailFoot').innerHTML=`
+    <button class="btn-stu btn-ghost-stu" onclick="showToast('已点赞')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z"/></svg>点赞</button>
+    <button class="btn-stu btn-ghost-stu" onclick="closeModal('resDetailModal');openShareModal(${id})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>分享</button>
+    <button class="btn-stu btn-primary-stu" onclick="closeModal('resDetailModal');showToast('开始下载')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>下载（剩余 27/50）</button>`;
+  openModal('resDetailModal');
+}
+
+// ============ 我上传的 - 预览（无点赞、无下载、有分享）============
+function openMinePreview(id){
+  const item=LIB_DATA.find(x=>x.id===id)||MINE_DATA.find(x=>x.id===id);
+  if(!item)return;
+  const full=LIB_DATA.find(x=>x.id===id)||item;
+  const kw=(full.keywords||[]).map(k=>`<span class="tag-stu tag-blue">${esc(k)}</span>`).join('');
+  document.getElementById('minePreviewTitle').textContent='资料预览 · '+esc(full.title);
+  document.getElementById('minePreviewBody').innerHTML=`
+    <div style="background:linear-gradient(135deg,#F4FAFE,#E3F1F9);border-radius:12px;padding:14px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start;">
+      <div class="rel-file-ic ft-${full.ft}" style="width:48px;height:48px;font-size:11px;">${full.ft.toUpperCase()}</div>
+      <div style="flex:1;">
+        <h3 style="font-size:15px;font-weight:600;">${esc(full.title)}</h3>
+        <div style="font-size:11px;color:var(--text-3);margin-top:5px;">${esc(full.size||'—')} · 上传于 ${esc(full.uploadTime||full.timeLabel||'—')}</div>
+        <div style="margin-top:7px;display:flex;gap:5px;flex-wrap:wrap;">
+          <span class="tag-stu tag-blue">${esc(full.major||item.major)}</span>
+          <span class="tag-stu tag-purple">${esc(full.minor||item.minor)}</span>
+          ${statusTag(item.status)}
+        </div>
+      </div>
+    </div>
+    <div class="preview-mock">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span style="font-size:13px;">在线预览区域（${(full.ft||'').toUpperCase()} · ${full.size||'—'}）</span>
+    </div>
+    <dl style="display:grid;grid-template-columns:88px 1fr;gap:8px 14px;background:#FAFBFD;border:1px solid var(--border-light);border-radius:10px;padding:14px;font-size:13px;">
+      <dt style="color:var(--text-3);font-weight:500;">所属课程</dt><dd style="margin:0;">${esc(full.course||'—')}</dd>
+      <dt style="color:var(--text-3);font-weight:500;">来源说明</dt><dd style="margin:0;">${esc(full.source||'—')}</dd>
+      <dt style="color:var(--text-3);font-weight:500;">版本信息</dt><dd style="margin:0;">${esc(full.version||'—')}</dd>
+      <dt style="color:var(--text-3);font-weight:500;">关键词</dt><dd style="margin:0;display:flex;gap:5px;flex-wrap:wrap;">${kw||'—'}</dd>
+      <dt style="color:var(--text-3);font-weight:500;">文件介绍</dt><dd style="margin:0;white-space:pre-wrap;line-height:1.7;">${esc(full.intro||'—')}</dd>
+      <dt style="color:var(--text-3);font-weight:500;">备注</dt><dd style="margin:0;">${esc(full.remarks||'—')}</dd>
+      <dt style="color:var(--text-3);font-weight:500;">下载 / 点赞</dt><dd style="margin:0;">${(item.downloads||0).toLocaleString()} 次下载 · ${item.likes||0} 点赞</dd>
+    </dl>`;
+  document.getElementById('minePreviewFoot').innerHTML=`
+    <button class="btn-stu btn-ghost-stu" onclick="closeModal('minePreviewModal')">关闭</button>
+    <button class="btn-stu btn-ghost-stu" onclick="closeModal('minePreviewModal');openShareModal(${id})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>分享</button>`;
+  openModal('minePreviewModal');
+}
+
+// ============ 需求详情（含相关资料 + 下载）============
+function openDemandDetail(id){
+  const d=DEMAND_DATA.find(x=>x.id===id);if(!d)return;
+  document.getElementById('ddTitle').textContent='需求详情 · '+d.title;
+  const rf=d.relatedFiles||[];
+  const rfHTML=rf.length===0
+    ?`<div style="padding:16px;text-align:center;color:var(--text-4);font-size:13px;background:#FAFBFD;border-radius:8px;">暂无相关资料，管理员正在跟进处理中</div>`
+    :rf.map(f=>`<div class="rel-file-row">
+        ${ftIC(f.ft,36)}
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(f.name)}</div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap;">
+            <span>上传者：${esc(f.uploader)}</span><span>${esc(f.uploadDate)}</span><span>${esc(f.size)}</span><span>↓ ${f.downloads}</span>
+          </div>
+        </div>
+        <button class="act act-primary" style="height:28px;padding:0 12px;border-radius:6px;font-size:12px;display:inline-flex;align-items:center;gap:4px;color:var(--primary);border:1px solid #BFDDF6;background:var(--primary-light);cursor:pointer;" onclick="showToast('开始下载：${esc(f.name)}')">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>下载
+        </button>
+      </div>`).join('');
+
+  document.getElementById('ddBody').innerHTML=`
+    <div class="detail-sec">
+      <h4><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>需求信息</h4>
+      <div class="detail-kv">
+        <div class="kv"><span class="k">需求编号</span><span class="v">${esc(d.id)}</span></div>
+        <div class="kv"><span class="k">处理状态</span><span class="v">${demandStatusTag(d.status)}</span></div>
+        <div class="kv"><span class="k">所属分类</span><span class="v"><span class="tag-stu tag-blue">${esc(d.major)}</span></span></div>
+        <div class="kv"><span class="k">资料小类</span><span class="v"><span class="tag-stu tag-purple">${esc(d.minor||'—')}</span></span></div>
+        <div class="kv"><span class="k">所属课程</span><span class="v">${esc(d.course)}</span></div>
+        <div class="kv"><span class="k">联系方式</span><span class="v">${esc(d.contact||'—')}</span></div>
+        <div class="kv"><span class="k">提交时间</span><span class="v">${esc(d.submitTime)}</span></div>
+        <div class="kv wide"><span class="k">备注说明</span>
+          <p style="margin-top:6px;font-size:13px;color:var(--text-1);line-height:1.8;background:#FAFBFD;padding:12px;border-radius:8px;border:1px solid var(--border-light);">${esc(d.remark)}</p>
+        </div>
+      </div>
+    </div>
+    <div class="detail-sec">
+      <h4><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>平台相关资料 <span style="font-weight:400;color:var(--text-3);font-size:11px;">（${rf.length} 份可下载）</span></h4>
+      <div>${rfHTML}</div>
+    </div>`;
+  document.getElementById('ddFoot').innerHTML=`<button class="btn-stu btn-ghost-stu" onclick="closeModal('demandDetailModal')">关闭</button>`;
+  openModal('demandDetailModal');
+}
+
+// ============ 分享 Modal ============
+function openShareModal(id){
+  const item=LIB_DATA.find(x=>x.id===id)||MINE_DATA.find(x=>x.id===id);
+  const link=`https://xf.example.edu/lib/resource/${id}`;
+  document.getElementById('shareLinkText').textContent=link;
+  openModal('shareModal');
+}
+function copyShareLink(){
+  const txt=document.getElementById('shareLinkText').textContent;
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>showToast('链接已复制'));}
+  else{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('链接已复制');}
+}
+
+// ============ 提交上传 ============
+function submitUpload(){
+  const title=document.getElementById('up-title').value.trim();
+  const major=document.getElementById('up-major').value;
+  const minor=document.getElementById('up-minor').value;
+  if(!title){showToast('请填写资料标题');return;}
+  if(!major){showToast('请选择所属分类');return;}
+  if(!minor){showToast('请选择资料小类');return;}
+  closeModal('uploadModal');
+  showToast('资料已发布！');
+  ['up-title','up-course','up-source','up-version','up-tags','up-intro','up-remark'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['up-major','up-minor','up-demand'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+
+// ============ 提交需求 ============
+function submitDemand(){
+  const title=document.getElementById('dm-title-input').value.trim();
+  const major=document.getElementById('dm-major-input').value;
+  if(!title){showToast('请填写资料名称');return;}
+  if(!major){showToast('请选择所属分类');return;}
+  const minor=document.getElementById('dm-minor-input').value;
+  const course=document.getElementById('dm-course-input').value.trim();
+  const remark=document.getElementById('dm-remark-input').value.trim();
+  const today=new Date().toISOString().slice(0,10);
+  const newId='D00'+demandIdSeed++;
+  const contact=document.getElementById('dm-contact-input').value.trim();
+  DEMAND_DATA.unshift({id:newId,title,major,minor,course:course||'—',remark:remark||'—',contact:contact||'—',submitTime:today,status:'pending',relatedFiles:[]});
+  closeModal('demandModal');
+  showToast('需求已提交！');
+  ['dm-title-input','dm-course-input','dm-contact-input','dm-remark-input'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['dm-major-input','dm-minor-input'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); 
+  switchTab('demand');renderDemand();
+  // 更新计数
+  document.getElementById('tc-demand').textContent=DEMAND_DATA.length;
+}
+
+// ============ 刷新征集需求下拉选项 ============
+function refreshDemandOptions(){
+  const sel=document.getElementById('up-demand');if(!sel)return;
+  const active=DEMAND_DATA.filter(d=>d.status==='pending'||d.status==='notified');
+  sel.innerHTML='<option value="">不关联征集需求</option>'+active.map(d=>`<option value="${esc(d.id)}">${esc(d.id)} · ${esc(d.title)}</option>`).join('');
+}
+const _origOpenUpload=window.openModal;
+window.openModal=function(id){
+  if(id==='uploadModal') refreshDemandOptions();
+  _origOpenUpload(id);
+};
+
+// ============ Init ============
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('mainSeg').addEventListener('click',e=>{
+    const btn=e.target.closest('button[data-tab]');
+    if(!btn)return;
+    switchTab(btn.getAttribute('data-tab'));
+  });
+  document.querySelectorAll('.modal-mask').forEach(m=>{
+    m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');});
+  });
+  renderAll();renderHot();renderMine();renderDemand();
+});
+</script>
+<script>
+  renderStuSidebar('library');
+  renderStuTopbar('搜索资料、关键词、上传者...');
+</script>
+</body>
+</html>

@@ -1,0 +1,679 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>场地预约 · 学风建设 · 学生端</title>
+<style>
+:root{
+  --primary:#3087CC;
+  --primary-light:#E3F1F9;
+  --primary-dark:#006DAD;
+  --primary-50:#F4FAFE;
+  --text-1:#3C444F;
+  --text-2:#696F7D;
+  --text-3:#9096A2;
+  --text-4:#ABB0BA;
+  --border:#E5E8EE;
+  --border-light:#EFF1F5;
+  --bg:#F4F6FA;
+  --bg-card:#FFFFFF;
+  --success:#1BB975;
+  --success-bg:#E8FCF4;
+  --success-border:#A7F3D0;
+  --warning:#F29100;
+  --warning-bg:#FFF5E5;
+  --warning-border:#FFE0B3;
+  --danger:#DF2027;
+  --danger-bg:#FCE8EA;
+  --danger-border:#F6BCBE;
+  --shadow-sm:0 1px 3px rgba(15,32,55,.05);
+  --shadow-md:0 6px 20px rgba(15,32,55,.06);
+  --shadow-lg:0 12px 32px rgba(15,32,55,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:"OPPOSans","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;color:var(--text-1);background:var(--bg);font-size:14px;-webkit-font-smoothing:antialiased;}
+body{min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+svg{display:block;flex-shrink:0;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-thumb{background:#D9DDE3;border-radius:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ===== Layout ===== */
+.layout{
+  max-width:1480px;margin:0 auto;display:grid;grid-template-columns:240px 1fr;gap:24px;padding:0 24px;
+}
+.s-sidebar{
+  position:sticky;top:24px;align-self:start;height:calc(100vh - 48px);overflow-y:auto;padding-top:24px;
+}
+.brand-stu{
+  display:flex;align-items:center;gap:10px;margin-bottom:24px;
+}
+.brand-stu .logo{
+  width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#3087CC,#006DAD);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  box-shadow:0 6px 16px rgba(48,135,204,.28);
+}
+.brand-stu strong{font-size:14px;font-weight:600;display:block;}
+.brand-stu span{font-size:10px;color:var(--text-3);letter-spacing:.4px;display:block;margin-top:2px;}
+
+.user-stu{
+  background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;
+  border-radius:14px;padding:14px;margin-bottom:18px;position:relative;overflow:hidden;
+  box-shadow:0 12px 28px rgba(48,135,204,.3);
+}
+.user-stu::before{
+  content:"";position:absolute;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 70%);right:-30px;top:-40px;
+}
+.user-stu .row{display:flex;align-items:center;gap:10px;position:relative;}
+.user-stu .ava{
+  width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#FFD68F,#F29100);
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;
+  border:2px solid rgba(255,255,255,.4);
+}
+.user-stu strong{font-size:14px;font-weight:600;display:block;}
+.user-stu p{font-size:11px;opacity:.85;margin-top:2px;}
+.user-stu .stars{margin-top:8px;display:inline-flex;gap:2px;align-items:center;font-size:11px;opacity:.85;}
+.user-stu .stars svg{width:12px;height:12px;color:#FFD43B;}
+.user-stu .progress{margin-top:10px;height:4px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden;}
+.user-stu .progress .fill{height:100%;background:linear-gradient(90deg,#FFD68F,#FFC53D);border-radius:2px;}
+
+.s-nav{display:flex;flex-direction:column;gap:2px;}
+.s-nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:8px;color:var(--text-2);
+  font-size:13px;cursor:pointer;transition:all .15s;text-decoration:none;
+}
+.s-nav-item:hover{background:#fff;color:var(--text-1);}
+.s-nav-item.active{background:var(--primary-light);color:var(--primary);font-weight:500;box-shadow:var(--shadow-sm);}
+.s-nav-item.active svg{color:var(--primary);}
+.s-nav-item .badge{
+  margin-left:auto;background:linear-gradient(135deg,#FF6B6B,#DF2027);color:#fff;font-size:10px;
+  padding:1px 6px;border-radius:8px;font-weight:600;letter-spacing:.2px;
+}
+
+.s-quick{
+  background:#fff;border-radius:14px;padding:14px;margin-top:18px;border:1px solid var(--border-light);
+}
+.s-quick h6{font-size:12px;font-weight:600;color:var(--text-3);margin-bottom:10px;}
+.s-quick .item{
+  display:flex;align-items:center;gap:8px;padding:8px;border-radius:7px;cursor:pointer;font-size:12px;color:var(--text-2);
+}
+.s-quick .item:hover{background:var(--primary-50);color:var(--primary);}
+
+.s-main{padding:24px 0 60px;min-width:0;}
+
+/* ===== Topbar ===== */
+.s-topbar{
+  background:#fff;border-radius:14px;padding:8px 14px;display:flex;align-items:center;gap:14px;
+  margin-bottom:18px;box-shadow:var(--shadow-sm);
+}
+.s-search{
+  flex:1;height:38px;background:var(--bg);border-radius:10px;display:flex;align-items:center;padding:0 12px;gap:8px;
+  border:1px solid transparent;transition:all .15s;
+}
+.s-search:focus-within{border-color:var(--primary);background:#fff;}
+.s-search input{flex:1;border:none;outline:none;background:transparent;font-size:13px;color:var(--text-1);font-family:inherit;}
+.s-search input::placeholder{color:var(--text-4);}
+.s-search .kbd{font-size:11px;color:var(--text-4);background:#fff;padding:2px 6px;border-radius:4px;border:1px solid var(--border);}
+.s-topbar .icon-btn{
+  width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);background:var(--bg);position:relative;transition:all .15s;
+}
+.s-topbar .icon-btn:hover{background:var(--primary-light);color:var(--primary);}
+.s-topbar .icon-btn .red-dot{
+  position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--danger);
+  border:2px solid var(--bg);
+}
+
+/* ===== Hero card ===== */
+.hero-stu{
+  background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;
+  border-radius:18px;padding:24px 26px;position:relative;overflow:hidden;margin-bottom:18px;
+  box-shadow:0 18px 40px rgba(48,135,204,.18);
+}
+.hero-stu::before{
+  content:"";position:absolute;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);right:-80px;top:-100px;
+}
+.hero-stu::after{
+  content:"";position:absolute;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,213,143,.18),transparent 60%);right:80px;bottom:-100px;
+}
+.hero-stu .row{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+.hero-stu h2{font-size:26px;font-weight:700;}
+.hero-stu p{font-size:13px;opacity:.85;margin-top:6px;line-height:1.6;}
+.hero-stu .actions{display:flex;gap:10px;}
+.hero-stu .btn{
+  background:rgba(255,255,255,.2);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.3);color:#fff;
+  padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;transition:all .15s;
+}
+.hero-stu .btn:hover{background:rgba(255,255,255,.3);}
+.hero-stu .btn.primary{background:#fff;color:var(--primary);border-color:#fff;}
+
+/* ===== Cards ===== */
+.s-section{margin-bottom:22px;}
+.s-section-head{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;
+}
+.s-section-head h3{font-size:18px;font-weight:600;}
+.s-section-head h3 small{font-size:12px;color:var(--text-3);font-weight:400;margin-left:8px;}
+.s-section-head .more{font-size:12px;color:var(--text-3);display:inline-flex;align-items:center;gap:4px;}
+.s-section-head .more:hover{color:var(--primary);}
+
+.kpi-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+}
+.kpi-card{
+  background:#fff;border-radius:14px;padding:16px;border:1px solid var(--border-light);
+  position:relative;overflow:hidden;transition:all .15s;cursor:pointer;
+}
+.kpi-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.kpi-card .blob{position:absolute;width:120px;height:120px;border-radius:50%;right:-40px;top:-40px;opacity:.3;pointer-events:none;}
+.kpi-card .ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.kpi-card .label{font-size:11px;color:var(--text-3);}
+.kpi-card .num{font-size:20px;font-weight:700;margin-top:4px;}
+.kpi-card .num small{font-size:11px;font-weight:400;color:var(--text-3);margin-left:2px;}
+
+/* ===== Course list ===== */
+.course-row{
+  background:#fff;border-radius:14px;padding:16px;display:flex;gap:14px;align-items:center;
+  border:1px solid var(--border-light);margin-bottom:10px;transition:all .15s;cursor:pointer;
+}
+.course-row:hover{border-color:var(--primary);box-shadow:var(--shadow-md);}
+.course-row .c-icon{
+  width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  color:#fff;flex-shrink:0;
+}
+.ci-math{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.ci-eng{background:linear-gradient(135deg,#F29100,#FFD68F);}
+.ci-cs{background:linear-gradient(135deg,#0EA5E9,#7DD3FC);}
+.ci-phy{background:linear-gradient(135deg,#7C5BC1,#B59CE5);}
+.ci-chem{background:linear-gradient(135deg,#1BB975,#A7F3D0);}
+.ci-mech{background:linear-gradient(135deg,#DF2027,#F6BCBE);}
+.course-row .text{flex:1;min-width:0;}
+.course-row .text h5{font-size:15px;font-weight:600;}
+.course-row .text .meta{margin-top:6px;display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--text-3);}
+.course-row .text .meta span{display:inline-flex;align-items:center;gap:4px;}
+.course-row .right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.course-row .right .tag-status{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:500;}
+.course-row .right .ena{background:var(--success-bg);color:var(--success);}
+.course-row .right .full{background:var(--warning-bg);color:var(--warning);}
+.course-row .right .grey{background:#F1F2F3;color:var(--text-3);}
+.course-row .btn-book{
+  height:32px;padding:0 14px;border-radius:8px;background:var(--primary);color:#fff;
+  font-size:12px;font-weight:500;border:none;cursor:pointer;
+}
+.course-row .btn-book:disabled{background:var(--text-4);}
+
+/* ===== Subject filter chips ===== */
+.chips{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.chip{
+  padding:8px 16px;border-radius:999px;background:#fff;border:1px solid var(--border-light);
+  font-size:13px;color:var(--text-2);cursor:pointer;transition:all .15s;
+}
+.chip.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+
+/* ===== QA Card ===== */
+.qa-row{
+  background:#fff;border-radius:14px;padding:16px;border:1px solid var(--border-light);
+  margin-bottom:10px;transition:all .15s;cursor:pointer;
+}
+.qa-row:hover{border-color:var(--primary);box-shadow:var(--shadow-md);}
+.qa-row .head{display:flex;align-items:center;gap:8px;}
+.qa-row .head .ava{
+  width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#9CBFDA,#3087CC);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;
+}
+.qa-row .head .info{flex:1;min-width:0;}
+.qa-row .head .info .n{font-size:12px;font-weight:500;}
+.qa-row .head .info .t{font-size:10px;color:var(--text-3);margin-top:1px;}
+.qa-row h5{font-size:15px;font-weight:600;line-height:1.5;margin-top:10px;}
+.qa-row .tags{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;}
+.qa-row .tags .tag{font-size:11px;padding:3px 8px;border-radius:5px;background:var(--primary-light);color:var(--primary);}
+.qa-row .tags .tag.solved{background:var(--success-bg);color:var(--success);}
+.qa-row .tags .tag.unsolved{background:var(--warning-bg);color:var(--warning);}
+.qa-row .meta{
+  margin-top:10px;padding-top:10px;border-top:1px dashed var(--border-light);
+  display:flex;gap:18px;font-size:12px;color:var(--text-3);
+}
+.qa-row .meta span{display:inline-flex;align-items:center;gap:4px;}
+.qa-row .meta .like.active{color:var(--danger);}
+
+/* ===== Resource grid ===== */
+.res-grid-stu{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;
+}
+.res-card-stu{
+  background:#fff;border-radius:14px;padding:16px;border:1px solid var(--border-light);
+  transition:all .15s;cursor:pointer;position:relative;overflow:hidden;
+}
+.res-card-stu:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--primary);}
+.res-card-stu .ftype{
+  width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:11px;font-weight:600;margin-bottom:12px;
+}
+.ftype-pdf{background:linear-gradient(135deg,#DF2027,#FF6B6B);}
+.ftype-ppt{background:linear-gradient(135deg,#F29100,#FFAA33);}
+.ftype-doc{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.ftype-xls{background:linear-gradient(135deg,#1BB975,#34D399);}
+.res-card-stu h5{font-size:14px;font-weight:600;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.res-card-stu .meta{margin-top:10px;display:flex;justify-content:space-between;align-items:center;}
+.res-card-stu .meta .cat{font-size:11px;color:var(--text-3);}
+.res-card-stu .stats{margin-top:10px;padding-top:10px;border-top:1px solid var(--border-light);display:flex;gap:12px;font-size:11px;color:var(--text-3);}
+.res-card-stu .stats span{display:inline-flex;align-items:center;gap:3px;}
+
+/* Star feature tag */
+.featured-badge{
+  position:absolute;top:8px;right:8px;
+  background:linear-gradient(135deg,#FFD68F,#F29100);color:#fff;
+  font-size:9px;padding:2px 8px;border-radius:5px;font-weight:600;letter-spacing:.4px;
+}
+
+/* ===== Banner / Slide ===== */
+.s-banner{
+  height:160px;border-radius:14px;background:linear-gradient(135deg,#F29100,#FFD68F);
+  display:flex;align-items:center;padding:20px 26px;position:relative;overflow:hidden;color:#fff;
+  margin-bottom:18px;
+}
+.s-banner::before{
+  content:"";position:absolute;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%);right:-50px;top:-60px;
+}
+.s-banner h3{font-size:20px;font-weight:700;}
+.s-banner p{font-size:13px;opacity:.95;margin-top:6px;line-height:1.6;}
+.s-banner .btn{
+  margin-top:12px;background:#fff;color:#F29100;padding:6px 16px;border-radius:6px;
+  font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px;
+}
+
+/* ===== Profile ===== */
+.profile-banner-stu{
+  background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;
+  border-radius:18px;padding:32px;position:relative;overflow:hidden;margin-bottom:18px;
+}
+.profile-banner-stu::before{
+  content:"";position:absolute;width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);right:-80px;top:-100px;
+}
+.profile-banner-stu .pb-row{display:flex;align-items:center;gap:24px;position:relative;}
+.profile-banner-stu .ava{
+  width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#FFD68F,#F29100);
+  border:3px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-weight:600;
+}
+.profile-banner-stu .info h2{font-size:24px;font-weight:600;}
+.profile-banner-stu .info p{font-size:13px;opacity:.85;margin-top:4px;}
+.profile-banner-stu .info .stars{margin-top:8px;display:flex;gap:3px;align-items:center;font-size:12px;}
+.profile-banner-stu .info .stars svg{width:14px;height:14px;color:#FFD43B;}
+.profile-banner-stu .stat-mini{
+  position:relative;display:flex;gap:32px;margin-top:24px;padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.18);
+}
+.profile-banner-stu .stat-mini .item strong{font-size:24px;font-weight:700;display:block;}
+.profile-banner-stu .stat-mini .item span{font-size:11px;opacity:.85;}
+
+/* ===== Generic panel ===== */
+.panel-stu{
+  background:#fff;border-radius:14px;padding:20px;border:1px solid var(--border-light);
+  margin-bottom:14px;
+}
+.panel-stu h4{font-size:15px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.panel-stu h4 a{font-size:12px;color:var(--text-3);font-weight:400;}
+
+/* ===== Forms ===== */
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.f-item label{display:block;font-size:12px;color:var(--text-2);margin-bottom:6px;font-weight:500;}
+.f-item label .req{color:var(--danger);}
+.f-item input,.f-item select,.f-item textarea{
+  width:100%;height:38px;padding:0 12px;border-radius:8px;border:1px solid var(--border);
+  font-size:13px;background:#fff;outline:none;font-family:inherit;color:var(--text-1);
+}
+.f-item textarea{height:auto;padding:10px 12px;resize:vertical;}
+.f-item input:focus,.f-item select:focus,.f-item textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(48,135,204,.12);}
+.f-actions{display:flex;justify-content:flex-end;gap:10px;}
+.btn-stu{
+  height:38px;padding:0 22px;border-radius:8px;font-size:13px;font-weight:500;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;
+  border:1px solid transparent;font-family:inherit;transition:all .15s;
+}
+.btn-primary-stu{background:var(--primary);color:#fff;}
+.btn-primary-stu:hover{background:var(--primary-dark);}
+.btn-ghost-stu{background:#fff;color:var(--text-2);border-color:var(--border);}
+
+/* ===== Tag generic ===== */
+.tag-stu{
+  display:inline-flex;align-items:center;padding:3px 9px;border-radius:5px;
+  font-size:11px;color:var(--text-2);background:#F1F4F8;font-weight:500;
+}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;left:50%;top:24px;transform:translate(-50%,-20px);
+  background:#1F2733;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;
+  display:flex;align-items:center;gap:6px;box-shadow:var(--shadow-lg);
+  opacity:0;pointer-events:none;transition:all .25s;z-index:1000;
+}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+
+/* Modal */
+.modal-mask{
+  position:fixed;inset:0;background:rgba(15,32,55,.4);
+  backdrop-filter:blur(4px);display:none;
+  align-items:center;justify-content:center;z-index:99;
+}
+.modal-mask.show{display:flex;}
+.modal-stu{
+  width:560px;max-width:92vw;max-height:88vh;
+  background:#fff;border-radius:16px;box-shadow:var(--shadow-lg);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.modal-stu .head{
+  padding:18px 22px;border-bottom:1px solid var(--border-light);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-stu .head h3{font-size:16px;font-weight:600;}
+.modal-stu .body{padding:22px;overflow-y:auto;}
+.modal-stu .foot{
+  padding:14px 22px;border-top:1px solid var(--border-light);
+  display:flex;justify-content:flex-end;gap:10px;
+}
+
+/* Misc */
+.row-2-stu{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;}
+.row-3-stu{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+
+@media (max-width:1100px){
+  .layout{grid-template-columns:1fr;}
+  .s-sidebar{position:static;height:auto;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .row-2-stu{grid-template-columns:1fr;}
+}
+
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="s-sidebar"></aside>
+  <main class="s-main">
+    <header class="s-topbar"></header>
+
+    <!-- 页面标题 -->
+    <div class="s-section-head">
+      <h3>场地预约记录</h3>
+    </div>
+
+    <!-- 跳转提示 Banner -->
+    <div style="background:linear-gradient(135deg,#EBF5FF,#DBEAFE);border:1px solid #BFDBFE;border-radius:14px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;gap:16px;">
+      <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#3087CC,#006DAD);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 16px rgba(48,135,204,.28);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <h5 style="font-size:14px;font-weight:600;color:#1E40AF;">场地预约已接入业务助手</h5>
+        <p style="font-size:12px;color:#3B82F6;margin-top:3px;line-height:1.6;">如需预约知新馆、56度中南、问渠拾光等场地，请前往<strong>业务助手 · 场地预约模块</strong>完成申请，预约记录将同步展示在此页面。</p>
+      </div>
+      <button class="btn-stu" onclick="openModal('redirectModal')" style="background:var(--primary);color:#fff;flex-shrink:0;height:34px;padding:0 14px;font-size:12px;">
+        前往预约
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+    <!-- 统计数字 -->
+    <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:18px;">
+      <div class="kpi-card">
+        <div class="blob" style="background:var(--primary-light);"></div>
+        <div class="ic" style="background:var(--primary-light);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </div>
+        <div class="label">累计预约次数</div>
+        <div class="num">12<small>次</small></div>
+      </div>
+      <div class="kpi-card">
+        <div class="blob" style="background:var(--success-bg);"></div>
+        <div class="ic" style="background:var(--success-bg);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="label">已批准</div>
+        <div class="num">10<small>次</small></div>
+      </div>
+      <div class="kpi-card">
+        <div class="blob" style="background:var(--warning-bg);"></div>
+        <div class="ic" style="background:var(--warning-bg);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="label">待审批</div>
+        <div class="num">2<small>次</small></div>
+      </div>
+    </div>
+
+    <!-- 预约记录表格 -->
+    <div class="panel-stu">
+      <h4>
+        我的预约记录
+        <span style="font-size:12px;color:var(--text-3);font-weight:400;">共 4 条</span>
+      </h4>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border-light);">
+              <th style="padding:10px 12px;text-align:left;font-size:12px;color:var(--text-3);font-weight:500;white-space:nowrap;">预约编号</th>
+              <th style="padding:10px 12px;text-align:left;font-size:12px;color:var(--text-3);font-weight:500;white-space:nowrap;">场地</th>
+              <th style="padding:10px 12px;text-align:left;font-size:12px;color:var(--text-3);font-weight:500;white-space:nowrap;">时间段</th>
+              <th style="padding:10px 12px;text-align:left;font-size:12px;color:var(--text-3);font-weight:500;white-space:nowrap;">使用事由</th>
+              <th style="padding:10px 12px;text-align:left;font-size:12px;color:var(--text-3);font-weight:500;white-space:nowrap;">人数</th>
+              <th style="padding:10px 12px;text-align:left;font-size:12px;color:var(--text-3);font-weight:500;white-space:nowrap;">申请时间</th>
+              <th style="padding:10px 12px;text-align:left;font-size:12px;color:var(--text-3);font-weight:500;white-space:nowrap;">状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border-light);cursor:pointer;transition:background .15s;" onmouseover="this.style.background='var(--primary-50)'" onmouseout="this.style.background=''">
+              <td style="padding:12px;color:var(--text-3);font-size:12px;font-family:monospace;">VB-2026-012</td>
+              <td style="padding:12px;font-weight:500;">知新馆 301</td>
+              <td style="padding:12px;color:var(--text-2);">04-30 &nbsp;14:00–16:00</td>
+              <td style="padding:12px;color:var(--text-2);">微分方程小组讨论</td>
+              <td style="padding:12px;color:var(--text-2);">12 人</td>
+              <td style="padding:12px;color:var(--text-3);font-size:12px;">04-28</td>
+              <td style="padding:12px;"><span class="tag-stu" style="background:var(--success-bg);color:var(--success);">已批准</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light);cursor:pointer;transition:background .15s;" onmouseover="this.style.background='var(--primary-50)'" onmouseout="this.style.background=''">
+              <td style="padding:12px;color:var(--text-3);font-size:12px;font-family:monospace;">VB-2026-011</td>
+              <td style="padding:12px;font-weight:500;">知新馆 205</td>
+              <td style="padding:12px;color:var(--text-2);">05-02 &nbsp;19:00–21:00</td>
+              <td style="padding:12px;color:var(--text-2);">英语六级辅学</td>
+              <td style="padding:12px;color:var(--text-2);">20 人</td>
+              <td style="padding:12px;color:var(--text-3);font-size:12px;">04-29</td>
+              <td style="padding:12px;"><span class="tag-stu" style="background:var(--warning-bg);color:var(--warning);">待审批</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light);cursor:pointer;transition:background .15s;" onmouseover="this.style.background='var(--primary-50)'" onmouseout="this.style.background=''">
+              <td style="padding:12px;color:var(--text-3);font-size:12px;font-family:monospace;">VB-2026-008</td>
+              <td style="padding:12px;font-weight:500;">56度中南 · 活动室</td>
+              <td style="padding:12px;color:var(--text-2);">04-22 &nbsp;14:00–18:00</td>
+              <td style="padding:12px;color:var(--text-2);">辅学义工春季分享会</td>
+              <td style="padding:12px;color:var(--text-2);">35 人</td>
+              <td style="padding:12px;color:var(--text-3);font-size:12px;">04-18</td>
+              <td style="padding:12px;"><span class="tag-stu" style="background:var(--success-bg);color:var(--success);">已批准</span></td>
+            </tr>
+            <tr style="cursor:pointer;transition:background .15s;" onmouseover="this.style.background='var(--primary-50)'" onmouseout="this.style.background=''">
+              <td style="padding:12px;color:var(--text-3);font-size:12px;font-family:monospace;">VB-2026-003</td>
+              <td style="padding:12px;font-weight:500;">知新馆 102 · 报告厅</td>
+              <td style="padding:12px;color:var(--text-2);">04-10 &nbsp;19:00–21:00</td>
+              <td style="padding:12px;color:var(--text-2);">考研数学一专题讲座</td>
+              <td style="padding:12px;color:var(--text-2);">60 人</td>
+              <td style="padding:12px;color:var(--text-3);font-size:12px;">04-07</td>
+              <td style="padding:12px;"><span class="tag-stu">已结束</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- 跳转业务助手 Modal -->
+<div class="modal-mask" id="redirectModal">
+  <div class="modal-stu" style="width:480px;">
+    <div class="head">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#3087CC,#006DAD);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3>前往业务助手完成预约</h3>
+      </div>
+      <button style="width:32px;height:32px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--text-3);" onclick="closeModal('redirectModal')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="body">
+      <!-- 说明卡片 -->
+      <div style="background:linear-gradient(135deg,#EBF5FF,#DBEAFE);border:1px solid #BFDBFE;border-radius:12px;padding:16px;margin-bottom:18px;">
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p style="font-size:13px;color:#1E40AF;line-height:1.7;">场地预约功能已集成至<strong>「业务助手」</strong>，点击确认后将跳转至业务助手的场地预约模块，完成选场地、选时段、填写事由等操作。</p>
+        </div>
+      </div>
+      <!-- 步骤说明 -->
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:4px;">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg);border-radius:9px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">1</div>
+          <span style="font-size:13px;color:var(--text-1);">在业务助手中选择场地和时段</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg);border-radius:9px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">2</div>
+          <span style="font-size:13px;color:var(--text-1);">填写使用事由、人数并提交申请</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg);border-radius:9px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">3</div>
+          <span style="font-size:13px;color:var(--text-1);">审批结果将同步回本页面记录</span>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <button class="btn-stu btn-ghost-stu" onclick="closeModal('redirectModal')">取消</button>
+      <button class="btn-stu btn-primary-stu" onclick="closeModal('redirectModal');showToast('正在跳转到业务助手 · 场地预约模块…')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        前往业务助手预约
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== PC 学生端公共脚本（侧边栏渲染、Toast、Modal） ======
+
+const STU_NAV = [
+  {id:'home',name:'首页',href:'home.html',icon:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'},
+  {id:'volunteer-apply',name:'辅学义工申请',href:'volunteer-apply.html',icon:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>'},
+  {id:'courses',name:'知新选课',href:'courses.html',icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'},
+  {id:'qa',name:'即问即答',href:'qa.html',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+  {id:'library',name:'宝藏资料库',href:'library.html',icon:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'},
+  {id:'venue',name:'场地预约',href:'venue-book.html',icon:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'},
+  {id:'profile',name:'个人中心',href:'profile.html',icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'}
+];
+
+function renderStuSidebar(activeId){
+  const sb=document.querySelector('.s-sidebar');
+  if(!sb)return;
+  const navHTML=STU_NAV.map(it=>`
+    <a class="s-nav-item ${it.id===activeId?'active':''}" href="${it.href}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${it.icon}</svg>
+      ${it.name}
+      ${it.badge?`<span class="badge">${it.badge}</span>`:''}
+    </a>
+  `).join('');
+  sb.innerHTML=`
+    <div class="brand-stu">
+      <div class="logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 6v6c0 5 4 9 9 10 5-1 9-5 9-10V6l-9-4Z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <div>
+        <strong>学风建设系统</strong>
+        <span>学生端 v2.0</span>
+      </div>
+    </div>
+    <div class="user-stu">
+      <div class="row">
+        <div class="ava">王</div>
+        <div>
+          <strong>王诗韵 同学</strong>
+          <p>外国语 / 英语 2023</p>
+        </div>
+      </div>
+      <div class="stars">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+        <svg viewBox="0 0 24 24" fill="rgba(255,255,255,.3)"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+        <span style="margin-left:4px;">182h / 200h</span>
+      </div>
+      <div class="progress"><div class="fill" style="width:91%;"></div></div>
+    </div>
+    <nav class="s-nav">${navHTML}</nav></div>
+  `;
+}
+
+function renderStuTopbar(placeholder='搜索课程、问答、资料...'){
+  const tb=document.querySelector('.s-topbar');
+  if(!tb)return;
+  tb.innerHTML=`
+    <div class="s-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input placeholder="${placeholder}" />
+      <span class="kbd">⌘K</span>
+    </div>
+    <button class="icon-btn" title="消息" onclick="showToast('暂无新消息')">
+      <span class="red-dot"></span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </button>
+    <button class="icon-btn" title="帮助" onclick="showToast('使用说明已打开')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </button>
+  `;
+}
+
+// Toast
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){
+    t=document.createElement('div');t.id='toast';t.className='toast';
+    t.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span></span>`;
+    document.body.appendChild(t);
+  }
+  t.querySelector('span').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+// Modal
+function openModal(id){const m=document.getElementById(id);if(m)m.classList.add('show');}
+function closeModal(id){const m=document.getElementById(id);if(m)m.classList.remove('show');}
+
+// Chips
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.chips').forEach(g=>{
+    g.querySelectorAll('.chip').forEach(c=>{
+      c.addEventListener('click',()=>{
+        g.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+        c.classList.add('active');
+      });
+    });
+  });
+  document.querySelectorAll('.modal-mask').forEach(m=>{
+    m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');});
+  });
+});
+
+</script>
+<script>
+  renderStuSidebar('venue');
+  renderStuTopbar('搜索场地、时间...');
+</script>
+</body>
+</html>

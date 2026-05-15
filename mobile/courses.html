@@ -1,0 +1,1655 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>知新选课 · 学风建设</title>
+<style>
+:root{
+  --primary:#3087CC;--primary-light:#E3F1F9;--primary-dark:#006DAD;--primary-50:#F4FAFE;
+  --text-1:#3C444F;--text-2:#696F7D;--text-3:#9096A2;--text-4:#ABB0BA;
+  --border:#E5E8EE;--border-light:#EFF1F5;
+  --bg:#F4F6FA;--bg-card:#FFFFFF;
+  --success:#1BB975;--success-bg:#E8FCF4;
+  --warning:#F29100;--warning-bg:#FFF5E5;
+  --danger:#DF2027;--danger-bg:#FCE8EA;
+  --shadow-sm:0 1px 3px rgba(15,32,55,.05);--shadow-md:0 6px 20px rgba(15,32,55,.06);--shadow-lg:0 12px 32px rgba(15,32,55,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:"OPPOSans","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;color:var(--text-1);background:#E8ECF2;-webkit-font-smoothing:antialiased;font-size:14px;}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+svg{display:block;flex-shrink:0;}
+::-webkit-scrollbar{display:none;}
+
+/* === Phone shell === */
+.phone-shell{width:390px;height:844px;background:#1F2733;border-radius:48px;padding:10px;box-shadow:0 40px 80px rgba(31,39,51,.32),0 8px 24px rgba(31,39,51,.16);position:relative;}
+.phone-shell::before{content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);width:120px;height:32px;background:#1F2733;border-radius:0 0 22px 22px;z-index:5;}
+.phone-shell::after{content:"";position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:130px;height:5px;background:#fff;border-radius:3px;z-index:5;}
+.screen{width:100%;height:100%;background:var(--bg);border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column;}
+
+/* === Status Bar === */
+.status-bar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 28px 0 32px;font-size:14px;font-weight:600;background:transparent;color:var(--text-1);flex-shrink:0;}
+.status-bar.dark{color:#fff;}
+.status-bar .right{display:flex;gap:6px;align-items:center;}
+
+/* === App container === */
+.app{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.pages{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative;padding-bottom:90px;}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.page{animation:slideIn .3s ease;}
+
+/* === Bottom Tab Bar === */
+.tabbar{position:absolute;bottom:0;left:0;right:0;height:74px;background:rgba(255,255,255,.94);border-top:1px solid var(--border-light);display:flex;align-items:flex-start;justify-content:space-around;padding:8px 0 18px;backdrop-filter:blur(20px);z-index:10;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text-3);font-size:10px;padding:4px 0;transition:all .15s;text-decoration:none;}
+.tab.active{color:var(--primary);}
+.tab svg{width:22px;height:22px;}
+
+/* === Toast === */
+.toast{position:fixed;left:50%;top:60px;transform:translate(-50%,-20px);background:#1F2733;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:all .25s;z-index:200;box-shadow:var(--shadow-lg);}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+
+/* === Page header === */
+.page-header{background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;padding:12px 16px 56px;position:relative;overflow:hidden;flex-shrink:0;}
+.page-header::before{content:"";position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);right:-60px;top:-80px;}
+.page-header .ph-nav{display:flex;align-items:center;justify-content:space-between;}
+.page-header h2{font-size:18px;font-weight:700;margin-top:8px;position:relative;}
+.page-header p{font-size:11px;opacity:.85;margin-top:3px;position:relative;}
+
+/* === Seg tabs === */
+.seg-wrap{margin:-32px 12px 0;position:relative;z-index:2;}
+.seg{background:#fff;border-radius:14px;padding:4px;display:flex;box-shadow:0 4px 16px rgba(15,32,55,.08);}
+.seg-btn{flex:1;padding:9px 4px;font-size:12px;font-weight:500;border-radius:10px;color:var(--text-3);transition:all .2s;text-align:center;position:relative;}
+.seg-btn.active{background:var(--primary);color:#fff;box-shadow:0 4px 10px rgba(48,135,204,.3);}
+.seg-btn .seg-cnt{display:inline-block;background:rgba(255,255,255,.3);color:#fff;font-size:9px;padding:1px 5px;border-radius:8px;margin-left:3px;font-weight:600;}
+.seg-btn:not(.active) .seg-cnt{background:var(--danger);color:#fff;}
+.tab-body{margin-top:14px;padding:0 12px;}
+
+/* === Enrolled bar === */
+.enrolled-bar{background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+.enrolled-bar .eb-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.enrolled-bar .eb-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;color:var(--success);}
+.enrolled-bar .eb-link{font-size:11px;color:var(--primary);}
+.enrolled-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px dashed var(--border-light);}
+.enrolled-item .ei-info{flex:1;min-width:0;}
+.enrolled-item .ei-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.enrolled-item .ei-meta{font-size:10px;color:var(--text-3);margin-top:2px;}
+.enrolled-item .cancel-btn{flex-shrink:0;font-size:11px;color:var(--danger);background:var(--danger-bg);padding:4px 10px;border-radius:6px;border:none;}
+
+/* === Filter pills === */
+.filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;}
+.filter-row::-webkit-scrollbar{display:none;}
+.fpill{flex-shrink:0;padding:6px 12px;border-radius:999px;background:#fff;border:1px solid var(--border-light);font-size:11px;color:var(--text-2);transition:all .15s;}
+.fpill.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+
+/* === Course card === */
+.course-card-m{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow-sm);transition:all .15s;}
+.course-card-m:active{transform:scale(.99);}
+.course-card-m .cc-top{display:flex;gap:10px;}
+.course-card-m .cc-ic{width:44px;height:44px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;}
+.cc-math{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.cc-eng{background:linear-gradient(135deg,#F29100,#FFD68F);}
+.cc-cs{background:linear-gradient(135deg,#0EA5E9,#7DD3FC);}
+.cc-phy{background:linear-gradient(135deg,#7C5BC1,#B59CE5);}
+.cc-chem{background:linear-gradient(135deg,#1BB975,#A7F3D0);}
+.cc-other{background:linear-gradient(135deg,#EF4444,#FCA5A5);}
+.course-card-m .cc-text{flex:1;min-width:0;}
+.course-card-m .cc-name{font-size:14px;font-weight:600;line-height:1.4;}
+.course-card-m .cc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}
+.cc-tag{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500;}
+.ct-base{background:var(--primary-light);color:var(--primary);}
+.ct-qa{background:#E8FCF4;color:var(--success);}
+.ct-salon{background:#FFF5E5;color:var(--warning);}
+.ct-hobby{background:#F3E8FF;color:#7C5BC1);}
+.ct-school{background:#F1F2F3;color:var(--text-3);}
+.source-tag-m{font-size:10px;padding:2px 7px;border-radius:4px;background:#F1F4F8;color:var(--text-3);}
+.course-card-m .cc-meta{margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-3);}
+.course-card-m .cc-meta span{display:inline-flex;align-items:center;gap:3px;}
+.course-card-m .cc-footer{margin-top:10px;display:flex;align-items:center;justify-content:space-between;}
+.cap-info{font-size:11px;color:var(--text-3);}
+.cap-info strong{color:var(--text-1);}
+.cap-full strong{color:var(--danger);}
+.cc-acts{display:flex;gap:6px;}
+.btn-m{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s;}
+.btn-m:active{transform:scale(.97);}
+.btn-m.pri{background:var(--primary);color:#fff;}
+.btn-m.ghost{background:#F4F6FA;color:var(--text-2);border:1px solid var(--border);}
+.btn-m.danger{background:var(--danger-bg);color:var(--danger);}
+.btn-m.success{background:var(--success-bg);color:var(--success);}
+.enrolled-pill-m{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:5px 10px;border-radius:6px;background:var(--success-bg);color:var(--success);font-weight:600;}
+
+/* === Self request cards === */
+.req-card-m{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+.req-card-m .rch{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.req-card-m .rc-title{font-size:14px;font-weight:600;flex:1;min-width:0;margin-right:8px;}
+.st-badge-m{display:inline-flex;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:600;white-space:nowrap;flex-shrink:0;border:1px solid transparent;}
+.st-suc{background:var(--success-bg);color:var(--success);border-color:var(--success-bg);}
+.st-warn{background:var(--warning-bg);color:var(--warning);border-color:var(--warning-bg);}
+.st-danger{background:var(--danger-bg);color:var(--danger);border-color:var(--danger-bg);}
+.st-grey{background:#F1F2F3;color:var(--text-3);}
+.req-card-m .rc-info{font-size:11px;color:var(--text-3);display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+.req-card-m .rc-acts{display:flex;gap:6px;border-top:1px solid var(--border-light);padding-top:10px;}
+
+/* === Step flow (mobile) === */
+.step-flow-m{display:flex;align-items:flex-start;margin:8px 0;}
+.step-node-m{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;}
+.step-node-m:not(:last-child)::after{content:"";position:absolute;top:9px;left:calc(50% + 10px);right:calc(-50% + 10px);height:2px;background:var(--border);}
+.step-node-m.done::after,.step-node-m.active::after{background:var(--success);}
+.step-dot-m{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;}
+.step-node-m.done .step-dot-m{border-color:var(--success);background:var(--success);}
+.step-node-m.active .step-dot-m{border-color:var(--primary);background:var(--primary);}
+.step-node-m .step-lbl-m{font-size:9px;color:var(--text-4);text-align:center;white-space:nowrap;}
+.step-node-m.done .step-lbl-m{color:var(--success);}
+.step-node-m.active .step-lbl-m{color:var(--primary);font-weight:600;}
+
+/* === Apply cards (Tab 3) === */
+.apply-card-m{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+.apply-card-m .ac-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
+.apply-card-m .ac-name{font-size:14px;font-weight:600;flex:1;min-width:0;margin-right:8px;line-height:1.4;}
+.apply-status-m{font-size:10px;padding:3px 8px;border-radius:5px;font-weight:600;white-space:nowrap;flex-shrink:0;}
+.as-pending{background:var(--warning-bg);color:var(--warning);}
+.as-pass{background:var(--success-bg);color:var(--success);}
+.as-reject{background:var(--danger-bg);color:var(--danger);}
+.as-end{background:#F1F2F3;color:var(--text-3);}
+.apply-card-m .ac-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+.apply-card-m .ac-info{font-size:11px;color:var(--text-3);display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+.apply-card-m .ac-acts{display:flex;gap:6px;border-top:1px solid var(--border-light);padding-top:10px;}
+
+/* === Vol banner === */
+.vol-banner-m{background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;border-radius:14px;padding:14px 16px;margin-bottom:12px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;}
+.vol-banner-m::before{content:"";position:absolute;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);right:-30px;top:-50px;}
+.vol-banner-m .vb-info{position:relative;flex:1;min-width:0;margin-right:10px;}
+.vol-banner-m .vb-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.vol-banner-m .vb-badge{background:rgba(255,255,255,.2);padding:2px 8px;border-radius:10px;font-size:10px;}
+.vol-banner-m .vb-desc{font-size:10px;opacity:.85;margin-top:4px;line-height:1.5;}
+.vol-banner-m .vb-btn{flex-shrink:0;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.3);padding:7px 12px;border-radius:8px;font-size:11px;font-weight:600;white-space:nowrap;position:relative;}
+
+/* === Section heading === */
+.m-sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.m-sec-h h4{font-size:14px;font-weight:600;}
+.m-sec-h span{font-size:11px;color:var(--text-3);}
+
+/* === Empty state === */
+.m-empty{text-align:center;padding:40px 20px;color:var(--text-3);}
+.m-empty .ei{width:52px;height:52px;border-radius:14px;background:var(--bg);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+.m-empty p{font-size:13px;}
+
+/* === Slide-in panel (full screen) === */
+.slide-panel{position:absolute;inset:0;background:var(--bg);border-radius:38px;overflow:hidden;display:flex;flex-direction:column;z-index:60;transform:translateX(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);}
+.slide-panel.show{transform:translateX(0);}
+.panel-nav{height:48px;background:#fff;border-bottom:1px solid var(--border-light);display:flex;align-items:center;padding:0 4px;flex-shrink:0;}
+.panel-nav .back{width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--text-1);}
+.panel-nav .pn-title{flex:1;text-align:center;font-size:16px;font-weight:600;}
+.panel-nav .pn-right{width:40px;}
+.panel-body{flex:1;overflow-y:auto;padding:14px 16px 40px;}
+
+/* === Course detail panel === */
+.cd-banner{background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;border-radius:14px;padding:16px;margin-bottom:14px;position:relative;overflow:hidden;}
+.cd-banner::before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 60%);right:-30px;top:-50px;}
+.cd-banner .cbd-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;position:relative;}
+.cbd-tag{font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,.2);}
+.cd-banner h2{font-size:16px;font-weight:700;line-height:1.4;position:relative;}
+.cd-banner .cbd-meta{font-size:11px;opacity:.85;margin-top:5px;position:relative;}
+
+/* detail tab bar */
+.detail-tabs{display:flex;background:#fff;border-radius:12px;padding:3px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
+.detail-tab{flex:1;text-align:center;padding:8px 0;font-size:12px;border-radius:10px;color:var(--text-3);transition:all .2s;font-weight:500;}
+.detail-tab.active{background:var(--primary);color:#fff;font-weight:700;}
+
+/* info block */
+.info-block{background:#fff;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+.info-block h5{font-size:12px;font-weight:600;color:var(--text-3);margin-bottom:10px;}
+.info-row-m{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-light);font-size:13px;}
+.info-row-m:last-child{border-bottom:none;}
+.info-row-m span:first-child{color:var(--text-3);font-size:12px;}
+.info-row-m span:last-child{font-weight:500;text-align:right;max-width:60%;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;}
+.stat-card{background:#fff;border-radius:10px;padding:10px 6px;text-align:center;box-shadow:var(--shadow-sm);}
+.stat-card .sv{font-size:18px;font-weight:700;}
+.stat-card .sl{font-size:10px;color:var(--text-3);margin-top:2px;}
+
+/* timeline */
+.tl-item{display:flex;gap:12px;padding-bottom:14px;}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:4px;}
+.tl-content h6{font-size:13px;font-weight:600;}
+.tl-content .tl-by{font-size:11px;color:var(--text-3);margin-top:2px;}
+
+/* enroll student list */
+.stu-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-light);}
+.stu-item:last-child{border-bottom:none;}
+.stu-ava{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#9CBFDA,#3087CC);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;}
+.stu-info{flex:1;min-width:0;}
+.stu-info .sn{font-size:13px;font-weight:500;}
+.stu-info .sm{font-size:10px;color:var(--text-3);margin-top:1px;}
+
+/* === Bottom Sheet === */
+.sheet-overlay{position:absolute;inset:0;background:rgba(15,32,55,.45);backdrop-filter:blur(3px);z-index:70;opacity:0;pointer-events:none;transition:opacity .3s;border-radius:38px;}
+.sheet-overlay.show{opacity:1;pointer-events:auto;}
+.bottom-sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:22px 22px 0 0;z-index:71;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);display:flex;flex-direction:column;max-height:88%;}
+.bottom-sheet.show{transform:translateY(0);}
+.sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;flex-shrink:0;}
+.sheet-head{padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.sheet-head h4{font-size:16px;font-weight:700;}
+.sheet-head .sh-close{width:28px;height:28px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;}
+.sheet-body{flex:1;overflow-y:auto;padding:0 16px 20px;}
+
+/* === Form inside sheet === */
+.f-group{margin-bottom:14px;}
+.f-group label{display:block;font-size:12px;font-weight:500;color:var(--text-2);margin-bottom:6px;}
+.f-group label .req{color:var(--danger);}
+.f-group input,.f-group select,.f-group textarea{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);font-size:13px;background:#fff;outline:none;font-family:inherit;color:var(--text-1);transition:border-color .15s;}
+.f-group input:focus,.f-group select:focus,.f-group textarea:focus{border-color:var(--primary);}
+.f-group textarea{resize:none;min-height:80px;}
+.f-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sheet-footer{padding:12px 16px 20px;border-top:1px solid var(--border-light);display:flex;gap:8px;flex-shrink:0;}
+.sheet-btn{flex:1;height:44px;border-radius:12px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;font-family:inherit;transition:all .15s;}
+.sheet-btn:active{transform:scale(.98);}
+.sheet-btn.pri{background:var(--primary);color:#fff;}
+.sheet-btn.ghost{background:#F4F6FA;color:var(--text-2);border:1px solid var(--border);}
+
+/* === Notice sheet (enrollment) === */
+.notice-item-m{display:flex;gap:10px;padding:9px 12px;border-radius:10px;border:1px solid var(--border-light);margin-bottom:8px;}
+.notice-num-m{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.notice-item-m h6{font-size:12px;font-weight:600;}
+.notice-item-m p{font-size:11px;color:var(--text-3);margin-top:2px;line-height:1.5;}
+.confirm-enroll-btn{width:100%;height:46px;border-radius:12px;background:var(--primary);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:inherit;margin-top:10px;transition:all .15s;}
+.confirm-enroll-btn:disabled{opacity:.45;cursor:not-allowed;}
+.confirm-enroll-btn:not(:disabled):active{transform:scale(.98);}
+
+/* === Self req detail sheet === */
+.detail-field{padding:10px 0;border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:flex-start;font-size:13px;gap:10px;}
+.detail-field:last-child{border-bottom:none;}
+.detail-field .df-label{color:var(--text-3);font-size:12px;white-space:nowrap;flex-shrink:0;}
+.detail-field .df-val{font-weight:500;text-align:right;}
+
+</style>
+</head>
+<body>
+<div class="phone-shell">
+  <div class="screen">
+    <div class="status-bar"></div>
+    <div class="app">
+      <div class="pages">
+        <div class="page">
+
+          <!-- Page Header -->
+          <div class="page-header">
+            <div class="ph-nav">
+              <h2 style="font-size:17px;font-weight:700;position:relative;">知新选课</h2>
+              <div style="display:flex;gap:8px;position:relative;">
+                <button onclick="showToast('搜索功能')" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;display:flex;align-items:center;justify-content:center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </button>
+              </div>
+            </div>
+            <p style="font-size:11px;opacity:.85;margin-top:4px;position:relative;">预约报名 · 个人报课 · 义工报课</p>
+          </div>
+
+          <!-- Seg tab bar -->
+          <div class="seg-wrap">
+            <div class="seg">
+              <button class="seg-btn active" id="segEnroll" onclick="switchMTab('enroll')">预约报名<span class="seg-cnt" id="scEnroll">7</span></button>
+              <button class="seg-btn" id="segSelf" onclick="switchMTab('self')">个人报课<span class="seg-cnt" id="scSelf">2</span></button>
+              <button class="seg-btn" id="segApply" onclick="switchMTab('apply')">义工报课<span class="seg-cnt" id="scApply">2</span></button>
+            </div>
+          </div>
+
+          <!-- ===== Tab 1: 预约报名课程 ===== -->
+          <div class="tab-body" id="mTab-enroll">
+
+            <!-- 已报名 -->
+            <div class="enrolled-bar">
+              <div class="eb-head">
+                <div class="eb-title">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  我已报名 <span id="mEnrollCnt" style="font-weight:400;font-size:11px;color:var(--text-3);">（2 门）</span>
+                </div>
+                <button class="eb-link" onclick="openHistorySheet()">查看历史及签到</button>
+              </div>
+              <div id="mEnrolledList"></div>
+            </div>
+
+            <!-- 筛选 pills -->
+            <div class="filter-row" id="filterRow">
+              <button class="fpill active" onclick="filterCourse(this,'')">全部</button>
+              <button class="fpill" onclick="filterCourse(this,'答疑坊')">答疑坊</button>
+              <button class="fpill" onclick="filterCourse(this,'荟知坊')">荟知坊</button>
+              <button class="fpill" onclick="filterCourse(this,'志趣坊')">志趣坊</button>
+            </div>
+
+            <div id="mCourseList"></div>
+          </div>
+
+          <!-- ===== Tab 2: 自主报课 ===== -->
+          <div class="tab-body" id="mTab-self" style="display:none;">
+            <div class="m-sec-h" style="margin-bottom:8px;">
+              <div>
+                <h4>个人报课需求</h4>
+                <p style="font-size:11px;color:var(--text-3);margin-top:2px;">提交辅导需求，由义工组长分配</p>
+              </div>
+              <button class="btn-m pri" onclick="openNewSelfReqSheet()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                提交需求
+              </button>
+            </div>
+            <div id="mSelfReqList"></div>
+          </div>
+
+          <!-- ===== Tab 3: 课程申报 ===== -->
+          <div class="tab-body" id="mTab-apply" style="display:none;">
+            <div class="vol-banner-m">
+              <div class="vb-info">
+                <div class="vb-title">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 9 9 10 5-1 9-5 9-10V6l-9-4Z"/><path d="m9 12 2 2 4-4"/></svg>
+                  义工身份 · 义工报课
+                  <span class="vb-badge">三星义工 · 182h</span>
+                </div>
+                <div class="vb-desc">作为认证义工，可申报开设新课程，审核通过后发布供同学报名。</div>
+              </div>
+              <button class="vb-btn" onclick="openNewApplySheet()">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                申报
+              </button>
+            </div>
+            <div class="m-sec-h">
+              <h4>我的课程记录</h4>
+              <span>需审核后上线</span>
+            </div>
+            <div class="filter-row" id="applyFilterRow" style="margin-bottom:10px;">
+              <button class="fpill active" onclick="filterApply(this,'')">全部</button>
+              <button class="fpill" onclick="filterApply(this,'义工申请')">义工申请</button>
+              <button class="fpill" onclick="filterApply(this,'学校安排')">学校安排</button>
+            </div>
+            <div id="mApplyList"></div>
+          </div>
+
+          <div style="height:20px;"></div>
+        </div>
+      </div>
+      <nav class="tabbar"></nav>
+    </div>
+
+    <!-- =============================== -->
+    <!-- 课程详情 slide panel -->
+    <!-- =============================== -->
+    <div class="slide-panel" id="courseDetailPanel">
+      <div class="panel-nav">
+        <button class="back" onclick="closePanel('courseDetailPanel')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="pn-title">课程详情</div>
+        <div class="pn-right"></div>
+      </div>
+      <div class="panel-body" id="courseDetailBody"></div>
+    </div>
+
+    <!-- =============================== -->
+    <!-- 自主报课 详情 slide panel -->
+    <!-- =============================== -->
+    <div class="slide-panel" id="selfReqDetailPanel">
+      <div class="panel-nav">
+        <button class="back" onclick="closePanel('selfReqDetailPanel')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="pn-title" id="srDetailTitle">需求详情</div>
+        <div class="pn-right"></div>
+      </div>
+      <div class="panel-body" id="srDetailBody"></div>
+    </div>
+
+    <!-- =============================== -->
+    <!-- 申报详情 slide panel -->
+    <!-- =============================== -->
+    <div class="slide-panel" id="applyDetailPanel">
+      <div class="panel-nav">
+        <button class="back" onclick="closePanel('applyDetailPanel')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="pn-title">课程详情</div>
+        <div class="pn-right"></div>
+      </div>
+      <div class="panel-body" id="applyDetailBody"></div>
+    </div>
+
+    <!-- ===== Bottom Sheets overlays ===== -->
+    <div class="sheet-overlay" id="shOverlay" onclick="closeTopSheet()"></div>
+
+    <!-- 报名须知 sheet -->
+    <div class="bottom-sheet" id="enrollNoticeSheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h4>📋 报名须知</h4>
+        <button class="sh-close" onclick="closeSheet('enrollNoticeSheet')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="sheet-body">
+        <div style="background:linear-gradient(135deg,#FFF8E1,#FFF3CC);border-radius:10px;padding:10px 12px;margin-bottom:12px;border:1px solid #FFE0B3;">
+          <p style="font-size:11px;color:#9A6500;line-height:1.7;">请仔细阅读以下须知，了解相关规定后方可确认报名。</p>
+        </div>
+        <div class="notice-item-m">
+          <div class="notice-num-m" style="background:var(--primary-light);color:var(--primary);">1</div>
+          <div><h6>请准时到场</h6><p>报名后请务必准时参加，于开课前 10 分钟抵达教室。</p></div>
+        </div>
+        <div class="notice-item-m">
+          <div class="notice-num-m" style="background:var(--primary-light);color:var(--primary);">2</div>
+          <div><h6>签到窗口有限制</h6><p>签到有效期：开课前 10 分钟至结束后 30 分钟，超时记缺席。</p></div>
+        </div>
+        <div class="notice-item-m" style="background:var(--warning-bg);border-color:#FFE0B3;">
+          <div class="notice-num-m" style="background:#FFE0B3;color:var(--warning);">3</div>
+          <div><h6>取消需提前 24 小时</h6><p>超时取消视为无故缺席，影响后续报名资格。</p></div>
+        </div>
+        <div class="notice-item-m" style="background:var(--danger-bg);border-color:#F6BCBE;">
+          <div class="notice-num-m" style="background:#F6BCBE;color:var(--danger);">4</div>
+          <div><h6>无故缺席影响资格</h6><p>累计 2 次无故缺席将暂停义工申请资格及星级积分评定。</p></div>
+        </div>
+        <button class="confirm-enroll-btn" id="confirmEnrollBtn" disabled onclick="confirmMEnroll()">已阅读，确认报名（3）</button>
+        <button onclick="closeSheet('enrollNoticeSheet')" style="width:100%;margin-top:8px;padding:10px;font-size:13px;color:var(--text-3);text-align:center;">取消</button>
+      </div>
+    </div>
+
+    <!-- 历史报名 sheet -->
+    <div class="bottom-sheet" id="historySheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h4>历史报名记录</h4>
+        <button class="sh-close" onclick="closeSheet('historySheet')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="sheet-body" id="historySheetBody"></div>
+    </div>
+
+    <!-- 提交自主报课 sheet -->
+    <div class="bottom-sheet" id="newSelfReqSheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h4>提交报课需求</h4>
+        <button class="sh-close" onclick="closeSheet('newSelfReqSheet')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="sheet-body">
+        <div class="f-row-2">
+          <div class="f-group"><label>课程名称 <span class="req">*</span></label><input id="nsr_name" placeholder="如：高数期末专题辅导" /></div>
+          <div class="f-group"><label>所属学科 <span class="req">*</span></label>
+            <select id="nsr_subject"><option value="">请选择</option><option>数学</option><option>英语</option><option>物理</option><option>化学</option><option>计算机</option><option>经济学</option><option>其他</option></select>
+          </div>
+        </div>
+        <div class="f-row-2">
+          <div class="f-group"><label>辅导形式 <span class="req">*</span></label>
+            <select id="nsr_type"><option value="">请选择辅导形式</option><option>1对1辅导</option><option>1对多辅导</option></select>
+          </div>
+          <div class="f-group"><label>偏好时间段 <span class="req">*</span></label>
+            <input id="nsr_time" placeholder="如：周末上午、工作日晚上" />
+          </div>
+        </div>
+        <div class="f-group"><label>上课次数 <span class="req">*</span></label>
+          <select id="nsr_freq"><option value="">请选择上课次数</option><option>一次性</option><option>长期</option></select>
+        </div>
+        <div class="f-group"><label>具体需求说明 <span class="req">*</span></label><textarea id="nsr_desc" placeholder="请描述您的学习困难和具体辅导需求..."></textarea></div>
+      </div>
+      <div class="sheet-footer">
+        <button class="sheet-btn ghost" onclick="closeSheet('newSelfReqSheet')">取消</button>
+        <button class="sheet-btn pri" onclick="submitNewSelfReq()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>
+          提交需求
+        </button>
+      </div>
+    </div>
+
+    <!-- 编辑自主报课 sheet -->
+    <div class="bottom-sheet" id="editSelfReqSheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h4>编辑报课需求</h4>
+        <button class="sh-close" onclick="closeSheet('editSelfReqSheet')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="sheet-body">
+        <input type="hidden" id="esr_id" />
+        <div class="f-row-2">
+          <div class="f-group"><label>课程名称 <span class="req">*</span></label><input id="esr_name" /></div>
+          <div class="f-group"><label>所属学科 <span class="req">*</span></label>
+            <select id="esr_subject"><option value="">请选择</option><option>数学</option><option>英语</option><option>物理</option><option>化学</option><option>计算机</option><option>经济学</option><option>其他</option></select>
+          </div>
+        </div>
+        <div class="f-row-2">
+          <div class="f-group"><label>辅导形式 <span class="req">*</span></label>
+            <select id="esr_type"><option value="">请选择辅导形式</option><option>1对1辅导</option><option>1对多辅导</option></select>
+          </div>
+          <div class="f-group"><label>偏好时间段 <span class="req">*</span></label>
+            <input id="esr_time" placeholder="如：周末上午、工作日晚上" />
+          </div>
+        </div>
+        <div class="f-group"><label>上课次数 <span class="req">*</span></label>
+          <select id="esr_freq"><option value="">请选择上课次数</option><option>一次性</option><option>长期</option></select>
+        </div>
+        <div class="f-group"><label>具体需求说明 <span class="req">*</span></label><textarea id="esr_desc"></textarea></div>
+      </div>
+      <div class="sheet-footer">
+        <button class="sheet-btn ghost" onclick="closeSheet('editSelfReqSheet')">取消</button>
+        <button class="sheet-btn pri" onclick="submitEditSelfReq()">保存修改</button>
+      </div>
+    </div>
+
+    <!-- 申报新课程 sheet -->
+    <div class="bottom-sheet" id="newApplySheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h4>申报新课程</h4>
+        <button class="sh-close" onclick="closeSheet('newApplySheet')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="sheet-body">
+        <div class="f-group"><label>课程名称 <span class="req">*</span></label><input id="na_name" placeholder="如：高等数学A · 微分方程专题" /></div>
+        <div class="f-row-2">
+          <div class="f-group"><label>主分类 <span class="req">*</span></label>
+            <select id="na_type"><option value="">请选择</option><option>答疑坊</option><option>荟知坊</option><option>志趣坊</option></select>
+          </div>
+          <div class="f-group"><label>所属科目 <span class="req">*</span></label>
+            <select id="na_subject"><option value="">请选择</option><option>数学</option><option>英语</option><option>物理</option><option>化学</option><option>计算机</option><option>力学</option><option>其他</option></select>
+          </div>
+        </div>
+        <div class="f-group"><label>关联活动课程</label>
+          <select id="na_activity"><option value="">不关联（可选）</option></select>
+        </div>
+        <div class="f-row-2">
+          <div class="f-group"><label>预计授课时间 <span class="req">*</span></label><input id="na_time" type="datetime-local" /></div>
+          <div class="f-group"><label>招生名额 <span class="req">*</span></label><input id="na_cap" type="number" placeholder="5-100" min="5" max="100" /></div>
+        </div>
+        <div class="f-group">
+          <label>上课地点 <span class="req">*</span></label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input id="na_loc" placeholder="请先预约场地" readonly style="flex:1;background:var(--bg);color:var(--text-2);" />
+            <button type="button" class="sheet-btn pri" style="flex:0 0 auto;width:auto;height:38px;padding:0 14px;font-size:12px;border-radius:10px;" onclick="goBookVenueM('na')">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;margin-right:2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>去预约
+            </button>
+          </div>
+          <div id="na_venueInfo" style="display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--primary-light);border:1px solid rgba(48,135,204,.12);font-size:12px;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span id="na_venueName" style="font-weight:600;"></span>
+              <span style="color:var(--text-3);">|</span>
+              <span>最大容纳 <strong id="na_venueCap" style="color:var(--primary);"></strong> 人</span>
+              <a href="javascript:void(0)" onclick="clearVenueM('na')" style="margin-left:auto;color:var(--text-3);font-size:11px;">重新预约</a>
+            </div>
+          </div>
+        </div>
+        <div class="f-group"><label>课程内容简介 <span class="req">*</span></label><textarea id="na_desc" placeholder="请描述课程主要内容和学习目标..."></textarea></div>
+      </div>
+      <div class="sheet-footer">
+        <button class="sheet-btn ghost" onclick="closeSheet('newApplySheet')">取消</button>
+        <button class="sheet-btn pri" onclick="submitNewApply()">提交申报</button>
+      </div>
+    </div>
+
+    <!-- 编辑课程申报 sheet -->
+    <div class="bottom-sheet" id="editApplySheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h4>编辑义工报课</h4>
+        <button class="sh-close" onclick="closeSheet('editApplySheet')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="sheet-body">
+        <input type="hidden" id="ea_id" />
+        <div class="f-group"><label>课程名称 <span class="req">*</span></label><input id="ea_name" /></div>
+        <div class="f-row-2">
+          <div class="f-group"><label>主分类 <span class="req">*</span></label>
+            <select id="ea_type"><option value="">请选择</option><option>答疑坊</option><option>荟知坊</option><option>志趣坊</option></select>
+          </div>
+          <div class="f-group"><label>所属科目 <span class="req">*</span></label>
+            <select id="ea_subject"><option value="">请选择</option><option>数学</option><option>英语</option><option>物理</option><option>化学</option><option>计算机</option><option>综合</option><option>其他</option></select>
+          </div>
+        </div>
+        <div class="f-group"><label>关联活动课程</label>
+          <select id="ea_activity"><option value="">不关联（可选）</option></select>
+        </div>
+        <div class="f-row-2">
+          <div class="f-group"><label>预计授课时间 <span class="req">*</span></label><input id="ea_time" type="datetime-local" /></div>
+          <div class="f-group"><label>招生名额 <span class="req">*</span></label><input id="ea_cap" type="number" placeholder="5-100" min="5" max="100" /></div>
+        </div>
+        <div class="f-group">
+          <label>上课地点 <span class="req">*</span></label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input id="ea_loc" placeholder="请先预约场地" readonly style="flex:1;background:var(--bg);color:var(--text-2);" />
+            <button type="button" class="sheet-btn pri" style="flex:0 0 auto;width:auto;height:38px;padding:0 14px;font-size:12px;border-radius:10px;" onclick="goBookVenueM('ea')">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;margin-right:2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>去预约
+            </button>
+          </div>
+          <div id="ea_venueInfo" style="display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--primary-light);border:1px solid rgba(48,135,204,.12);font-size:12px;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span id="ea_venueName" style="font-weight:600;"></span>
+              <span style="color:var(--text-3);">|</span>
+              <span>最大容纳 <strong id="ea_venueCap" style="color:var(--primary);"></strong> 人</span>
+              <a href="javascript:void(0)" onclick="clearVenueM('ea')" style="margin-left:auto;color:var(--text-3);font-size:11px;">重新预约</a>
+            </div>
+          </div>
+        </div>
+        <div class="f-group"><label>课程内容简介 <span class="req">*</span></label><textarea id="ea_desc"></textarea></div>
+      </div>
+      <div class="sheet-footer">
+        <button class="sheet-btn ghost" onclick="closeSheet('editApplySheet')">取消</button>
+        <button class="sheet-btn pri" onclick="submitEditApply()">保存修改</button>
+      </div>
+    </div>
+
+    <!-- 申诉 sheet -->
+    <div class="bottom-sheet" id="appealSheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h4>发起申诉</h4>
+        <button class="sh-close" onclick="closeSheet('appealSheet')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="sheet-body">
+        <div style="background:linear-gradient(135deg,#FCE8EA,#FFF0F0);border-radius:10px;padding:10px 12px;margin-bottom:14px;border:1px solid #F6BCBE;">
+          <p style="font-size:11px;color:#7F1D1D;line-height:1.7;"><strong>申诉须知：</strong>审核结果出具后 <strong>15 天内</strong>有效 · 同一事项最多 <strong>2 次</strong> · 恶意申诉将影响星级评定</p>
+        </div>
+        <input type="hidden" id="mAppealCourseId" />
+        <div class="f-group">
+          <label>关联课程</label>
+          <input id="mAppealCourseName" readonly style="background:var(--bg);color:var(--text-2);" />
+        </div>
+        <div class="f-group">
+          <label>申诉类型 <span class="req">*</span></label>
+          <select id="mAppealType">
+            <option value="audit">课程审核异议</option>
+            <option value="point">积分记录异议</option>
+            <option value="enroll">报名记录异议</option>
+            <option value="other">其他问题</option>
+          </select>
+        </div>
+        <div class="f-group">
+          <label>申诉理由 <span class="req">*</span></label>
+          <textarea id="mAppealReason" placeholder="请客观、详细描述异议事项与事实经过…"></textarea>
+        </div>
+        <div class="f-group">
+          <label>期望处理结果 <span class="req">*</span></label>
+          <textarea id="mAppealExpect" placeholder="例如：希望重新审核课程申报或补录相应积分…"></textarea>
+        </div>
+      </div>
+      <div class="sheet-footer">
+        <button class="sheet-btn ghost" onclick="showToast('已保存为草稿')">保存草稿</button>
+        <button class="sheet-btn pri" onclick="submitMobileAppeal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          提交申诉
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /screen -->
+</div><!-- /phone-shell -->
+
+<script>
+// ===== 公共工具 =====
+const MOBILE_TABS=[
+  {id:'home',name:'首页',href:'home.html',icon:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'},
+  {id:'courses',name:'选课',href:'courses.html',icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'},
+  {id:'qa',name:'问答',href:'qa.html',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+  {id:'library',name:'资料库',href:'library.html',icon:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'},
+  {id:'profile',name:'我的',href:'profile.html',icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'}
+];
+function renderTabbar(activeId){
+  const tb=document.querySelector('.tabbar');if(!tb)return;
+  tb.innerHTML=MOBILE_TABS.map(t=>{
+    return`<a class="tab ${t.id===activeId?'active':''}" href="${t.href}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg>${t.name}</a>`;
+  }).join('');
+}
+function renderStatusBar(dark=false){
+  const sb=document.querySelector('.status-bar');if(!sb)return;
+  sb.classList.toggle('dark',dark);
+  sb.innerHTML=`<span>9:41</span><span class="right">
+    <svg width="16" height="10" viewBox="0 0 17 11" fill="currentColor"><rect y="6" width="3" height="5" rx=".5"/><rect x="4" y="4" width="3" height="7" rx=".5"/><rect x="8" y="2" width="3" height="9" rx=".5"/><rect x="12" width="3" height="11" rx=".5"/></svg>
+    <svg width="14" height="10" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 9.5C5.6 9.5 3.4 8.5 1.7 7L8 1l6.3 6c-1.7 1.5-3.9 2.5-6.3 2.5z" fill="currentColor"/></svg>
+    <svg width="22" height="10" viewBox="0 0 24 11" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="1" y="1" width="20" height="9" rx="2" stroke-opacity=".5"/><rect x="22" y="4" width="1.5" height="3" rx=".5" fill="currentColor" stroke="none"/><rect x="2.5" y="2.5" width="14" height="6" rx="1" fill="currentColor"/></svg>
+  </span>`;
+}
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t);}
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+// ===== Tab switch =====
+function switchMTab(tab){
+  ['enroll','self','apply'].forEach(k=>{
+    document.getElementById('mTab-'+k).style.display=k===tab?'block':'none';
+    document.getElementById('seg'+k.charAt(0).toUpperCase()+k.slice(1)).classList.toggle('active',k===tab);
+  });
+}
+
+// ===== Slide panel =====
+function openPanel(id){document.getElementById(id).classList.add('show');}
+function closePanel(id){document.getElementById(id).classList.remove('show');}
+
+// ===== Bottom sheet =====
+let _activeSheet=null;
+function openSheet(id){
+  if(_activeSheet&&_activeSheet!==id)closeSheet(_activeSheet);
+  document.getElementById('shOverlay').classList.add('show');
+  document.getElementById(id).classList.add('show');
+  _activeSheet=id;
+}
+function closeSheet(id){
+  document.getElementById('shOverlay').classList.remove('show');
+  document.getElementById(id).classList.remove('show');
+  if(_activeSheet===id)_activeSheet=null;
+}
+function closeTopSheet(){if(_activeSheet)closeSheet(_activeSheet);}
+
+// ===== DATA =====
+const ENROLL_COURSES=[
+  {id:1,name:'高等数学A · 微分方程专题',type:'答疑坊',subject:'数学',isSchool:false,teacher:'陈思远',teacherInfo:'三星义工 · 数学 2021',volGroup:'知新馆数学辅导组',time:'2026-04-30（周四）10:00-12:00',loc:'知新馆 301',signed:24,cap:30,myEnroll:true,myEnrollTime:'04-25 09:12',signedCount:0,desc:'本课程系统讲解一阶/二阶常微分方程的求解方法，配合期末真题精讲。',auditLog:[{time:'2026-04-28',op:'审核通过',user:'管理员',desc:'内容符合规范'}],enrollStudents:[{name:'王诗韵',sid:'2023141101',dept:'外国语学院',major:'英语',enrollTime:'04-25 09:12',signed:false},{name:'李明远',sid:'2023020234',dept:'数学学院',major:'数学',enrollTime:'04-25 10:32',signed:false}]},
+  {id:2,name:'大学英语六级真题精讲',type:'基础辅学',subject:'英语',isSchool:true,teacher:'外院教学中心',teacherInfo:'官方发布',volGroup:'知新馆英语辅导组',time:'2026-04-29（周三）14:00-16:00',loc:'知新馆 205',signed:30,cap:30,myEnroll:true,myEnrollTime:'04-22 11:20',signedCount:28,desc:'针对六级考试系统讲解历年真题，涵盖听力、阅读、翻译和写作。',auditLog:[],enrollStudents:[]},
+  {id:3,name:'Python 实战编程入门',type:'答疑坊',subject:'计算机',isSchool:false,teacher:'刘子轩',teacherInfo:'二星义工 · CS 2022',volGroup:'知新馆计算机辅导组',time:'2026-04-28（周二）16:30-18:30',loc:'知新馆 408',signed:30,cap:30,myEnroll:false,myEnrollTime:'',signedCount:25,desc:'从零开始学习Python编程，覆盖基础语法、数据结构、文件操作等。',auditLog:[{time:'2026-04-23',op:'审核通过',user:'管理员',desc:'内容符合要求'}],enrollStudents:[]},
+  {id:4,name:'摄影艺术 · 构图基础',type:'志趣坊',subject:'艺术',isSchool:true,teacher:'王老师',teacherInfo:'官方发布',volGroup:'知新馆综合辅导组',time:'2026-05-02（周六）19:00-21:00',loc:'知新馆 102',signed:18,cap:25,myEnroll:false,myEnrollTime:'',signedCount:10,desc:'探索摄影构图的基本法则，包括三分法、对称构图、引导线等技巧。',auditLog:[],enrollStudents:[]},
+  {id:5,name:'考研经验分享会',type:'荟知坊',subject:'综合',isSchool:true,teacher:'多位考研学长学姐',teacherInfo:'官方发布',volGroup:'知新馆综合辅导组',time:'2026-05-04（周一）19:00-21:00',loc:'知新馆 102',signed:0,cap:80,myEnroll:false,myEnrollTime:'',signedCount:0,desc:'邀请多位考研成功学长学姐分享备考经验，涵盖数学、英语、政治等。',auditLog:[],enrollStudents:[]},
+  {id:6,name:'线性代数行列式专题',type:'答疑坊',subject:'数学',isSchool:false,teacher:'张力',teacherInfo:'二星义工 · 数学 2022',volGroup:'知新馆数学辅导组',time:'2026-05-05（周二）10:00-12:00',loc:'知新馆 301',signed:0,cap:30,myEnroll:false,myEnrollTime:'',signedCount:0,desc:'专项讲解行列式的计算方法与性质，结合期末高频考点。',auditLog:[{time:'2026-05-02',op:'提交申报',user:'张力',desc:''}],enrollStudents:[]},
+  {id:7,name:'大学物理 · 电磁学专题',type:'基础辅学',subject:'物理',isSchool:false,teacher:'周泽宇',teacherInfo:'三星义工 · 物理 2021',volGroup:'知新馆物理辅导组',time:'2026-05-06（周三）14:00-16:00',loc:'知新馆 205',signed:12,cap:30,myEnroll:false,myEnrollTime:'',signedCount:8,desc:'系统梳理电磁学重点知识，包括静电场、稳恒磁场与电磁感应。',auditLog:[{time:'2026-04-30',op:'审核通过',user:'管理员',desc:''}],enrollStudents:[]},
+];
+
+const SELF_REQUESTS=[
+  {id:1,course:'高数期末 · 积分学专题辅导',subject:'数学',type:'1对1辅导',frequency:'长期',timePrefer:'周末下午',loc:'知新馆自习区',
+   need:'最近复习积分学，对二重积分、换序积分等题型掌握不好，希望有义工能重点讲解这部分内容。',
+   status:'辅导中',statusCls:'st-suc',
+   volunteer:'陈思远',volInfo:'三星义工 · 数学 2021',volGroup:'数学组',volStar:'三星级',
+   scheduledTime:'2026-05-01 14:00~16:00',remark:'已安排义工，辅导进行中',submitTime:'2026-04-20 10:30',
+   steps:[
+     {label:'提交需求',time:'04-20 10:30',done:true},
+     {label:'组长受理',time:'04-21 09:10',done:true},
+     {label:'分配义工',time:'04-21 11:30',done:true},
+     {label:'辅导进行中',time:'05-01~',done:true,active:true},
+     {label:'已完成',time:'',done:false},
+   ]},
+  {id:2,course:'英语六级写作专项提升',subject:'英语',type:'1对多辅导',frequency:'一次性',timePrefer:'工作日晚上',loc:'知新馆 205',
+   need:'六级写作分数总是提不上去，希望有义工教写作框架和高分表达，最好能有练习批改。',
+   status:'待受理',statusCls:'st-warn',
+   volunteer:'',volInfo:'',volGroup:'',volStar:'',scheduledTime:'',remark:'',submitTime:'2026-04-25 15:44',
+   steps:[
+     {label:'提交需求',time:'04-25 15:44',done:true,active:true},
+     {label:'组长受理',time:'',done:false},
+     {label:'分配义工',time:'',done:false},
+     {label:'辅导进行中',time:'',done:false},
+     {label:'已完成',time:'',done:false},
+   ]},
+];
+
+const MY_APPLICATIONS=[
+  {id:1,name:'有机化学反应机理',type:'答疑坊',subtype:'朋辈辅导',subject:'化学',source:'义工申请',points:0,applyTime:'2026-05-01 18:20',status:'已驳回',signedCount:5,time:'2026-05-06 14:00-16:00',loc:'知新馆 205',cap:30,
+   desc:'讲解有机化学常见反应机理，包括亲核取代、消除、加成、氧化还原等。',
+   auditLog:[{time:'2026-05-01',op:'提交申报',user:'本人',desc:''},{time:'2026-05-01',op:'进入审核队列',user:'系统自动',desc:''},{time:'2026-05-02',op:'审核驳回',user:'王老师',desc:'申报时间距上课时间不足72小时，请重新申报'}],
+   enrollStudents:[
+     {name:'林佳佳',sid:'2023141088',dept:'外国语学院',major:'日语',enrollTime:'05-01 15:02',signed:true},
+     {name:'陈思远',sid:'2022020011',dept:'数学学院',major:'数学',enrollTime:'05-01 16:25',signed:true},
+     {name:'徐晓丹',sid:'2023080044',dept:'化学化工学院',major:'化学',enrollTime:'05-02 09:10',signed:false},
+     {name:'黄泽宇',sid:'2023050122',dept:'计算机学院',major:'信息安全',enrollTime:'05-02 10:33',signed:false},
+     {name:'周静怡',sid:'2022141056',dept:'外国语学院',major:'英语',enrollTime:'05-02 11:17',signed:false},
+   ]},
+  {id:3,name:'Python 实战编程入门',type:'答疑坊',subtype:'朋辈辅导',subject:'计算机',source:'义工申请',points:30,applyTime:'2026-04-28 10:30',status:'已通过',signedCount:18,time:'2026-05-12 16:30-18:30',loc:'知新馆 408',cap:30,
+   desc:'从零开始学习Python编程，覆盖基础语法、数据结构、文件操作等内容，结合实战练习。',
+   auditLog:[{time:'2026-04-28',op:'提交申报',user:'本人',desc:''},{time:'2026-04-28',op:'进入审核队列',user:'系统自动',desc:''},{time:'2026-04-29',op:'审核通过',user:'王老师',desc:'内容充实，形式规范，准予开课'}],
+   enrollStudents:[
+     {name:'陈雨桐',sid:'2023141203',dept:'外国语学院',major:'英语',enrollTime:'04-29 09:10',signed:true},
+     {name:'吴佳旭',sid:'2022050078',dept:'计算机学院',major:'计算机科学',enrollTime:'04-29 10:22',signed:true},
+     {name:'赵芸芸',sid:'2023030095',dept:'物理学院',major:'物理',enrollTime:'04-29 11:35',signed:false},
+   ]},
+  {id:4,name:'高等数学期末冲刺',type:'基础辅学',subtype:'',subject:'数学',source:'学校安排',points:20,applyTime:'2026-05-01 09:00',status:'已通过',signedCount:3,time:'2026-05-20 10:00-12:00',loc:'知新馆 301',cap:50,
+   desc:'期末数学重点章节梳理，涵盖导数、积分、线性代数核心考点。',
+   auditLog:[{time:'2026-05-01',op:'学校安排',user:'教务处',desc:'学校统一安排，已发布'}],
+   enrollStudents:[
+     {name:'张晓彤',sid:'2023020118',dept:'数学学院',major:'数学',enrollTime:'05-02 08:45',signed:false},
+     {name:'刘子豪',sid:'2022050143',dept:'计算机学院',major:'软件工程',enrollTime:'05-02 09:20',signed:false},
+     {name:'王雅婷',sid:'2023080067',dept:'化学化工学院',major:'化学',enrollTime:'05-02 10:11',signed:false},
+   ]},
+  {id:2,name:'线性代数行列式专题',type:'答疑坊',subtype:'朋辈辅导',subject:'数学',source:'义工申请',points:0,applyTime:'2026-05-02 21:05',status:'待审核',signedCount:8,time:'2026-05-05 10:00-12:00',loc:'知新馆 301',cap:30,
+   desc:'专项讲解行列式的计算方法与性质，结合期末高频考点，帮助突破行列式计算的学习难关。',
+   auditLog:[{time:'2026-05-02',op:'提交申报',user:'本人',desc:''},{time:'2026-05-02',op:'进入审核队列',user:'系统自动',desc:''}],
+   enrollStudents:[
+     {name:'王诗韵',sid:'2023141101',dept:'外国语学院',major:'英语',enrollTime:'05-03 09:15',signed:false},
+     {name:'李明远',sid:'2023020234',dept:'数学学院',major:'数学',enrollTime:'05-03 10:32',signed:false},
+     {name:'张慧',sid:'2022030112',dept:'物理学院',major:'物理',enrollTime:'05-03 11:08',signed:false},
+     {name:'赵子昂',sid:'2023050089',dept:'计算机学院',major:'软件工程',enrollTime:'05-03 14:20',signed:false},
+     {name:'刘晨曦',sid:'2024020056',dept:'数学学院',major:'应用数学',enrollTime:'05-03 15:44',signed:false},
+     {name:'陈雨桐',sid:'2023141203',dept:'外国语学院',major:'英语',enrollTime:'05-04 08:10',signed:false},
+     {name:'吴佳旭',sid:'2022050078',dept:'计算机学院',major:'计算机科学',enrollTime:'05-04 09:01',signed:false},
+     {name:'孙宇航',sid:'2022020188',dept:'数学学院',major:'统计学',enrollTime:'05-04 10:22',signed:false},
+   ]},
+];
+
+const HISTORY_COURSES=[
+  {id:101,name:'高等数学A · 极限与连续',type:'基础辅学',subject:'数学',teacher:'李浩然',teacherInfo:'三星义工 · 数学 2021',time:'2026-04-15（周二）10:00-12:00',loc:'知新馆 301',mySignIn:true,enrollTime:'04-10 09:32',courseStatus:'已结束'},
+  {id:102,name:'大学英语四级真题精讲',type:'基础辅学',subject:'英语',teacher:'外院教学中心',teacherInfo:'官方发布',time:'2026-05-11（周日）14:00-16:00',loc:'知新馆 205',mySignIn:false,enrollTime:'04-16 11:20',courseStatus:'进行中'},
+  {id:103,name:'Python · 数据分析入门',type:'答疑坊',subject:'计算机',teacher:'吴文杰',teacherInfo:'二星义工 · CS 2022',time:'2026-05-15（周四）19:00-21:00',loc:'知新馆 408',mySignIn:false,enrollTime:'04-18 15:44',courseStatus:'未开始'},
+];
+
+// ===== Tab 1 渲染 =====
+const ctypeMapM={'答疑坊':'ct-qa','基础辅学':'ct-base','荟知坊':'ct-salon','志趣坊':'ct-hobby'};
+const ccIconMap={数学:'cc-math',英语:'cc-eng',计算机:'cc-cs',物理:'cc-phy',化学:'cc-chem'};
+const ccIconSvg={
+  数学:'<line x1="5" y1="12" x2="19" y2="12"/><path d="m9 6 6 6-6 6"/>',
+  英语:'<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+  计算机:'<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+  物理:'<circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="12" rx="10" ry="4"/>',
+  化学:'<path d="M10 2v8L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45L14 10V2"/><line x1="9" y1="2" x2="15" y2="2"/>',
+};
+const defaultSvg='<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>';
+let _courseFilter='';
+
+function renderCourseList(){
+  const list=ENROLL_COURSES.filter(c=>{
+    if(!_courseFilter)return true;
+    if(_courseFilter==='school')return c.isSchool;
+    if(_courseFilter==='vol')return !c.isSchool;
+    return c.type===_courseFilter;
+  });
+  const wrap=document.getElementById('mCourseList');
+  if(!list.length){wrap.innerHTML='<div class="m-empty"><div class="ei"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><p>暂无符合条件的课程</p></div>';return;}
+  wrap.innerHTML=list.map(c=>{
+    const isFull=c.signed>=c.cap;
+    const icCls=ccIconMap[c.subject]||'cc-other';
+    const icSvg=ccIconSvg[c.subject]||defaultSvg;
+    let actHtml='';
+    if(c.myEnroll){
+      actHtml=`<span class="enrolled-pill-m"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>已报名</span>
+        <button class="btn-m danger" onclick="cancelEnrollM(${c.id})">取消</button>`;
+    }else if(isFull){
+      actHtml=`<button class="btn-m ghost" disabled>已满员</button>`;
+    }else{
+      actHtml=`<button class="btn-m ghost" onclick="openCourseDetailM(${c.id})">详情</button>
+        <button class="btn-m pri" onclick="openEnrollNoticeM(${c.id})">报名</button>`;
+    }
+    const srcTag=c.isSchool?'学校发布':'义工申报';
+    return`<div class="course-card-m">
+      <div class="cc-top">
+        <div class="cc-ic ${icCls}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${icSvg}</svg>
+        </div>
+        <div class="cc-text">
+          <div class="cc-name" onclick="openCourseDetailM(${c.id})">${c.name}</div>
+          <div class="cc-tags">
+            <span class="cc-tag ${ctypeMapM[c.type]||'ct-school'}">${c.type}</span>
+            <span class="source-tag-m">${srcTag}</span>
+            <span class="source-tag-m">${c.subject}</span>
+          </div>
+        </div>
+      </div>
+      <div class="cc-meta">
+        <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${c.time.replace(/（.*?）/,'')}</span>
+        <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${c.loc}</span>
+        <span>${c.teacher}</span>
+      </div>
+      <div class="cc-footer">
+        <span class="cap-info ${isFull?'cap-full':''}">名额 <strong>${c.signed}/${c.cap}</strong></span>
+        <div class="cc-acts">${actHtml}</div>
+      </div>
+    </div>`;
+  }).join('');
+  renderMyEnrolledM();
+}
+
+function filterCourse(btn,val){
+  document.querySelectorAll('.filter-row .fpill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  _courseFilter=val;
+  renderCourseList();
+}
+
+function renderMyEnrolledM(){
+  const enrolled=ENROLL_COURSES.filter(c=>c.myEnroll);
+  document.getElementById('mEnrollCnt').textContent='（'+enrolled.length+' 门）';
+  const list=document.getElementById('mEnrolledList');
+  if(!enrolled.length){list.innerHTML='<p style="font-size:12px;color:var(--text-3);padding-top:4px;">暂未报名任何课程</p>';return;}
+  list.innerHTML=enrolled.map(c=>`
+    <div class="enrolled-item">
+      <div class="ei-info">
+        <div class="ei-name">${c.name}</div>
+        <div class="ei-meta">${c.loc} · 报名时间 ${c.myEnrollTime}</div>
+      </div>
+      <button class="cancel-btn" onclick="cancelEnrollM(${c.id})">取消报名</button>
+    </div>`).join('');
+}
+
+function cancelEnrollM(id){
+  if(!confirm('确认取消报名？'))return;
+  const c=ENROLL_COURSES.find(x=>x.id===id);
+  if(c){c.myEnroll=false;c.myEnrollTime='';c.signed=Math.max(0,c.signed-1);}
+  renderCourseList();
+  showToast('已取消报名，名额已释放');
+}
+
+// ===== 报名须知 + 倒计时 =====
+let _enrollId=null,_enrollTimer=null;
+function openEnrollNoticeM(id){
+  _enrollId=id;
+  const btn=document.getElementById('confirmEnrollBtn');
+  let cnt=3;btn.disabled=true;btn.textContent='已阅读，确认报名（'+cnt+'）';
+  openSheet('enrollNoticeSheet');
+  clearInterval(_enrollTimer);
+  _enrollTimer=setInterval(()=>{
+    cnt--;
+    if(cnt>0){btn.textContent='已阅读，确认报名（'+cnt+'）';}
+    else{clearInterval(_enrollTimer);btn.disabled=false;btn.textContent='已阅读，确认报名';}
+  },1000);
+}
+function confirmMEnroll(){
+  closeSheet('enrollNoticeSheet');
+  if(_enrollId){
+    const c=ENROLL_COURSES.find(x=>x.id===_enrollId);
+    if(c&&!c.myEnroll){c.myEnroll=true;c.myEnrollTime=new Date().toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'}).replace('/','-')+' '+new Date().toTimeString().slice(0,5);c.signed++;}
+    renderCourseList();
+  }
+  showToast('报名成功！请准时到场并扫码签到');
+}
+
+// ===== 课程详情 panel（仅课程信息，无tab） =====
+function openCourseDetailM(id){
+  const c=ENROLL_COURSES.find(x=>x.id===id)||HISTORY_COURSES.find(x=>x.id===id);
+  if(!c)return;
+  const isFull=c.signed>=c.cap;
+  const rate=c.cap>0?Math.round(c.signed/c.cap*100):0;
+  const remain=c.cap-c.signed;
+  const banner=`<div class="cd-banner">
+    <div class="cbd-tags">
+      <span class="cbd-tag">${c.type}</span>
+      ${c.myEnroll?'<span class="cbd-tag" style="background:rgba(27,185,117,.35);">已报名</span>':''}
+    </div>
+    <h2>${c.name}</h2>
+    <div class="cbd-meta">${c.time} · ${c.loc}</div>
+  </div>`;
+  const body=`${banner}
+  <div class="info-block">
+    <h5>基本信息</h5>
+    <div class="info-row-m"><span>授课讲师/义工</span><span>${c.teacher}</span></div>
+    <div class="info-row-m"><span>义工星级</span><span><span style="color:#F5A623;">★★</span> 二星级</span></div>
+    <div class="info-row-m"><span>所属科目</span><span>${c.subject||'—'}</span></div>
+    <div class="info-row-m"><span>义工类别</span><span>知新馆辅学义工</span></div>
+    <div class="info-row-m"><span>辅导组别</span><span>${c.volGroup||'—'}</span></div>
+    <div class="info-row-m"><span>名额</span><span style="color:${isFull?'var(--danger)':'var(--text-1)'};">${c.signed}/${c.cap} 人${isFull?' · 已满':''}</span></div>
+  </div>
+  <div class="info-block">
+    <h5>课程内容</h5>
+    <p style="font-size:13px;color:var(--text-2);line-height:1.8;">${c.desc||'—'}</p>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="sv" style="color:var(--primary);">${c.signed}</div><div class="sl">已报名</div></div>
+    <div class="stat-card"><div class="sv" style="color:${remain>0?'var(--text-1)':'var(--danger)'};">${remain}</div><div class="sl">剩余名额</div></div>
+    <div class="stat-card"><div class="sv" style="color:${rate>=80?'var(--danger)':'var(--success)'};">${rate}%</div><div class="sl">报名率</div></div>
+    <div class="stat-card"><div class="sv" style="color:var(--success);">${c.signedCount||0}</div><div class="sl">已签到</div></div>
+  </div>
+  ${!c.myEnroll&&!isFull?`<div style="margin-top:14px;"><button class="sheet-btn pri" style="width:100%;height:44px;border-radius:12px;" onclick="closePanel('courseDetailPanel');openEnrollNoticeM(${c.id})">立即报名</button></div>`:''}
+  ${c.myEnroll?`<div style="margin-top:14px;display:flex;gap:8px;">
+    <button class="sheet-btn ghost" style="flex:1;" onclick="closePanel('courseDetailPanel')">关闭</button>
+    <button class="sheet-btn" style="flex:1;background:var(--danger-bg);color:var(--danger);" onclick="closePanel('courseDetailPanel');cancelEnrollM(${c.id})">取消报名</button>
+  </div>`:''}`;
+  document.getElementById('courseDetailBody').innerHTML=body;
+  openPanel('courseDetailPanel');
+}
+
+// ===== 历史报名 sheet =====
+const courseStatusStyle={
+  '未开始':'background:var(--bg);color:var(--text-3);',
+  '进行中':'background:#e8f5e9;color:#2e7d32;',
+  '已结束':'background:#f3f4f6;color:#9ca3af;',
+};
+function openHistorySheet(){
+  const body=document.getElementById('historySheetBody');
+  body.innerHTML=HISTORY_COURSES.map(c=>{
+    const isOngoing=c.courseStatus==='进行中';
+    const signStyle=c.mySignIn?'background:var(--success-bg);color:var(--success);':'background:var(--bg);color:var(--text-3);';
+    const csStyle=courseStatusStyle[c.courseStatus]||'background:var(--bg);color:var(--text-3);';
+    return`<div class="course-card-m" style="margin-bottom:10px;">
+      <div class="cc-top">
+        <div class="cc-ic ${ccIconMap[c.subject]||'cc-other'}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ccIconSvg[c.subject]||defaultSvg}</svg>
+        </div>
+        <div class="cc-text">
+          <div class="cc-name">${c.name}</div>
+          <div class="cc-tags"><span class="cc-tag ${ctypeMapM[c.type]||'ct-school'}">${c.type}</span><span class="source-tag-m">${c.subject}</span></div>
+        </div>
+        <span style="font-size:11px;padding:3px 8px;border-radius:5px;white-space:nowrap;align-self:flex-start;line-height:1.4;${csStyle}">${c.courseStatus||'未知'}</span>
+      </div>
+      <div class="cc-meta">
+        <span>${c.time.replace(/（.*?）/,'')}</span>
+        <span>${c.loc}</span>
+        <span>${c.teacher}</span>
+      </div>
+      <div class="cc-footer">
+        <span style="font-size:11px;padding:3px 8px;border-radius:5px;${signStyle}">${c.mySignIn?'已签到':'未签到'}</span>
+        <span style="font-size:11px;color:var(--text-3);">报名时间 ${c.enrollTime}</span>
+        ${isOngoing?`<button onclick="openScanOverlay()" style="margin-left:auto;display:flex;align-items:center;gap:4px;padding:4px 10px;font-size:11px;font-weight:600;background:linear-gradient(135deg,#1a78c2,#0d5ea0);color:#fff;border:none;border-radius:7px;cursor:pointer;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3" rx=".5" fill="currentColor"/><rect x="19" y="14" width="2" height="2" rx=".5" fill="currentColor"/><rect x="14" y="19" width="2" height="2" rx=".5" fill="currentColor"/><rect x="17" y="17" width="4" height="4" rx=".5" fill="currentColor"/></svg>
+          扫码签到
+        </button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  openSheet('historySheet');
+}
+
+// ===== Tab 2: 自主报课 =====
+function renderSelfReqList(){
+  const wrap=document.getElementById('mSelfReqList');
+  document.getElementById('scSelf').textContent=SELF_REQUESTS.length;
+  if(!SELF_REQUESTS.length){wrap.innerHTML='<div class="m-empty"><div class="ei"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><p>暂无报课需求</p></div>';return;}
+  wrap.innerHTML=SELF_REQUESTS.map(r=>{
+    const stepsHtml=`<div class="step-flow-m" style="margin:10px 0 6px;">
+      ${(r.steps||[]).map((s,i)=>{
+        const cls=(s.done&&s.active)?'active':(s.done?'done':'');
+        return`<div class="step-node-m ${cls}">
+          <div class="step-dot-m">
+            ${s.done&&!s.active?`<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+          </div>
+          <div class="step-lbl-m">${s.label}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+    const canEdit=r.status==='待受理';
+    return`<div class="req-card-m">
+      <div class="rch">
+        <div class="rc-title">${r.course}</div>
+        <span class="st-badge-m ${r.statusCls||'st-warn'}">${r.status}</span>
+      </div>
+      <div class="rc-info">
+        <span>📚 ${r.subject}</span>
+        <span>🧑‍🏫 ${r.type}</span>
+        <span>📅 ${r.timePrefer}</span>
+        <span>📌 ${r.submitTime} 提交</span>
+      </div>
+      ${stepsHtml}
+      <div class="rc-acts">
+        <button class="btn-m ghost" style="font-size:11px;padding:6px 10px;" onclick="openSelfReqDetail(${r.id})">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          详情
+        </button>
+        ${r.status==='辅导中'?`<button class="btn-m" style="background:linear-gradient(135deg,#1a78c2,#0d5ea0);color:#fff;font-size:11px;padding:6px 10px;" onclick="openScanOverlay()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3" rx=".5" fill="currentColor"/></svg>
+          扫码签到
+        </button>`:''}
+        ${canEdit?`<button class="btn-m ghost" style="color:var(--primary);font-size:11px;padding:6px 10px;" onclick="openEditSelfReq(${r.id})">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+          编辑
+        </button>`:''}
+        <button class="btn-m danger" style="font-size:11px;padding:6px 10px;" onclick="deleteSelfReq(${r.id})">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          删除
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openNewSelfReqSheet(){
+  ['nsr_name','nsr_time','nsr_desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['nsr_subject','nsr_type','nsr_freq'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  openSheet('newSelfReqSheet');
+}
+function submitNewSelfReq(){
+  const name=document.getElementById('nsr_name').value.trim();
+  const subject=document.getElementById('nsr_subject').value;
+  const type=document.getElementById('nsr_type').value;
+  const timePref=document.getElementById('nsr_time').value.trim();
+  const freq=document.getElementById('nsr_freq').value;
+  const desc=document.getElementById('nsr_desc').value.trim();
+  if(!name){showToast('请填写课程名称');return;}
+  if(!subject){showToast('请选择所属学科');return;}
+  if(!type){showToast('请选择辅导形式');return;}
+  if(!timePref){showToast('请填写偏好时间段');return;}
+  if(!freq){showToast('请选择上课次数');return;}
+  if(!desc){showToast('请填写具体需求说明');return;}
+  SELF_REQUESTS.push({
+    id:Date.now(),course:name,subject,type,frequency:freq,
+    timePrefer:timePref,loc:'',
+    need:desc,status:'待受理',statusCls:'st-warn',
+    submitTime:new Date().toLocaleDateString('zh-CN')+' '+new Date().toTimeString().slice(0,5),
+    volunteer:'',volInfo:'',volGroup:'',volStar:'',scheduledTime:'',remark:'',
+    steps:[
+      {label:'提交需求',time:new Date().toLocaleDateString('zh-CN'),done:true,active:true},
+      {label:'组长受理',time:'',done:false},
+      {label:'分配义工',time:'',done:false},
+      {label:'辅导进行中',time:'',done:false},
+      {label:'已完成',time:'',done:false},
+    ]
+  });
+  closeSheet('newSelfReqSheet');
+  renderSelfReqList();
+  showToast('需求已提交，等待义工组长分配');
+}
+
+function openSelfReqDetail(id){
+  const r=SELF_REQUESTS.find(x=>x.id===id);if(!r)return;
+  document.getElementById('srDetailTitle').textContent=r.course+' · 需求详情';
+  const fields=[
+    ['申报人','王诗韵'],
+    ['申报人学号','2023141101'],
+    ['申报人所在学院','外国语学院'],
+    ['申报人专业','英语'],
+    ['所需课程','<strong>'+r.course+'</strong>'],
+    ['所属学科',r.subject],
+    ['辅导形式',r.type],
+    ['偏好时间段',r.timePrefer],
+    ['上课次数',r.frequency||'—'],
+    ['提交时间',r.submitTime],
+    ['当前状态',`<span class="st-badge-m ${r.statusCls||'st-warn'}" style="display:inline-block;">${r.status}</span>`],
+    ['具体需求',`<span style="display:block;font-size:12px;color:var(--text-2);line-height:1.8;white-space:pre-wrap;text-align:left;">${r.need}</span>`],
+  ];
+  if(r.volunteer){
+    fields.push(['分配义工',r.volunteer+' （'+r.volInfo+'）']);
+    fields.push(['所属组别',r.volGroup||'—']);
+    fields.push(['义工星级',r.volStar||'—']);
+    if(r.remark)fields.push(['备注说明',r.remark]);
+  }
+  // 5步进度
+  const stepsHtml=`<div class="step-flow-m" style="margin:10px 0 4px;">
+    ${(r.steps||[]).map((s,i)=>{
+      const cls=(s.done&&s.active)?'active':(s.done?'done':'');
+      return`<div class="step-node-m ${cls}">
+        <div class="step-dot-m">${s.done&&!s.active?`<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}</div>
+        <div class="step-lbl-m">${s.label}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+  const body=`<div class="info-block">
+    ${fields.map(([l,v])=>`<div class="detail-field"><span class="df-label">${l}</span><span class="df-val">${v}</span></div>`).join('')}
+  </div>
+  <div class="info-block">
+    <h5>进度跟踪</h5>
+    ${stepsHtml}
+  </div>`;
+  document.getElementById('srDetailBody').innerHTML=body;
+  openPanel('selfReqDetailPanel');
+}
+
+function openEditSelfReq(id){
+  const r=SELF_REQUESTS.find(x=>x.id===id);if(!r)return;
+  document.getElementById('esr_id').value=r.id;
+  document.getElementById('esr_name').value=r.course;
+  document.getElementById('esr_subject').value=r.subject;
+  document.getElementById('esr_type').value=r.type;
+  document.getElementById('esr_time').value=r.timePrefer||'';
+  document.getElementById('esr_freq').value=r.frequency||'';
+  document.getElementById('esr_desc').value=r.need;
+  openSheet('editSelfReqSheet');
+}
+function submitEditSelfReq(){
+  const id=parseInt(document.getElementById('esr_id').value);
+  const r=SELF_REQUESTS.find(x=>x.id===id);if(!r)return;
+  const name=document.getElementById('esr_name').value.trim();
+  const subject=document.getElementById('esr_subject').value;
+  const type=document.getElementById('esr_type').value;
+  const timePref=document.getElementById('esr_time').value.trim();
+  const freq=document.getElementById('esr_freq').value;
+  const desc=document.getElementById('esr_desc').value.trim();
+  if(!name){showToast('请填写课程名称');return;}
+  if(!subject){showToast('请选择所属学科');return;}
+  if(!type){showToast('请选择辅导形式');return;}
+  if(!timePref){showToast('请填写偏好时间段');return;}
+  if(!freq){showToast('请选择上课次数');return;}
+  if(!desc){showToast('请填写具体需求说明');return;}
+  r.course=name;r.subject=subject;r.type=type;
+  r.timePrefer=timePref;r.frequency=freq;r.need=desc;
+  closeSheet('editSelfReqSheet');
+  renderSelfReqList();
+  showToast('需求已更新');
+}
+function deleteSelfReq(id){
+  if(!confirm('确认删除此报课需求？'))return;
+  const idx=SELF_REQUESTS.findIndex(x=>x.id===id);
+  if(idx>=0)SELF_REQUESTS.splice(idx,1);
+  renderSelfReqList();
+  showToast('需求已删除');
+}
+
+// ===== Tab 3: 课程申报 =====
+const statusLabelA={'待审核':'待审核','已通过':'已通过','已驳回':'已驳回','已结束':'已结束'};
+const statusClassA={'待审核':'as-pending','已通过':'as-pass','已驳回':'as-reject','已结束':'as-end'};
+
+let _applySourceFilter='';
+function filterApply(btn,src){
+  _applySourceFilter=src;
+  document.querySelectorAll('#applyFilterRow .fpill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderApplyList();
+}
+const srcStyleMapM={'义工申请':'background:#E8F4FF;color:#1a78c2;','学校安排':'background:#F0FDF4;color:#15803d;'};
+function renderApplyList(){
+  const wrap=document.getElementById('mApplyList');
+  const list=MY_APPLICATIONS.filter(a=>!_applySourceFilter||a.source===_applySourceFilter);
+  document.getElementById('scApply').textContent=MY_APPLICATIONS.length;
+  if(!list.length){wrap.innerHTML='<div class="m-empty"><div class="ei"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><p>暂无课程记录</p></div>';return;}
+  wrap.innerHTML=list.map(a=>{
+    const canEdit=a.status==='待审核'||a.status==='已驳回';
+    const srcStyle=srcStyleMapM[a.source]||'background:#F1F4F8;color:var(--text-2);';
+    const pointsHtml=a.status==='已通过'&&a.points>0
+      ?`<span style="font-size:11px;font-weight:700;color:var(--primary);">+${a.points} 积分</span>`
+      :'';
+    return`<div class="apply-card-m">
+      <div class="ac-top">
+        <div class="ac-name">${a.name}</div>
+        <span class="apply-status-m ${statusClassA[a.status]||'as-pending'}">${a.status}</span>
+      </div>
+      <div class="ac-tags">
+        <span class="cc-tag ${ctypeMapM[a.type]||'ct-school'}">${a.type}</span>
+        
+        <span class="source-tag-m">${a.subject}</span>
+        ${a.source?`<span style="font-size:11px;padding:2px 7px;border-radius:5px;${srcStyle}">${a.source}</span>`:''}
+      </div>
+      <div class="ac-info">
+        <span>📅 ${a.applyTime}</span>
+        <span>👥 已报名 ${a.signedCount} 人</span>
+        ${pointsHtml}
+      </div>
+      <div class="ac-acts">
+        <button class="btn-m ghost" style="font-size:11px;padding:6px 10px;" onclick="openApplyDetail(${a.id})">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>详情
+        </button>
+        ${a.status==='已通过'?`<button class="btn-m" style="background:linear-gradient(135deg,#1a78c2,#0d5ea0);color:#fff;font-size:11px;padding:6px 10px;" onclick="openCourseQrOverlay('${a.name}')">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3" rx=".5" fill="currentColor"/></svg>课程二维码
+        </button>`:''}
+        ${canEdit?`<button class="btn-m ghost" style="color:var(--primary);font-size:11px;padding:6px 10px;" onclick="openEditApply(${a.id})">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>编辑
+        </button>`:''}
+        <button class="btn-m danger" style="font-size:11px;padding:6px 10px;" onclick="deleteApply(${a.id})">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>删除
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openNewApplySheet(){
+  ['na_name','na_time','na_loc','na_desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['na_type','na_subject','na_activity'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('na_cap').value='';
+  clearVenueM('na');
+  openSheet('newApplySheet');
+}
+let _mBookedVenue = {na:null, ea:null};
+
+function goBookVenueM(prefix){
+  showToast('请前往业务助手预约场地');
+  setTimeout(function(){
+    const venue = {name:'知新馆 301', cap:40};
+    _mBookedVenue[prefix] = venue;
+    document.getElementById(prefix+'_loc').value = venue.name;
+    document.getElementById(prefix+'_venueName').textContent = venue.name;
+    document.getElementById(prefix+'_venueCap').textContent = venue.cap;
+    document.getElementById(prefix+'_venueInfo').style.display = '';
+    showToast('场地预约成功：' + venue.name);
+  }, 1200);
+}
+
+function clearVenueM(prefix){
+  _mBookedVenue[prefix] = null;
+  document.getElementById(prefix+'_loc').value = '';
+  document.getElementById(prefix+'_venueInfo').style.display = 'none';
+}
+
+function checkCourseConflictM(time, loc){
+  const allCourses = ENROLL_COURSES.concat(MY_APPLICATIONS.filter(a=>a.status!=='已驳回'));
+  const inputDate = new Date(time);
+  const inputStart = inputDate.getTime();
+  const inputEnd = inputStart + 2*3600*1000;
+  for(let i=0;i<allCourses.length;i++){
+    const c = allCourses[i];
+    if(!c.loc||!c.time) continue;
+    if((c.loc||'').trim() !== loc.trim()) continue;
+    let cStart=0;
+    const m1=(c.time||'').match(/(\d{4})-(\d{2})-(\d{2})[^\d]*(\d{2}):(\d{2})/);
+    if(m1) cStart=new Date(parseInt(m1[1]),parseInt(m1[2])-1,parseInt(m1[3]),parseInt(m1[4]),parseInt(m1[5])).getTime();
+    if(!m1){
+      const m1b=(c.time||'').match(/(\d{2})-(\d{2})[^\d]*(\d{2}):(\d{2})/);
+      if(m1b) cStart=new Date(2026,parseInt(m1b[1])-1,parseInt(m1b[2]),parseInt(m1b[3]),parseInt(m1b[4])).getTime();
+    }
+    const m2=(c.time||'').match(/(\d{2}):(\d{2})\s*[-~]\s*(\d{2}):(\d{2})/);
+    let cEnd=cStart+2*3600*1000;
+    if(m2){ const d=new Date(cStart); d.setHours(parseInt(m2[3]),parseInt(m2[4]),0,0); cEnd=d.getTime(); }
+    if(cStart===0) continue;
+    if(inputStart<cEnd && inputEnd>cStart) return c;
+  }
+  return null;
+}
+
+function initMobileActivityOptions(){
+  ['na_activity','ea_activity'].forEach(id=>{
+    const sel=document.getElementById(id); if(!sel) return;
+    ENROLL_COURSES.forEach(c=>{
+      const opt=document.createElement('option');
+      opt.value=c.id;
+      opt.textContent=c.name+'（'+c.type+'）';
+      sel.appendChild(opt);
+    });
+  });
+}
+
+function submitNewApply(){
+  const name=document.getElementById('na_name').value.trim();
+  const type=document.getElementById('na_type').value;
+  const subject=document.getElementById('na_subject').value;
+  const time=document.getElementById('na_time').value;
+  const cap=document.getElementById('na_cap').value;
+  const loc=document.getElementById('na_loc').value.trim();
+  const desc=document.getElementById('na_desc').value.trim();
+
+  if(!name){showToast('请填写课程名称');return;}
+  if(!type){showToast('请选择主分类');return;}
+  if(!subject){showToast('请选择所属科目');return;}
+  if(!time){showToast('请选择预计授课时间');return;}
+  if(!cap){showToast('请填写招生名额');return;}
+  if(parseInt(cap)<5||parseInt(cap)>100){showToast('招生名额需在 5-100 之间');return;}
+  if(!loc||!_mBookedVenue.na){showToast('请先预约上课场地');return;}
+  if(!desc){showToast('请填写课程内容简介');return;}
+
+  const conflict=checkCourseConflictM(time, loc);
+  if(conflict){
+    showToast('时间与场地冲突：【'+conflict.name+'】在该时段已占用 '+loc+'，请重新预约');
+    return;
+  }
+
+  const activity=document.getElementById('na_activity').value;
+  const now=new Date();
+  MY_APPLICATIONS.push({
+    id:Date.now(),name,type,subtype:'',
+    subject,cap:parseInt(cap)||30,
+    time,loc,desc,status:'待审核',signedCount:0,
+    source:'义工申请',
+    activityCourseId:activity||'',
+    applyTime:now.toLocaleDateString('zh-CN')+' '+now.toTimeString().slice(0,5),
+    auditLog:[{time:now.toLocaleDateString('zh-CN'),op:'提交申报',user:'本人',desc:''}]
+  });
+  _mBookedVenue.na=null;
+  closeSheet('newApplySheet');
+  renderApplyList();
+  showToast('申报已提交，等待管理员审核');
+}
+
+let _applyDetailId=null;
+function openApplyDetail(id){
+  _applyDetailId=id;
+  renderApplyDetailTab('info');
+  openPanel('applyDetailPanel');
+}
+function renderApplyDetailTab(tab){
+  const a=MY_APPLICATIONS.find(x=>x.id===_applyDetailId);if(!a)return;
+  // Tab bar 放在蓝色卡片上方
+  const tabBar=`<div class="detail-tabs" style="margin-bottom:12px;">
+    <button class="detail-tab ${tab==='info'?'active':''}" onclick="renderApplyDetailTab('info')">课程信息</button>
+    <button class="detail-tab ${tab==='audit'?'active':''}" onclick="renderApplyDetailTab('audit')">审核记录</button>
+    <button class="detail-tab ${tab==='enroll'?'active':''}" onclick="renderApplyDetailTab('enroll')">报名情况</button>
+  </div>`;
+  const banner=`<div class="cd-banner" style="margin-bottom:14px;">
+    <div class="cbd-tags">
+      <span class="cbd-tag">${a.type}</span>
+      
+    </div>
+    <h2>${a.name}</h2>
+    <div class="cbd-meta">${a.time} · ${a.loc}</div>
+  </div>`;
+  let content='';
+  if(tab==='info'){
+    const pointsHtml=a.status==='已通过'&&a.points>0
+      ?`<strong style="color:var(--primary);">+${a.points} 积分</strong>`
+      :'—';
+    const actCourseId=a.activityCourseId||'';
+    let actCourseName='无';
+    if(actCourseId){ const ac=ENROLL_COURSES.find(c=>c.id==actCourseId); if(ac) actCourseName=ac.name+'（'+ac.type+'）'; }
+    const starLevel=a.starLevel||'三星级';
+    const starCount={'一星级':1,'二星级':2,'三星级':3,'四星级':4,'五星级':5}[starLevel]||3;
+    const starIcons='<span style="color:#F5A623;">'+('★'.repeat(starCount))+'</span> '+starLevel;
+    content=`<div class="info-block">
+      <h5>申报基本信息</h5>
+      <div class="info-row-m"><span>关联活动课程</span><span>${actCourseName}</span></div>
+      <div class="info-row-m"><span>${a.source==='学校安排'?'授课人':'申报人'}</span><span>王诗韵 / 2023141101</span></div>
+      <div class="info-row-m"><span>义工星级</span><span>${starIcons}</span></div>
+      <div class="info-row-m"><span>所属学科</span><span>${a.subject}</span></div>
+      <div class="info-row-m"><span>课程来源</span><span>${a.source||'—'}</span></div>
+      <div class="info-row-m"><span>申报时间</span><span>${a.applyTime}</span></div>
+      <div class="info-row-m"><span>招生名额</span><span>${a.cap} 人</span></div>
+      <div class="info-row-m"><span>已报名人数</span><span>${a.enrollCount>0?a.enrollCount+' 人':'—'}</span></div>
+      <div class="info-row-m"><span>积分奖励</span><span>${pointsHtml}</span></div>
+    </div>
+    <div class="info-block">
+      <h5>课程简介</h5>
+      <p style="font-size:13px;color:var(--text-2);line-height:1.8;">${a.desc}</p>
+    </div>`;
+  }else if(tab==='audit'){
+    const logs=a.auditLog||[];
+    content=`<div class="info-block">
+      <h5>审核记录</h5>
+      ${logs.length===0
+        ?'<p style="text-align:center;padding:20px 0;color:var(--text-3);font-size:13px;">暂无审核记录</p>'
+        :logs.map((lg,i)=>`<div class="tl-item" style="padding-left:14px;${i<logs.length-1?'border-left:2px solid var(--border-light);margin-left:4px;':''}">
+          <div class="tl-content"><h6>${lg.op}</h6><div class="tl-by">操作人：${lg.user} · ${lg.time}${lg.desc?' · '+lg.desc:''}</div></div>
+        </div>`).join('')}
+    </div>`;
+  }else{
+    const sts=a.enrollStudents||[];
+    const cnt=sts.length>0?sts.length:(a.signedCount||0);
+    const remain=a.cap-cnt;
+    // 表格行（有数据时）
+    const rows=sts.length>0
+      ? sts.map((s,i)=>{
+          const rowBg=i%2===1?'background:#F9FAFC;':'';
+          const signBg=s.signed?'background:var(--success-bg);color:var(--success);':'background:var(--bg);color:var(--text-3);';
+          return `<div style="display:grid;grid-template-columns:24px 1fr 76px 56px 50px;gap:4px;padding:9px 10px;font-size:11px;border-bottom:1px solid var(--border-light);align-items:center;${rowBg}">
+            <span style="color:var(--text-4);font-weight:500;text-align:center;">${i+1}</span>
+            <div style="min-width:0;">
+              <div style="font-weight:600;font-size:12px;">${s.name}</div>
+              <div style="color:var(--text-3);font-size:10px;margin-top:1px;">${s.sid}</div>
+            </div>
+            <span style="color:var(--text-2);font-size:10px;white-space:nowrap;">${s.enrollTime}</span>
+            <span style="color:var(--text-3);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.dept.replace('学院','').replace('与统计','')}</span>
+            <div style="text-align:center;"><span style="font-size:10px;padding:2px 5px;border-radius:4px;${signBg}">${s.signed?'已签到':'未签到'}</span></div>
+          </div>`;
+        }).join('')
+      : `<div style="padding:24px 0;text-align:center;color:var(--text-3);font-size:12px;">暂无学生报名</div>`;
+    content=`<div class="info-block">
+      <h5>报名情况（${cnt} / ${a.cap} 人）</h5>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div class="stat-card"><div class="sv" style="color:var(--primary);">${cnt}</div><div class="sl">已报名</div></div>
+        <div class="stat-card"><div class="sv" style="color:${remain>0?'var(--text-1)':'var(--danger)'};">${remain}</div><div class="sl">剩余名额</div></div>
+      </div>
+      <div style="background:#fff;border-radius:10px;overflow:hidden;border:1px solid var(--border-light);">
+        <div style="display:grid;grid-template-columns:24px 1fr 76px 56px 50px;gap:4px;padding:8px 10px;background:var(--bg);font-size:10px;color:var(--text-3);font-weight:600;border-bottom:1px solid var(--border);">
+          <span style="text-align:center;">#</span>
+          <span>姓名 / 学号</span>
+          <span>报名时间</span>
+          <span>院系</span>
+          <span style="text-align:center;">签到</span>
+        </div>
+        ${rows}
+      </div>
+    </div>`;
+  }
+  document.getElementById('applyDetailBody').innerHTML=tabBar+banner+content;
+}
+
+function openEditApply(id){
+  const a=MY_APPLICATIONS.find(x=>x.id===id);if(!a)return;
+  document.getElementById('ea_id').value=a.id;
+  document.getElementById('ea_name').value=a.name;
+  document.getElementById('ea_type').value=a.type;
+  document.getElementById('ea_subject').value=a.subject;
+  document.getElementById('ea_activity').value=a.activityCourseId||'';
+  document.getElementById('ea_cap').value=a.cap;
+  document.getElementById('ea_time').value=a.time;
+  document.getElementById('ea_desc').value=a.desc;
+  if(a.loc){
+    _mBookedVenue.ea={name:a.loc, cap:a.cap};
+    document.getElementById('ea_loc').value=a.loc;
+    document.getElementById('ea_venueName').textContent=a.loc;
+    document.getElementById('ea_venueCap').textContent=a.cap;
+    document.getElementById('ea_venueInfo').style.display='';
+  } else {
+    clearVenueM('ea');
+  }
+  openSheet('editApplySheet');
+}
+function submitEditApply(){
+  const id=parseInt(document.getElementById('ea_id').value);
+  const a=MY_APPLICATIONS.find(x=>x.id===id);if(!a)return;
+  const name=document.getElementById('ea_name').value.trim();
+  const type=document.getElementById('ea_type').value;
+  const subject=document.getElementById('ea_subject').value;
+  const time=document.getElementById('ea_time').value;
+  const cap=document.getElementById('ea_cap').value;
+  const loc=document.getElementById('ea_loc').value.trim();
+  const desc=document.getElementById('ea_desc').value.trim();
+
+  if(!name){showToast('请填写课程名称');return;}
+  if(!type){showToast('请选择主分类');return;}
+  if(!subject){showToast('请选择所属科目');return;}
+  if(!time){showToast('请选择预计授课时间');return;}
+  if(!cap){showToast('请填写招生名额');return;}
+  if(!loc||!_mBookedVenue.ea){showToast('请先预约上课场地');return;}
+  if(!desc){showToast('请填写课程内容简介');return;}
+
+  const conflict=checkCourseConflictM(time, loc);
+  if(conflict && conflict.name!==a.name){
+    showToast('时间与场地冲突：【'+conflict.name+'】在该时段已占用 '+loc+'，请重新预约');
+    return;
+  }
+
+  a.name=name;a.type=type;a.subtype='';
+  a.subject=subject;a.cap=parseInt(cap)||a.cap;
+  a.time=time;a.loc=loc;a.desc=desc;
+  a.activityCourseId=document.getElementById('ea_activity').value||'';
+  a.status='待审核';
+  _mBookedVenue.ea=null;
+  closeSheet('editApplySheet');
+  renderApplyList();
+  showToast('申报信息已更新，重新进入审核队列');
+}
+function deleteApply(id){
+  if(!confirm('确认撤销此课程申报？'))return;
+  const idx=MY_APPLICATIONS.findIndex(x=>x.id===id);
+  if(idx>=0)MY_APPLICATIONS.splice(idx,1);
+  renderApplyList();
+  showToast('申报已撤销');
+}
+
+// ===== Scan Overlay (扫码签到) =====
+function openScanOverlay(){
+  document.getElementById('scanOverlay').classList.add('show');
+}
+function closeScanOverlay(){
+  document.getElementById('scanOverlay').classList.remove('show');
+}
+
+// ===== Course QR Overlay (课程二维码) =====
+function openCourseQrOverlay(name){
+  document.getElementById('qrCourseName').textContent=name||'课程签到二维码';
+  document.getElementById('courseQrOverlay').classList.add('show');
+}
+function closeCourseQrOverlay(){
+  document.getElementById('courseQrOverlay').classList.remove('show');
+}
+
+// ===== 申诉 Sheet =====
+function openAppealSheet(id){
+  const a=MY_APPLICATIONS.find(x=>x.id===id);
+  if(!a)return;
+  document.getElementById('mAppealCourseId').value=id;
+  document.getElementById('mAppealCourseName').value=a.name;
+  document.getElementById('mAppealReason').value='';
+  document.getElementById('mAppealExpect').value='';
+  openSheet('appealSheet');
+}
+function submitMobileAppeal(){
+  const reason=(document.getElementById('mAppealReason').value||'').trim();
+  const expect=(document.getElementById('mAppealExpect').value||'').trim();
+  if(!reason||reason.length<10){showToast('请填写申诉理由（不少于 10 字）');return;}
+  if(!expect){showToast('请填写期望处理结果');return;}
+  closeSheet('appealSheet');
+  const no='AP-'+new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'-')+'-'+Math.floor(Math.random()*9000+1000);
+  showToast('申诉已提交 · 编号 '+no);
+}
+
+// ===== init =====
+document.addEventListener('DOMContentLoaded',()=>{
+  renderStatusBar(false);
+  renderTabbar('courses');
+  renderCourseList();
+  renderSelfReqList();
+  renderApplyList();
+  initMobileActivityOptions();
+});
+</script>
+
+<!-- ===== 扫码签到 Overlay ===== -->
+<div id="scanOverlay" style="display:none;position:fixed;inset:0;z-index:9000;background:#000;flex-direction:column;align-items:center;justify-content:center;" class="scan-ov">
+  <style>
+    .scan-ov.show{display:flex!important;}
+    .scan-frame{width:220px;height:220px;position:relative;}
+    .scan-frame::before,.scan-frame::after{content:'';position:absolute;width:36px;height:36px;border-color:#fff;border-style:solid;}
+    .scan-frame::before{top:0;left:0;border-width:3px 0 0 3px;border-radius:4px 0 0 4px;}
+    .scan-frame::after{bottom:0;right:0;border-width:0 3px 3px 0;border-radius:0 0 4px 0;}
+    .scan-corner-tr,.scan-corner-bl{position:absolute;width:36px;height:36px;border-color:#fff;border-style:solid;}
+    .scan-corner-tr{top:0;right:0;border-width:3px 3px 0 0;border-radius:0 4px 0 0;}
+    .scan-corner-bl{bottom:0;left:0;border-width:0 0 3px 3px;border-radius:0 0 0 4px;}
+    @keyframes scanLine{0%{top:10px;}100%{top:200px;}}
+    .scan-line{position:absolute;left:4px;right:4px;height:2px;background:linear-gradient(90deg,transparent,#1a78c2,#4db6ff,#1a78c2,transparent);animation:scanLine 2s linear infinite;top:10px;}
+  </style>
+  <div style="color:#fff;font-size:16px;font-weight:600;margin-bottom:28px;">扫码签到</div>
+  <div class="scan-frame">
+    <div class="scan-corner-tr"></div>
+    <div class="scan-corner-bl"></div>
+    <div class="scan-line"></div>
+    <!-- 模拟摄像头取景区域 -->
+    <div style="position:absolute;inset:0;background:rgba(255,255,255,0.04);border-radius:4px;"></div>
+  </div>
+  <div style="color:rgba(255,255,255,0.6);font-size:12px;margin-top:20px;text-align:center;">将二维码放入框内即可自动识别</div>
+  <button onclick="closeScanOverlay();showToast('签到成功！')" style="margin-top:32px;padding:12px 40px;background:linear-gradient(135deg,#1a78c2,#0d5ea0);color:#fff;border:none;border-radius:24px;font-size:14px;font-weight:600;cursor:pointer;">模拟签到成功</button>
+  <button onclick="closeScanOverlay()" style="margin-top:12px;padding:10px 40px;background:transparent;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.2);border-radius:24px;font-size:13px;cursor:pointer;">取消</button>
+</div>
+
+<!-- ===== 课程二维码 Overlay ===== -->
+<div id="courseQrOverlay" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.7);flex-direction:column;align-items:center;justify-content:center;" class="qr-ov">
+  <style>
+    .qr-ov.show{display:flex!important;}
+    .qr-card{background:#fff;border-radius:20px;padding:28px 24px;display:flex;flex-direction:column;align-items:center;width:260px;}
+    .qr-title{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:4px;text-align:center;}
+    .qr-sub{font-size:11px;color:#9ca3af;margin-bottom:18px;text-align:center;}
+    .qr-img-wrap{width:180px;height:180px;background:#f8f9fa;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;padding:10px;}
+    .qr-tip{font-size:11px;color:#6b7280;text-align:center;line-height:1.6;}
+    .qr-close-btn{margin-top:18px;width:100%;padding:11px;background:linear-gradient(135deg,#1a78c2,#0d5ea0);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;}
+  </style>
+  <div class="qr-card">
+    <div class="qr-title" id="qrCourseName">课程签到二维码</div>
+    <div class="qr-sub">学生扫码即可完成签到</div>
+    <!-- SVG 模拟二维码 -->
+    <div class="qr-img-wrap">
+      <svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <!-- 三个定位角 -->
+        <rect x="5" y="5" width="50" height="50" rx="4" fill="none" stroke="#1a1a1a" stroke-width="5"/>
+        <rect x="15" y="15" width="30" height="30" rx="2" fill="#1a1a1a"/>
+        <rect x="105" y="5" width="50" height="50" rx="4" fill="none" stroke="#1a1a1a" stroke-width="5"/>
+        <rect x="115" y="15" width="30" height="30" rx="2" fill="#1a1a1a"/>
+        <rect x="5" y="105" width="50" height="50" rx="4" fill="none" stroke="#1a1a1a" stroke-width="5"/>
+        <rect x="15" y="115" width="30" height="30" rx="2" fill="#1a1a1a"/>
+        <!-- 数据区域模拟点阵 -->
+        <g fill="#1a1a1a">
+          <rect x="65" y="5" width="8" height="8"/><rect x="78" y="5" width="8" height="8"/><rect x="91" y="5" width="8" height="8"/>
+          <rect x="65" y="18" width="8" height="8"/><rect x="91" y="18" width="8" height="8"/>
+          <rect x="65" y="31" width="8" height="8"/><rect x="78" y="31" width="8" height="8"/><rect x="91" y="31" width="8" height="8"/>
+          <rect x="65" y="44" width="8" height="8"/>
+          <rect x="65" y="57" width="8" height="8"/><rect x="78" y="57" width="8" height="8"/>
+          <rect x="5" y="65" width="8" height="8"/><rect x="18" y="65" width="8" height="8"/>
+          <rect x="44" y="65" width="8" height="8"/><rect x="57" y="65" width="8" height="8"/>
+          <rect x="78" y="65" width="8" height="8"/><rect x="91" y="65" width="8" height="8"/>
+          <rect x="117" y="65" width="8" height="8"/><rect x="143" y="65" width="8" height="8"/>
+          <rect x="5" y="78" width="8" height="8"/><rect x="31" y="78" width="8" height="8"/><rect x="57" y="78" width="8" height="8"/>
+          <rect x="78" y="78" width="8" height="8"/><rect x="104" y="78" width="8" height="8"/><rect x="130" y="78" width="8" height="8"/>
+          <rect x="5" y="91" width="8" height="8"/><rect x="18" y="91" width="8" height="8"/><rect x="44" y="91" width="8" height="8"/>
+          <rect x="65" y="91" width="8" height="8"/><rect x="91" y="91" width="8" height="8"/><rect x="117" y="91" width="8" height="8"/><rect x="143" y="91" width="8" height="8"/>
+          <rect x="5" y="104" width="8" height="8"/><rect x="31" y="104" width="8" height="8"/><rect x="57" y="104" width="8" height="8"/>
+          <rect x="78" y="104" width="8" height="8"/><rect x="104" y="104" width="8" height="8"/>
+          <rect x="65" y="117" width="8" height="8"/><rect x="78" y="117" width="8" height="8"/><rect x="91" y="117" width="8" height="8"/><rect x="117" y="117" width="8" height="8"/>
+          <rect x="65" y="130" width="8" height="8"/><rect x="104" y="130" width="8" height="8"/><rect x="130" y="130" width="8" height="8"/>
+          <rect x="65" y="143" width="8" height="8"/><rect x="78" y="143" width="8" height="8"/><rect x="104" y="143" width="8" height="8"/><rect x="143" y="143" width="8" height="8"/>
+        </g>
+        <!-- 中心 logo 区 -->
+        <rect x="68" y="68" width="24" height="24" rx="4" fill="#1a78c2"/>
+        <text x="80" y="84" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">签</text>
+      </svg>
+    </div>
+    <div class="qr-tip">请让报名学生打开学习系统<br/>扫描此二维码进行签到</div>
+    <button class="qr-close-btn" onclick="closeCourseQrOverlay()">关闭</button>
+  </div>
+</div>
+</body>
+</html>
