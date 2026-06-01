@@ -1,0 +1,1173 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>首页 · 学风建设</title>
+<style>
+:root{
+  --primary:#3087CC;
+  --primary-light:#E3F1F9;
+  --primary-dark:#006DAD;
+  --primary-50:#F4FAFE;
+  --text-1:#3C444F;
+  --text-2:#696F7D;
+  --text-3:#9096A2;
+  --text-4:#ABB0BA;
+  --border:#E5E8EE;
+  --border-light:#EFF1F5;
+  --bg:#F4F6FA;
+  --bg-card:#FFFFFF;
+  --success:#1BB975;
+  --success-bg:#E8FCF4;
+  --warning:#F29100;
+  --warning-bg:#FFF5E5;
+  --danger:#DF2027;
+  --danger-bg:#FCE8EA;
+  --shadow-sm:0 1px 3px rgba(15,32,55,.05);
+  --shadow-md:0 6px 20px rgba(15,32,55,.06);
+  --shadow-lg:0 12px 32px rgba(15,32,55,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:"OPPOSans","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;color:var(--text-1);background:#E8ECF2;-webkit-font-smoothing:antialiased;font-size:14px;}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+svg{display:block;flex-shrink:0;}
+::-webkit-scrollbar{display:none;}
+
+/* === Phone shell === */
+.phone-shell{
+  width:390px;height:844px;background:#1F2733;border-radius:48px;padding:10px;
+  box-shadow:0 40px 80px rgba(31,39,51,.32),0 8px 24px rgba(31,39,51,.16);
+  position:relative;
+}
+.phone-shell::before{
+  content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);
+  width:120px;height:32px;background:#1F2733;border-radius:0 0 22px 22px;z-index:5;
+}
+.phone-shell::after{
+  content:"";position:absolute;left:50%;bottom:6px;transform:translateX(-50%);
+  width:130px;height:5px;background:#fff;border-radius:3px;z-index:5;
+}
+.screen{
+  width:100%;height:100%;background:var(--bg);border-radius:38px;overflow:hidden;
+  position:relative;display:flex;flex-direction:column;
+}
+
+/* === Status Bar === */
+.status-bar{
+  height:44px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px 0 32px;font-size:14px;font-weight:600;
+  background:transparent;color:var(--text-1);
+  flex-shrink:0;
+}
+.status-bar.dark{color:#fff;}
+.status-bar .right{display:flex;gap:6px;align-items:center;}
+
+/* === App container === */
+.app{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.pages{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative;padding-bottom:90px;}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.page{animation:slideIn .3s ease;}
+
+/* === Mobile Header (banner) === */
+.m-header.banner{
+  background:linear-gradient(135deg,#3087CC 0%,#006DAD 100%);
+  color:#fff;padding:0 16px 80px;margin-bottom:-60px;
+  position:relative;overflow:hidden;
+}
+.m-header.banner::before{
+  content:"";position:absolute;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);
+  right:-80px;top:-100px;
+}
+.m-header.banner::after{
+  content:"";position:absolute;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.1),transparent 65%);
+  left:-60px;bottom:-60px;
+}
+.h-row{display:flex;align-items:center;justify-content:space-between;padding-top:8px;}
+.h-greet{display:flex;align-items:center;gap:10px;}
+.h-greet .ava{
+  width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,.4);
+  background:linear-gradient(135deg,#FFD68F,#F29100);
+  display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:#fff;
+}
+.h-greet .text strong{font-size:15px;display:block;}
+.h-greet .text p{font-size:11px;opacity:.85;margin-top:2px;}
+.h-icons{display:flex;gap:10px;}
+.h-icons button{
+  width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.18);
+  color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);
+  position:relative;
+}
+.h-icons button .red-dot{
+  position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;
+  background:#FF6B6B;border:2px solid #3087CC;
+}
+.star-card{
+  margin-top:18px;background:rgba(255,255,255,.15);backdrop-filter:blur(20px);
+  border-radius:16px;padding:14px 16px;border:1px solid rgba(255,255,255,.18);
+}
+.star-card .row{display:flex;align-items:center;justify-content:space-between;}
+.star-card .row .left strong{font-size:24px;font-weight:700;}
+.star-card .row .left strong small{font-size:13px;font-weight:400;opacity:.8;margin-left:2px;}
+.star-card .row .left p{font-size:11px;opacity:.85;margin-top:2px;}
+.star-card .row .right{display:flex;align-items:center;gap:4px;}
+.star-card .row .right svg{width:14px;height:14px;}
+.progress-bar{
+  margin-top:10px;height:5px;background:rgba(255,255,255,.18);border-radius:3px;overflow:hidden;
+}
+.progress-bar .fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,#FFD68F,#FFC53D);
+}
+.star-card .progress-meta{
+  display:flex;justify-content:space-between;font-size:10px;opacity:.85;margin-top:6px;
+}
+
+/* === Quick actions === */
+.quick-row{
+  margin:0 12px;padding:18px 6px;background:#fff;border-radius:16px;
+  box-shadow:var(--shadow-sm);position:relative;z-index:2;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+}
+.qa{
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 4px;border-radius:10px;
+  transition:all .15s;text-decoration:none;color:inherit;
+}
+.qa:active{background:var(--primary-50);transform:scale(.96);}
+.qa-ic{
+  width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+}
+.qa span{font-size:11px;color:var(--text-2);font-weight:500;}
+
+/* === Section title === */
+.sec-title{
+  padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;
+}
+.sec-title h3{font-size:15px;font-weight:600;}
+.sec-title h3 small{font-size:11px;color:var(--text-3);font-weight:400;margin-left:6px;}
+.sec-title .more{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:2px;}
+
+/* === Course card === */
+.course-list{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+.course-card{
+  background:#fff;border-radius:14px;padding:14px;display:flex;gap:12px;
+  box-shadow:var(--shadow-sm);transition:all .15s;cursor:pointer;
+}
+.course-card:active{transform:scale(.99);box-shadow:var(--shadow-md);}
+.course-card .c-icon{
+  width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;color:#fff;
+}
+.ci-math{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.ci-eng{background:linear-gradient(135deg,#F29100,#FFD68F);}
+.ci-cs{background:linear-gradient(135deg,#0EA5E9,#7DD3FC);}
+.ci-phy{background:linear-gradient(135deg,#7C5BC1,#B59CE5);}
+.ci-chem{background:linear-gradient(135deg,#1BB975,#A7F3D0);}
+.ci-mech{background:linear-gradient(135deg,#DF2027,#F6BCBE);}
+.course-card .c-text{flex:1;min-width:0;}
+.course-card .c-text h5{font-size:14px;font-weight:600;line-height:1.4;}
+.course-card .c-text .meta{margin-top:6px;display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-3);}
+.course-card .c-text .meta span{display:inline-flex;align-items:center;gap:3px;}
+.course-card .c-tag{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:3px 8px;border-radius:5px;font-size:10px;font-weight:500;
+  background:var(--primary-light);color:var(--primary);align-self:flex-start;
+}
+.c-tag.warning{background:var(--warning-bg);color:var(--warning);}
+.c-tag.success{background:var(--success-bg);color:var(--success);}
+.c-tag.grey{background:#F1F2F3;color:var(--text-3);}
+
+/* === News list === */
+.news-list{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+.news-card{
+  background:#fff;border-radius:12px;padding:12px;display:flex;gap:10px;
+  box-shadow:var(--shadow-sm);
+}
+.news-card .n-icon{
+  width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.news-card h6{font-size:13px;font-weight:500;line-height:1.4;}
+.news-card p{font-size:11px;color:var(--text-3);margin-top:4px;}
+
+/* === Bottom Tab Bar === */
+.tabbar{
+  position:absolute;bottom:0;left:0;right:0;height:74px;background:#fff;
+  border-top:1px solid var(--border-light);
+  display:flex;align-items:flex-start;justify-content:space-around;
+  padding:8px 0 18px;backdrop-filter:blur(20px);background:rgba(255,255,255,.94);
+  z-index:10;
+}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  color:var(--text-3);font-size:10px;padding:4px 0;
+  transition:all .15s;text-decoration:none;
+}
+.tab.active{color:var(--primary);}
+.tab.active svg{color:var(--primary);}
+.tab svg{width:22px;height:22px;}
+
+/* === Header simple (white) === */
+.m-h-simple{
+  padding:10px 16px 14px;display:flex;align-items:center;justify-content:space-between;
+  background:#fff;
+}
+.m-h-simple .title{font-size:18px;font-weight:600;}
+.m-h-simple .actions{display:flex;gap:8px;}
+.m-h-simple .actions button{
+  width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);background:#F4F6FA;
+}
+
+/* === Search === */
+.search-bar{
+  margin:8px 16px 14px;height:38px;border-radius:12px;background:#fff;
+  display:flex;align-items:center;padding:0 14px;gap:8px;
+  border:1px solid var(--border-light);
+}
+.search-bar input{
+  flex:1;border:none;outline:none;background:transparent;font-size:13px;color:var(--text-1);
+}
+.search-bar input::placeholder{color:var(--text-4);}
+
+/* === Pill filter === */
+.pills{
+  display:flex;gap:8px;padding:0 16px 12px;overflow-x:auto;scrollbar-width:none;
+}
+.pills::-webkit-scrollbar{display:none;}
+.pill{
+  flex-shrink:0;padding:7px 14px;border-radius:999px;background:#fff;border:1px solid var(--border-light);
+  font-size:12px;color:var(--text-2);transition:all .15s;
+}
+.pill.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+
+/* === Subject grid === */
+.subj-grid{
+  padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+}
+.subj-card{
+  background:#fff;border-radius:14px;padding:16px 10px;text-align:center;
+  box-shadow:var(--shadow-sm);transition:all .15s;cursor:pointer;
+}
+.subj-card:active{transform:scale(.96);}
+.subj-card .ic{
+  width:48px;height:48px;border-radius:14px;margin:0 auto 8px;
+  display:flex;align-items:center;justify-content:center;
+}
+.subj-card .name{font-size:13px;font-weight:600;}
+.subj-card .count{font-size:11px;color:var(--text-3);margin-top:2px;}
+
+/* === Hot volunteer === */
+.vol-row{
+  padding:0 16px;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;
+}
+.vol-row::-webkit-scrollbar{display:none;}
+.vol-card{
+  flex-shrink:0;width:130px;background:#fff;border-radius:14px;padding:14px 10px;
+  text-align:center;box-shadow:var(--shadow-sm);
+}
+.vol-card .ava{
+  width:54px;height:54px;border-radius:50%;margin:0 auto 8px;
+  background:linear-gradient(135deg,#9CBFDA,#3087CC);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;
+}
+.vol-card h5{font-size:13px;font-weight:600;}
+.vol-card .subj{font-size:10px;color:var(--text-3);margin-top:2px;}
+.vol-card .stars{display:inline-flex;gap:1px;margin-top:6px;}
+.vol-card .stars svg{width:11px;height:11px;color:#FFC53D;}
+
+/* === QA list === */
+.qa-list{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+.qa-card{
+  background:#fff;border-radius:14px;padding:14px;box-shadow:var(--shadow-sm);
+}
+.qa-card .head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.qa-card .head .ava{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,#9CBFDA,#3087CC);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;
+}
+.qa-card .head .info{flex:1;min-width:0;}
+.qa-card .head .info .n{font-size:12px;font-weight:500;}
+.qa-card .head .info .t{font-size:10px;color:var(--text-3);}
+.qa-card h5{font-size:14px;font-weight:600;line-height:1.4;}
+.qa-card .tags{margin-top:8px;display:flex;gap:6px;}
+.qa-card .tag{
+  font-size:10px;padding:2px 8px;border-radius:4px;
+  background:var(--primary-light);color:var(--primary);
+}
+.qa-card .tag.solved{background:var(--success-bg);color:var(--success);}
+.qa-card .tag.unsolved{background:var(--warning-bg);color:var(--warning);}
+.qa-card .meta{
+  margin-top:10px;padding-top:10px;border-top:1px dashed var(--border-light);
+  display:flex;gap:14px;font-size:11px;color:var(--text-3);
+}
+.qa-card .meta span{display:inline-flex;align-items:center;gap:3px;}
+.qa-card .meta span.like.active{color:var(--danger);}
+
+/* === Resource card === */
+.res-grid{padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.res-card{
+  background:#fff;border-radius:14px;padding:14px;box-shadow:var(--shadow-sm);
+  transition:all .15s;cursor:pointer;
+}
+.res-card:active{transform:scale(.97);}
+.res-card .ftype{
+  width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:11px;font-weight:600;margin-bottom:10px;
+}
+.ftype-pdf{background:linear-gradient(135deg,#DF2027,#FF6B6B);}
+.ftype-ppt{background:linear-gradient(135deg,#F29100,#FFAA33);}
+.ftype-doc{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.ftype-xls{background:linear-gradient(135deg,#1BB975,#34D399);}
+.res-card h5{font-size:13px;font-weight:500;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.res-card .meta{margin-top:8px;display:flex;justify-content:space-between;align-items:center;}
+.res-card .meta .stats{display:flex;gap:6px;font-size:10px;color:var(--text-3);}
+.res-card .meta .stats span{display:inline-flex;align-items:center;gap:2px;}
+
+/* === Profile === */
+.profile-banner{
+  background:linear-gradient(135deg,#3087CC 0%,#006DAD 100%);
+  color:#fff;padding:24px 16px 56px;position:relative;
+  border-radius:0 0 24px 24px;
+}
+.profile-banner::before{
+  content:"";position:absolute;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%);
+  right:-100px;top:-120px;
+}
+.pro-head{display:flex;align-items:center;gap:14px;position:relative;z-index:1;}
+.pro-head .ava{
+  width:64px;height:64px;border-radius:50%;border:3px solid rgba(255,255,255,.4);
+  background:linear-gradient(135deg,#FFD68F,#F29100);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;
+}
+.pro-head .info h3{font-size:18px;font-weight:600;}
+.pro-head .info p{font-size:12px;opacity:.85;margin-top:4px;}
+.pro-head .info .stars{margin-top:6px;display:flex;gap:2px;}
+.pro-head .info .stars svg{width:14px;height:14px;color:#FFD43B;}
+.pro-stats{
+  position:relative;z-index:1;margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);
+  background:rgba(255,255,255,.16);backdrop-filter:blur(10px);
+  border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,.2);
+}
+.pro-stats .item{text-align:center;border-right:1px solid rgba(255,255,255,.2);}
+.pro-stats .item:last-child{border-right:none;}
+.pro-stats .item strong{font-size:20px;font-weight:700;display:block;}
+.pro-stats .item span{font-size:11px;opacity:.85;}
+
+.pro-menu{
+  margin:-32px 16px 16px;background:#fff;border-radius:16px;padding:8px 0;
+  box-shadow:var(--shadow-sm);position:relative;z-index:2;
+}
+.pro-row{
+  padding:12px 16px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--border-light);text-decoration:none;color:inherit;
+  cursor:pointer;
+}
+.pro-row:last-child{border-bottom:none;}
+.pro-row .ic{
+  width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+}
+.pro-row .info{flex:1;min-width:0;}
+.pro-row .info h6{font-size:14px;font-weight:500;}
+.pro-row .info p{font-size:11px;color:var(--text-3);margin-top:2px;}
+.pro-row .arrow{color:var(--text-4);}
+.pro-row .badge{
+  background:var(--danger);color:#fff;padding:1px 8px;border-radius:8px;font-size:10px;font-weight:500;
+}
+
+/* === Notice card === */
+.notice-card{
+  margin:14px 16px;background:linear-gradient(135deg,#FFF8E1,#FFE0B3);
+  border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;
+  border:1px solid #FFE0B3;
+}
+.notice-card .ic{
+  width:40px;height:40px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center;color:#F29100;flex-shrink:0;
+}
+.notice-card h6{font-size:13px;font-weight:600;color:#9A6500;}
+.notice-card p{font-size:11px;color:#9A6500;opacity:.8;margin-top:2px;line-height:1.4;}
+
+/* === Section in profile === */
+.pro-section{
+  margin:0 16px 14px;background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow-sm);
+}
+.pro-section h4{font-size:14px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;}
+.pro-section h4 a{font-size:11px;color:var(--text-3);font-weight:400;}
+
+/* === Star milestone (mobile) === */
+.milestones{display:flex;justify-content:space-between;align-items:flex-start;margin-top:8px;position:relative;}
+.milestones::before{
+  content:"";position:absolute;left:14px;right:14px;top:14px;height:2px;background:var(--border);
+}
+.milestones .ms{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;
+}
+.ms .dot{
+  width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-3);font-weight:600;
+}
+.ms.done .dot{background:var(--primary);border-color:var(--primary);color:#fff;}
+.ms.current .dot{background:#fff;border-color:var(--success);color:var(--success);box-shadow:0 0 0 4px rgba(27,185,117,.18);}
+.ms .lbl{font-size:10px;color:var(--text-3);text-align:center;}
+.ms.done .lbl,.ms.current .lbl{color:var(--text-1);font-weight:500;}
+
+/* === Detail page header === */
+.nav-header{
+  height:48px;display:flex;align-items:center;padding:0 4px;background:#fff;
+  border-bottom:1px solid var(--border-light);
+}
+.nav-header .back{
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--text-1);
+  background:none;border:none;cursor:pointer;
+}
+.nav-header .title{flex:1;text-align:center;font-size:16px;font-weight:600;}
+.nav-header .right{width:40px;display:flex;justify-content:center;}
+
+/* === Form === */
+.form{padding:14px 16px;}
+.form-group{
+  background:#fff;border-radius:14px;padding:4px 16px;margin-bottom:14px;
+  box-shadow:var(--shadow-sm);
+}
+.form-row{
+  padding:14px 0;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border-light);
+}
+.form-row:last-child{border-bottom:none;}
+.form-row label{
+  font-size:13px;color:var(--text-1);min-width:80px;
+}
+.form-row label .req{color:var(--danger);}
+.form-row input,.form-row select,.form-row textarea{
+  flex:1;border:none;outline:none;font-size:13px;color:var(--text-1);text-align:right;background:transparent;font-family:inherit;
+}
+.form-row input::placeholder{color:var(--text-4);}
+.form-row select{appearance:none;background:transparent;}
+.form-row textarea{text-align:left;resize:none;min-height:72px;}
+.form-actions{padding:18px 0;}
+.btn-block{
+  width:100%;height:46px;border-radius:14px;background:var(--primary);color:#fff;
+  font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .15s;border:none;cursor:pointer;font-family:inherit;
+}
+.btn-block:active{transform:scale(.98);background:var(--primary-dark);}
+
+/* Modal toast */
+.toast{
+  position:fixed;left:50%;top:60px;transform:translate(-50%,-20px);
+  background:#1F2733;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;
+  opacity:0;pointer-events:none;transition:all .25s;z-index:200;
+  box-shadow:var(--shadow-lg);
+}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+
+/* Floating action / notice */
+.floating-tip{
+  position:absolute;left:16px;right:16px;bottom:90px;background:#1F2733;color:#fff;
+  border-radius:12px;padding:12px 14px;font-size:12px;display:flex;gap:10px;align-items:center;
+  z-index:8;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(20px);transition:all .3s;
+  pointer-events:none;
+}
+.floating-tip.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.floating-tip .ic{
+  width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#FFD68F,#F29100);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.floating-tip .text{flex:1;}
+.floating-tip h6{font-size:12px;font-weight:600;}
+.floating-tip p{font-size:10px;opacity:.7;margin-top:2px;}
+.floating-tip button{color:#7DD3FC;font-size:12px;font-weight:500;}
+
+/* === Message Drawer (mobile) === */
+.msg-overlay{
+  position:absolute;inset:0;background:rgba(15,32,55,.45);backdrop-filter:blur(3px);
+  z-index:50;opacity:0;pointer-events:none;transition:opacity .3s;border-radius:38px;
+}
+.msg-overlay.show{opacity:1;pointer-events:auto;}
+.msg-drawer{
+  position:absolute;left:0;right:0;bottom:0;
+  background:#fff;border-radius:24px 24px 0 0;
+  z-index:51;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);
+  display:flex;flex-direction:column;max-height:78%;
+}
+.msg-drawer.show{transform:translateY(0);}
+.msg-drawer .drag-bar{
+  width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;flex-shrink:0;
+}
+.msg-drawer-head{
+  padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.msg-drawer-head h4{font-size:16px;font-weight:600;}
+.msg-drawer-head .unread-badge{
+  background:var(--danger);color:#fff;font-size:10px;font-weight:600;
+  padding:1px 7px;border-radius:8px;margin-left:6px;
+}
+.msg-drawer-head .mark-all{font-size:12px;color:var(--primary);}
+.msg-tabs{
+  display:flex;gap:0;padding:0 16px 10px;border-bottom:1px solid var(--border-light);flex-shrink:0;
+}
+.msg-tab{
+  padding:6px 14px;font-size:13px;border-radius:999px;color:var(--text-3);transition:all .15s;
+}
+.msg-tab.active{background:var(--primary-light);color:var(--primary);font-weight:500;}
+.msg-list{overflow-y:auto;flex:1;padding:8px 0 24px;}
+.msg-item{
+  display:flex;gap:12px;padding:12px 16px;transition:background .15s;position:relative;
+}
+.msg-item:active{background:var(--bg);}
+.msg-item .unread-dot{
+  position:absolute;top:16px;right:14px;width:7px;height:7px;border-radius:50%;background:var(--danger);
+}
+.msg-item .m-ic{
+  width:40px;height:40px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.msg-item .m-body{flex:1;min-width:0;}
+.msg-item .m-body .m-title{font-size:13px;font-weight:500;line-height:1.4;}
+.msg-item .m-body .m-desc{font-size:11px;color:var(--text-3);margin-top:3px;line-height:1.5;}
+.msg-item .m-body .m-time{font-size:10px;color:var(--text-4);margin-top:4px;}
+.msg-item.read .m-body .m-title{color:var(--text-3);font-weight:400;}
+.msg-sep{font-size:11px;color:var(--text-4);padding:10px 16px 4px;font-weight:500;}
+.msg-empty{padding:40px 0;text-align:center;color:var(--text-4);font-size:13px;}
+
+/* Course detail banner */
+.course-detail-banner{
+  margin-top:14px;background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;
+  border-radius:18px;padding:20px;position:relative;overflow:hidden;
+}
+.course-detail-banner::before{
+  content:"";position:absolute;width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 60%);
+  right:-40px;top:-50px;
+}
+
+/* Notice (warning) banner */
+.warn-banner{
+  padding:14px 16px;background:linear-gradient(135deg,#FFF8E1,#FFE0B3);
+  display:flex;align-items:center;gap:12px;
+}
+.warn-banner .ic{
+  width:48px;height:48px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;color:#F29100;
+}
+.warn-banner h3{font-size:15px;font-weight:600;color:#9A6500;}
+.warn-banner p{font-size:11px;color:#9A6500;opacity:.8;margin-top:2px;}
+
+/* === Rank page slide-in layer === */
+.rank-layer{
+  position:absolute;inset:0;background:var(--bg);border-radius:38px;overflow:hidden;
+  display:flex;flex-direction:column;z-index:60;
+  transform:translateX(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);
+}
+.rank-layer.show{transform:translateX(0);}
+
+/* Rank header banner */
+.rank-banner{
+  background:linear-gradient(135deg,#EF4444 0%,#B91C1C 100%);
+  color:#fff;padding:14px 16px 60px;flex-shrink:0;position:relative;overflow:hidden;
+}
+.rank-banner::before{
+  content:"";position:absolute;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);
+  right:-60px;top:-80px;
+}
+.rank-banner::after{
+  content:"";position:absolute;width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.1),transparent 65%);
+  left:-40px;bottom:-40px;
+}
+.rank-nav{display:flex;align-items:center;margin-bottom:14px;position:relative;z-index:1;}
+.rank-nav .back{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;margin-right:10px;}
+.rank-nav h2{font-size:17px;font-weight:700;flex:1;}
+.rank-nav .share-btn{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;}
+
+/* Period tabs */
+.rank-tabs{
+  display:flex;background:rgba(255,255,255,.15);border-radius:12px;padding:3px;position:relative;z-index:1;
+}
+.rank-tab{
+  flex:1;text-align:center;padding:8px 0;font-size:13px;border-radius:10px;color:rgba(255,255,255,.7);
+  transition:all .2s;font-weight:500;
+}
+.rank-tab.active{background:#fff;color:#EF4444;font-weight:700;}
+
+/* Podium */
+.podium-wrap{
+  margin:-44px 16px 0;position:relative;z-index:2;
+  display:flex;align-items:flex-end;justify-content:center;gap:0;
+}
+.podium-item{display:flex;flex-direction:column;align-items:center;flex:1;}
+.podium-item .p-ava{
+  border-radius:50%;border:3px solid #fff;
+  display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;position:relative;
+  box-shadow:0 4px 12px rgba(0,0,0,.18);margin-bottom:6px;
+}
+.podium-item .p-ava .crown{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  font-size:18px;line-height:1;
+}
+.podium-item .p-name{font-size:12px;font-weight:600;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px;}
+.podium-item .p-val{font-size:11px;color:var(--text-3);margin-top:2px;}
+.podium-item .p-base{
+  border-radius:10px 10px 0 0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding-bottom:12px;padding-top:12px;
+}
+.podium-1st .p-base{background:linear-gradient(180deg,#FFD700,#FFA500);height:72px;}
+.podium-2nd .p-base{background:linear-gradient(180deg,#C0C0C0,#A0A0A0);height:52px;}
+.podium-3rd .p-base{background:linear-gradient(180deg,#CD7F32,#A0522D);height:42px;}
+.podium-1st .p-base .rank-num{font-size:20px;font-weight:800;color:#fff;}
+.podium-2nd .p-base .rank-num,.podium-3rd .p-base .rank-num{font-size:16px;font-weight:700;color:rgba(255,255,255,.9);}
+
+/* Rank list */
+.rank-list-wrap{
+  flex:1;overflow-y:auto;padding:14px 16px 80px;
+}
+.rank-item{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  background:#fff;border-radius:14px;margin-bottom:10px;
+  box-shadow:0 1px 4px rgba(15,32,55,.05);transition:all .15s;
+}
+.rank-item.me{background:linear-gradient(135deg,#FFF0F0,#FFE4E4);border:1.5px solid rgba(239,68,68,.25);}
+.rank-item .r-num{
+  width:28px;text-align:center;font-size:15px;font-weight:700;color:var(--text-3);flex-shrink:0;
+}
+.rank-item .r-num.top4{color:#EF4444;}
+.rank-item .r-num.top5{color:#EF4444;}
+.rank-item .r-ava{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;
+}
+.rank-item .r-info{flex:1;min-width:0;}
+.rank-item .r-info .r-name{font-size:14px;font-weight:600;}
+.rank-item .r-info .r-sub{font-size:11px;color:var(--text-3);margin-top:2px;}
+.rank-item .r-right{text-align:right;flex-shrink:0;}
+.rank-item .r-right .r-val{font-size:15px;font-weight:700;color:var(--text-1);}
+.rank-item .r-right .r-unit{font-size:10px;color:var(--text-3);margin-top:2px;}
+.rank-item .r-right .r-change{font-size:10px;margin-top:2px;}
+.r-change.up{color:var(--success);}
+.r-change.down{color:var(--danger);}
+.r-change.same{color:var(--text-3);}
+
+/* My rank sticky bar */
+.my-rank-bar{
+  margin:0 16px 12px;padding:11px 14px;background:linear-gradient(135deg,#FFF0F0,#FFE4E4);
+  border-radius:14px;border:1.5px solid rgba(239,68,68,.25);
+  display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+.my-rank-bar .r-ava{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#FFD68F,#F29100);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.my-rank-bar .r-info{flex:1;}
+.my-rank-bar .r-info .r-name{font-size:13px;font-weight:600;}
+.my-rank-bar .r-info .r-sub{font-size:11px;color:var(--text-3);}
+.my-rank-bar .r-right{text-align:right;}
+.my-rank-bar .r-right .r-val{font-size:14px;font-weight:700;color:#EF4444;}
+.my-rank-bar .r-right .r-rank{font-size:11px;color:var(--text-3);}
+
+/* Generic small section card */
+.detail-card{
+  margin-top:14px;background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow-sm);
+}
+.detail-card h4{font-size:14px;font-weight:600;margin-bottom:12px;}
+.detail-card .info-list{display:flex;flex-direction:column;gap:10px;font-size:13px;}
+.detail-card .info-list .info-row{display:flex;justify-content:space-between;}
+.detail-card .info-list .info-row span:first-child{color:var(--text-3);}
+.detail-card p{font-size:13px;color:var(--text-2);line-height:1.7;}
+
+</style>
+</head>
+<body>
+<div class="phone-shell">
+  <div class="screen">
+    <div class="status-bar dark"></div>
+    <div class="app">
+      <div class="pages">
+        <div class="page">
+          <div class="m-header banner">
+            <div class="h-row">
+              <div class="h-greet">
+                <div class="ava">王</div>
+                <div class="text">
+                  <strong>王诗韵 同学</strong>
+                  <p>今天也要加油 ✨ 距五星仅差 18h</p>
+                </div>
+              </div>
+              <div class="h-icons">
+                <button id="msgBtnMobile" onclick="openMsgDrawer()">
+                  <span class="red-dot" id="msgDotMobile"></span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="star-card">
+              <div class="row">
+                <div class="left">
+                  <strong>182<small> h</small></strong>
+                  <p>本学期辅学时长 · 当前四星级义工</p>
+                </div>
+                <div class="right">
+                  <svg viewBox="0 0 24 24" fill="#FFD43B"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="#FFD43B"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="#FFD43B"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="#FFD43B"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="rgba(255,255,255,.3)"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                </div>
+              </div>
+              <div style="margin-top:10px;">
+                <span style="display:inline-block;background:rgba(255,255,255,.2);backdrop-filter:blur(6px);padding:4px 12px;border-radius:6px;font-size:11px;font-weight:500;color:#fff;border:1px solid rgba(255,255,255,.25);">知新馆辅学义工</span>
+              </div>
+              <div class="progress-bar"><div class="fill" style="width:91%;"></div></div>
+              <div class="progress-meta"><span>距五星 200h</span><span>91%</span></div>
+            </div>
+          </div>
+
+          <div class="quick-row">
+            <a class="qa" href="courses.html">
+              <div class="qa-ic" style="background:linear-gradient(135deg,#E3F1F9,#3087CC);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              </div>
+              <span>知新选课</span>
+            </a>
+            <a class="qa" href="qa.html">
+              <div class="qa-ic" style="background:linear-gradient(135deg,#FFE0B3,#F29100);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <span>即问即答</span>
+            </a>
+            <a class="qa" href="library.html">
+              <div class="qa-ic" style="background:linear-gradient(135deg,#A7F3D0,#1BB975);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </div>
+              <span>资料库</span>
+            </a>
+            <a class="qa" href="venue-book.html">
+              <div class="qa-ic" style="background:linear-gradient(135deg,#F6BCBE,#DF2027);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <span>预约场地</span>
+            </a>
+            <a class="qa" href="volunteer-apply.html">
+              <div class="qa-ic" style="background:linear-gradient(135deg,#7DD3FC,#0EA5E9);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              </div>
+              <span>义工申请</span>
+            </a>
+            <a class="qa" href="javascript:void(0)" onclick="openRankPage()">
+              <div class="qa-ic" style="background:linear-gradient(135deg,#FCA5A5,#EF4444);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+              </div>
+              <span>排行榜</span>
+            </a>
+          </div>
+
+          <div class="notice-card">
+            <div class="ic">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            </div>
+            <div style="flex:1;">
+              <h6>距 5 星 18h，加油冲刺！</h6>
+              <p>本周已申报 6h，再坚持几节课就能拿到 5 星证书 🌟</p>
+            </div>
+          </div>
+
+          <div class="sec-title">
+            <h3>今日推荐课程</h3>
+            <a class="more" href="courses.html">查看全部
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </div>
+          <div class="course-list">
+            <div class="course-card" onclick="location.href='course-detail.html'">
+              <div class="c-icon ci-math">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><path d="m9 6 6 6-6 6"/></svg>
+              </div>
+              <div class="c-text">
+                <h5>高等数学A · 微分方程专题</h5>
+                <div class="meta">
+                  <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>10:00 - 12:00</span>
+                  <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>知新馆 301</span>
+                  <span>陈思远</span>
+                </div>
+              </div>
+              <span class="c-tag success">报名中</span>
+            </div>
+            <div class="course-card" onclick="location.href='course-detail.html'">
+              <div class="c-icon ci-eng">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <div class="c-text">
+                <h5>大学英语六级 · 真题精讲</h5>
+                <div class="meta">
+                  <span>14:00 - 16:00</span><span>知新馆 205</span><span>王诗韵</span>
+                </div>
+              </div>
+              <span class="c-tag warning">爆满</span>
+            </div>
+            <div class="course-card" onclick="location.href='course-detail.html'">
+              <div class="c-icon ci-cs">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              </div>
+              <div class="c-text">
+                <h5>程序设计 · Python 入门</h5>
+                <div class="meta">
+                  <span>16:30 - 18:30</span><span>知新馆 408</span><span>刘子轩</span>
+                </div>
+              </div>
+              <span class="c-tag">报名中</span>
+            </div>
+          </div>
+
+          <div class="sec-title"><h3>最新通知</h3></div>
+          <div class="news-list">
+            <div class="news-card">
+              <div class="n-icon" style="background:var(--warning-bg);color:var(--warning);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div style="flex:1;">
+                <h6>课程即将开始提醒</h6>
+                <p>高等数学A · 微分方程专题 30 分钟后开始 · 知新馆 301</p>
+              </div>
+            </div>
+            <div class="news-card">
+              <div class="n-icon" style="background:var(--success-bg);color:var(--success);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div style="flex:1;">
+                <h6>恭喜！你的星级评定已通过</h6>
+                <p>已升级为四星级义工 · 2d 前</p>
+              </div>
+            </div>
+          </div>
+          <div style="height:20px;"></div>
+        </div>
+      </div>
+      <nav class="tabbar"></nav>
+    </div>
+    <div class="floating-tip" id="floatingTip">
+      <div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg></div>
+      <div class="text"><h6>距五星仅差 18h，加油！</h6><p>累计已达 91%，继续冲刺最后阶段</p></div>
+      <button onclick="document.getElementById('floatingTip').classList.remove('show')">知道了</button>
+    </div>
+  <!-- 排行榜详情页 -->
+  <div class="rank-layer" id="rankLayer">
+    <!-- 顶部 banner -->
+    <div class="rank-banner">
+      <div class="rank-nav">
+        <button class="back" onclick="closeRankPage()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <h2 style="text-align:center;">辅学排行榜 TOP10</h2>
+      </div>
+      <div class="rank-tabs" id="rankTabs">
+        <button class="rank-tab active" onclick="switchRankTab(this,'week')">本周</button>
+        <button class="rank-tab" onclick="switchRankTab(this,'month')">本月</button>
+        <button class="rank-tab" onclick="switchRankTab(this,'semester')">学期</button>
+      </div>
+    </div>
+
+    <!-- 颁奖台 TOP 3 -->
+    <div class="podium-wrap" id="rankPodium"></div>
+
+    <!-- 我的排名 sticky -->
+    <div class="my-rank-bar" id="myRankBar">
+      <div class="r-ava">王</div>
+      <div class="r-info">
+        <div class="r-name">王诗韵 <span style="font-size:10px;font-weight:400;color:var(--text-3);">（我）</span></div>
+        <div class="r-sub">外国语学院 · 英语</div>
+      </div>
+      <div class="r-right">
+        <div class="r-val" id="myRankVal">—</div>
+        <div class="r-rank" id="myRankPos">第 — 名</div>
+      </div>
+    </div>
+
+    <!-- 4名及以后列表 -->
+    <div class="rank-list-wrap" id="rankListWrap"></div>
+  </div>
+
+  <!-- 消息抽屉 -->
+  <div class="msg-overlay" id="msgOverlay" onclick="closeMsgDrawer()"></div>
+  <div class="msg-drawer" id="msgDrawer">
+    <div class="drag-bar"></div>
+    <div class="msg-drawer-head">
+      <div style="display:flex;align-items:center;">
+        <h4>消息通知</h4>
+        <span class="unread-badge" id="mobileUnreadBadge">3</span>
+      </div>
+      <button class="mark-all" onclick="markAllReadMobile()">全部已读</button>
+    </div>
+    <div class="msg-tabs">
+      <button class="msg-tab active" onclick="switchMsgTab(this,'all')">全部</button>
+      <button class="msg-tab" onclick="switchMsgTab(this,'unread')">未读</button>
+    </div>
+    <div class="msg-list" id="msgListMobile"></div>
+  </div>
+  </div>
+</div>
+<script>
+// ====== 移动端公共脚本（Tab 渲染、状态栏、Toast） ======
+
+const MOBILE_TABS = [
+  {id:'home',name:'首页',href:'home.html',icon:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'},
+  {id:'courses',name:'选课',href:'courses.html',icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'},
+  {id:'qa',name:'问答',href:'qa.html',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+  {id:'library',name:'资料库',href:'library.html',icon:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'},
+  {id:'profile',name:'我的',href:'profile.html',icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'}
+];
+
+function renderTabbar(activeId){
+  const tabbar = document.querySelector('.tabbar');
+  if(!tabbar) return;
+  tabbar.innerHTML = MOBILE_TABS.map(t=>{
+    return `<a class="tab ${t.id===activeId?'active':''}" href="${t.href}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg>
+      ${t.name}
+    </a>`;
+  }).join('');
+}
+
+function renderStatusBar(dark=false){
+  const sb = document.querySelector('.status-bar');
+  if(!sb) return;
+  sb.classList.toggle('dark',dark);
+  sb.innerHTML = `
+    <span>9:41</span>
+    <span class="right">
+      <svg width="16" height="10" viewBox="0 0 17 11" fill="currentColor"><rect y="6" width="3" height="5" rx=".5"/><rect x="4" y="4" width="3" height="7" rx=".5"/><rect x="8" y="2" width="3" height="9" rx=".5"/><rect x="12" width="3" height="11" rx=".5"/></svg>
+      <svg width="14" height="10" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 9.5C5.6 9.5 3.4 8.5 1.7 7L8 1l6.3 6c-1.7 1.5-3.9 2.5-6.3 2.5z" fill="currentColor"/></svg>
+      <svg width="22" height="10" viewBox="0 0 24 11" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="1" y="1" width="20" height="9" rx="2" stroke-opacity=".5"/><rect x="22" y="4" width="1.5" height="3" rx=".5" fill="currentColor" stroke="none"/><rect x="2.5" y="2.5" width="14" height="6" rx="1" fill="currentColor"/></svg>
+    </span>
+  `;
+}
+
+// ============= Toast =============
+function showToast(msg){
+  let toast = document.getElementById('toast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id='toast';toast.className='toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent=msg;
+  toast.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer=setTimeout(()=>toast.classList.remove('show'),1800);
+}
+
+// ============= Quick Actions (中间 + 按钮) =============
+function showQuickActions(){
+  showToast('快速提问已打开');
+}
+
+// ============= Pills toggle =============
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.pills').forEach(g=>{
+    g.querySelectorAll('.pill').forEach(p=>{
+      p.addEventListener('click',()=>{
+        g.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+        p.classList.add('active');
+      });
+    });
+  });
+});
+
+// ============= Message Drawer =============
+const MOBILE_MESSAGES = [
+  {id:1,type:'success',icon:'<polyline points="20 6 9 17 4 12"/>',color:'var(--success-bg)',iconColor:'var(--success)',title:'义工申请审核通过',desc:'你的 2026 春季辅学义工申请已通过三级审核，即将正式上岗！',time:'刚刚',read:false},
+  {id:2,type:'warning',icon:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',color:'var(--warning-bg)',iconColor:'var(--warning)',title:'课程即将开始提醒',desc:'高等数学A · 微分方程专题 将在 30 分钟后开始，地点：知新馆 301',time:'30 分钟前',read:false},
+  {id:3,type:'primary',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',color:'var(--primary-light)',iconColor:'var(--primary)',title:'即问即答有新回答',desc:'你提问的「高数证明数列收敛的常用方法」已有 3 个新回答',time:'2 小时前',read:false},
+  {id:4,type:'gold',icon:'<polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/>',color:'#FFF8E1',iconColor:'#F29100',title:'星级评定结果通知',desc:'恭喜！你的四星级义工评定已通过，相关权益已在个人中心生效',time:'2 天前',read:true},
+  {id:5,type:'primary',icon:'<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>',color:'var(--primary-light)',iconColor:'var(--primary)',title:'2026 春季义工招募开启',desc:'学风建设中心面向全校学生开放义工报名，截止 5 月 15 日',time:'3 天前',read:true},
+];
+let mobileCurrentTab = 'all';
+function renderMobileMessages(){
+  const list = document.getElementById('msgListMobile');
+  if(!list) return;
+  const msgs = mobileCurrentTab==='unread' ? MOBILE_MESSAGES.filter(m=>!m.read) : MOBILE_MESSAGES;
+  if(!msgs.length){list.innerHTML='<div class="msg-empty">暂无消息 🎉</div>';return;}
+  const unread = msgs.filter(m=>!m.read);
+  const read = msgs.filter(m=>m.read);
+  let html = '';
+  if(unread.length && mobileCurrentTab==='all'){html+='<div class="msg-sep">未读消息</div>';}
+  unread.forEach(m=>{ html+=renderMsgItem(m); });
+  if(read.length && mobileCurrentTab==='all'){html+='<div class="msg-sep">已读</div>';}
+  if(mobileCurrentTab==='all') read.forEach(m=>{ html+=renderMsgItem(m); });
+  list.innerHTML = html;
+  list.querySelectorAll('.msg-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const id=parseInt(el.dataset.id);
+      const msg=MOBILE_MESSAGES.find(m=>m.id===id);
+      if(msg&&!msg.read){msg.read=true;updateMobileUnread();renderMobileMessages();}
+    });
+  });
+}
+function renderMsgItem(m){
+  return `<div class="msg-item${m.read?' read':''}" data-id="${m.id}">
+    <div class="m-ic" style="background:${m.color};">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${m.iconColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${m.icon}</svg>
+    </div>
+    <div class="m-body">
+      <div class="m-title">${m.title}</div>
+      <div class="m-desc">${m.desc}</div>
+      <div class="m-time">${m.time}</div>
+    </div>
+    ${!m.read?'<div class="unread-dot"></div>':''}
+  </div>`;
+}
+function updateMobileUnread(){
+  const cnt = MOBILE_MESSAGES.filter(m=>!m.read).length;
+  const badge = document.getElementById('mobileUnreadBadge');
+  const dot = document.getElementById('msgDotMobile');
+  if(badge) badge.textContent=cnt, badge.style.display=cnt?'inline':'none';
+  if(dot) dot.style.display=cnt?'block':'none';
+}
+function switchMsgTab(el,tab){
+  document.querySelectorAll('.msg-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  mobileCurrentTab=tab;
+  renderMobileMessages();
+}
+function markAllReadMobile(){
+  MOBILE_MESSAGES.forEach(m=>m.read=true);
+  updateMobileUnread();
+  renderMobileMessages();
+}
+function openMsgDrawer(){
+  document.getElementById('msgOverlay').classList.add('show');
+  document.getElementById('msgDrawer').classList.add('show');
+  renderMobileMessages();
+}
+function closeMsgDrawer(){
+  document.getElementById('msgOverlay').classList.remove('show');
+  document.getElementById('msgDrawer').classList.remove('show');
+}
+
+// 浮动提示
+function showFloatingTip(){
+  const tip=document.getElementById('floatingTip');
+  if(!tip)return;
+  tip.classList.add('show');
+  setTimeout(()=>tip.classList.remove('show'),5000);
+}
+
+</script>
+<script>
+// ============= 排行榜 =============
+const RANK_DATA = {
+  week: [
+    {name:'陈思远',short:'陈',dept:'数学与统计学院',major:'数学',val:46,unit:'h',change:'+3',dir:'up',me:false,color:'linear-gradient(135deg,#3087CC,#5BA8DE)'},
+    {name:'刘子轩',short:'刘',dept:'计算机学院',major:'软件工程',val:38,unit:'h',change:'+1',dir:'up',me:false,color:'linear-gradient(135deg,#1BB975,#34D399)'},
+    {name:'黄怡然',short:'黄',dept:'化学化工学院',major:'化学',val:31,unit:'h',change:'-2',dir:'down',me:false,color:'linear-gradient(135deg,#7C5BC1,#B59CE5)'},
+    {name:'张力',short:'张',dept:'物理与天文学院',major:'物理',val:27,unit:'h',change:'+5',dir:'up',me:false,color:'linear-gradient(135deg,#F29100,#FFD68F)'},
+    {name:'林佳佳',short:'林',dept:'外国语学院',major:'日语',val:24,unit:'h',change:'0',dir:'same',me:false,color:'linear-gradient(135deg,#DF2027,#F6BCBE)'},
+    {name:'王诗韵',short:'王',dept:'外国语学院',major:'英语',val:18,unit:'h',change:'+2',dir:'up',me:true,color:'linear-gradient(135deg,#FFD68F,#F29100)'},
+    {name:'孙宇航',short:'孙',dept:'数学与统计学院',major:'统计学',val:16,unit:'h',change:'-1',dir:'down',me:false,color:'linear-gradient(135deg,#0EA5E9,#7DD3FC)'},
+    {name:'赵子昂',short:'赵',dept:'计算机学院',major:'软件工程',val:14,unit:'h',change:'+1',dir:'up',me:false,color:'linear-gradient(135deg,#EF4444,#FCA5A5)'},
+  ],
+  month: [
+    {name:'陈思远',short:'陈',dept:'数学与统计学院',major:'数学',val:182,unit:'h',change:'+8',dir:'up',me:false,color:'linear-gradient(135deg,#3087CC,#5BA8DE)'},
+    {name:'刘子轩',short:'刘',dept:'计算机学院',major:'软件工程',val:167,unit:'h',change:'+2',dir:'up',me:false,color:'linear-gradient(135deg,#1BB975,#34D399)'},
+    {name:'张力',short:'张',dept:'物理与天文学院',major:'物理',val:154,unit:'h',change:'+6',dir:'up',me:false,color:'linear-gradient(135deg,#F29100,#FFD68F)'},
+    {name:'黄怡然',short:'黄',dept:'化学化工学院',major:'化学',val:148,unit:'h',change:'-1',dir:'down',me:false,color:'linear-gradient(135deg,#7C5BC1,#B59CE5)'},
+    {name:'王诗韵',short:'王',dept:'外国语学院',major:'英语',val:136,unit:'h',change:'+3',dir:'up',me:true,color:'linear-gradient(135deg,#FFD68F,#F29100)'},
+    {name:'林佳佳',short:'林',dept:'外国语学院',major:'日语',val:121,unit:'h',change:'0',dir:'same',me:false,color:'linear-gradient(135deg,#DF2027,#F6BCBE)'},
+    {name:'孙宇航',short:'孙',dept:'数学与统计学院',major:'统计学',val:98,unit:'h',change:'-2',dir:'down',me:false,color:'linear-gradient(135deg,#0EA5E9,#7DD3FC)'},
+    {name:'赵子昂',short:'赵',dept:'计算机学院',major:'软件工程',val:76,unit:'h',change:'+4',dir:'up',me:false,color:'linear-gradient(135deg,#EF4444,#FCA5A5)'},
+  ],
+  semester: [
+    {name:'陈思远',short:'陈',dept:'数学与统计学院',major:'数学',val:486,unit:'h',change:'↑',dir:'same',me:false,color:'linear-gradient(135deg,#3087CC,#5BA8DE)'},
+    {name:'张力',short:'张',dept:'物理与天文学院',major:'物理',val:462,unit:'h',change:'↑',dir:'same',me:false,color:'linear-gradient(135deg,#F29100,#FFD68F)'},
+    {name:'刘子轩',short:'刘',dept:'计算机学院',major:'软件工程',val:438,unit:'h',change:'↑',dir:'same',me:false,color:'linear-gradient(135deg,#1BB975,#34D399)'},
+    {name:'黄怡然',short:'黄',dept:'化学化工学院',major:'化学',val:401,unit:'h',change:'↑',dir:'same',me:false,color:'linear-gradient(135deg,#7C5BC1,#B59CE5)'},
+    {name:'林佳佳',short:'林',dept:'外国语学院',major:'日语',val:368,unit:'h',change:'↑',dir:'same',me:false,color:'linear-gradient(135deg,#DF2027,#F6BCBE)'},
+    {name:'孙宇航',short:'孙',dept:'数学与统计学院',major:'统计学',val:312,unit:'h',change:'↑',dir:'same',me:false,color:'linear-gradient(135deg,#0EA5E9,#7DD3FC)'},
+    {name:'王诗韵',short:'王',dept:'外国语学院',major:'英语',val:298,unit:'h',change:'↑',dir:'same',me:true,color:'linear-gradient(135deg,#FFD68F,#F29100)'},
+    {name:'赵子昂',short:'赵',dept:'计算机学院',major:'软件工程',val:201,unit:'h',change:'↑',dir:'same',me:false,color:'linear-gradient(135deg,#EF4444,#FCA5A5)'},
+  ]
+};
+let currentRankTab = 'week';
+
+function openRankPage(){
+  document.getElementById('rankLayer').classList.add('show');
+  renderRankPage(currentRankTab);
+}
+function closeRankPage(){
+  document.getElementById('rankLayer').classList.remove('show');
+}
+function switchRankTab(el, tab){
+  document.querySelectorAll('.rank-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  currentRankTab = tab;
+  renderRankPage(tab);
+}
+function renderRankPage(tab){
+  const list = RANK_DATA[tab];
+  const crowns = ['👑','🥈','🥉'];
+  const sizes  = [52, 44, 40];    // avatar sizes
+  const podiumOrder = [1, 0, 2];  // 2nd left, 1st center, 3rd right
+  const classes = ['podium-2nd','podium-1st','podium-3rd'];
+
+  // Podium
+  const podium = document.getElementById('rankPodium');
+  podium.innerHTML = podiumOrder.map((idx,pos)=>{
+    const p = list[idx];
+    const cl = classes[pos];
+    const sz = sizes[idx];
+    return `
+    <div class="podium-item ${cl}">
+      <div class="p-ava" style="width:${sz}px;height:${sz}px;font-size:${Math.round(sz*0.35)}px;background:${p.color};">
+        ${idx===0?`<span class="crown">${crowns[idx]}</span>`:''}
+        ${p.short}
+        ${idx>0?`<span style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:16px;line-height:1;">${crowns[idx]}</span>`:''}
+      </div>
+      <div class="p-name">${p.name}</div>
+      <div class="p-val">${p.val}${p.unit}</div>
+      <div class="p-base"><span class="rank-num">${idx+1}</span></div>
+    </div>`;
+  }).join('');
+
+  // My rank bar
+  const me = list.find(p=>p.me);
+  const myIdx = list.findIndex(p=>p.me);
+  if(me){
+    document.getElementById('myRankVal').textContent = me.val + me.unit;
+    document.getElementById('myRankPos').textContent = '第 ' + (myIdx+1) + ' 名';
+  }
+
+  // List (rank 4+)
+  const wrap = document.getElementById('rankListWrap');
+  wrap.innerHTML = list.slice(3).map((p,i)=>{
+    const rank = i + 4;
+    const changeHtml = p.dir==='up'
+      ? `<span class="r-change up">▲ ${p.change}</span>`
+      : p.dir==='down'
+      ? `<span class="r-change down">▼ ${p.change}</span>`
+      : `<span class="r-change same">— 持平</span>`;
+    return `
+    <div class="rank-item ${p.me?'me':''}">
+      <div class="r-num ${rank<=5?'top'+rank:''}">${rank}</div>
+      <div class="r-ava" style="background:${p.color};">${p.short}</div>
+      <div class="r-info">
+        <div class="r-name">${p.name}${p.me?' <span style="font-size:10px;font-weight:400;color:#EF4444;">（我）</span>':''}</div>
+        <div class="r-sub">${p.dept} · ${p.major}</div>
+      </div>
+      <div class="r-right">
+        <div class="r-val">${p.val}<span style="font-size:10px;font-weight:400;color:var(--text-3);margin-left:1px;">${p.unit}</span></div>
+        ${changeHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+</script>
+<script>
+  renderStatusBar(true);
+  renderTabbar('home');
+  updateMobileUnread();
+  setTimeout(showFloatingTip,1500);
+</script>
+</body>
+</html>

@@ -1,0 +1,2279 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>我的 · 学风建设</title>
+<style>
+:root{
+  --primary:#3087CC;
+  --primary-light:#E3F1F9;
+  --primary-dark:#006DAD;
+  --primary-50:#F4FAFE;
+  --text-1:#3C444F;
+  --text-2:#696F7D;
+  --text-3:#9096A2;
+  --text-4:#ABB0BA;
+  --border:#E5E8EE;
+  --border-light:#EFF1F5;
+  --bg:#F4F6FA;
+  --bg-card:#FFFFFF;
+  --success:#1BB975;
+  --success-bg:#E8FCF4;
+  --warning:#F29100;
+  --warning-bg:#FFF5E5;
+  --danger:#DF2027;
+  --danger-bg:#FCE8EA;
+  --shadow-sm:0 1px 3px rgba(15,32,55,.05);
+  --shadow-md:0 6px 20px rgba(15,32,55,.06);
+  --shadow-lg:0 12px 32px rgba(15,32,55,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:"OPPOSans","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;color:var(--text-1);background:#E8ECF2;-webkit-font-smoothing:antialiased;font-size:14px;}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+svg{display:block;flex-shrink:0;}
+::-webkit-scrollbar{display:none;}
+
+/* === Phone shell === */
+.phone-shell{
+  width:390px;height:844px;background:#1F2733;border-radius:48px;padding:10px;
+  box-shadow:0 40px 80px rgba(31,39,51,.32),0 8px 24px rgba(31,39,51,.16);
+  position:relative;
+}
+.phone-shell::before{
+  content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);
+  width:120px;height:32px;background:#1F2733;border-radius:0 0 22px 22px;z-index:5;
+}
+.phone-shell::after{
+  content:"";position:absolute;left:50%;bottom:6px;transform:translateX(-50%);
+  width:130px;height:5px;background:#fff;border-radius:3px;z-index:5;
+}
+.screen{
+  width:100%;height:100%;background:var(--bg);border-radius:38px;overflow:hidden;
+  position:relative;display:flex;flex-direction:column;
+}
+
+/* === Status Bar === */
+.status-bar{
+  height:44px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px 0 32px;font-size:14px;font-weight:600;
+  background:transparent;color:var(--text-1);
+  flex-shrink:0;
+}
+.status-bar.dark{color:#fff;}
+.status-bar .right{display:flex;gap:6px;align-items:center;}
+
+/* === App container === */
+.app{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.pages{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative;padding-bottom:90px;}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.page{animation:slideIn .3s ease;}
+
+/* === Mobile Header (banner) === */
+.m-header.banner{
+  background:linear-gradient(135deg,#3087CC 0%,#006DAD 100%);
+  color:#fff;padding:0 16px 80px;margin-bottom:-60px;
+  position:relative;overflow:hidden;
+}
+.m-header.banner::before{
+  content:"";position:absolute;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);
+  right:-80px;top:-100px;
+}
+.m-header.banner::after{
+  content:"";position:absolute;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.1),transparent 65%);
+  left:-60px;bottom:-60px;
+}
+.h-row{display:flex;align-items:center;justify-content:space-between;padding-top:8px;}
+.h-greet{display:flex;align-items:center;gap:10px;}
+.h-greet .ava{
+  width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,.4);
+  background:linear-gradient(135deg,#FFD68F,#F29100);
+  display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:#fff;
+}
+.h-greet .text strong{font-size:15px;display:block;}
+.h-greet .text p{font-size:11px;opacity:.85;margin-top:2px;}
+.h-icons{display:flex;gap:10px;}
+.h-icons button{
+  width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.18);
+  color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);
+  position:relative;
+}
+.h-icons button .red-dot{
+  position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;
+  background:#FF6B6B;border:2px solid #3087CC;
+}
+.star-card{
+  margin-top:18px;background:rgba(255,255,255,.15);backdrop-filter:blur(20px);
+  border-radius:16px;padding:14px 16px;border:1px solid rgba(255,255,255,.18);
+}
+.star-card .row{display:flex;align-items:center;justify-content:space-between;}
+.star-card .row .left strong{font-size:24px;font-weight:700;}
+.star-card .row .left strong small{font-size:13px;font-weight:400;opacity:.8;margin-left:2px;}
+.star-card .row .left p{font-size:11px;opacity:.85;margin-top:2px;}
+.star-card .row .right{display:flex;align-items:center;gap:4px;}
+.star-card .row .right svg{width:14px;height:14px;}
+.progress-bar{
+  margin-top:10px;height:5px;background:rgba(255,255,255,.18);border-radius:3px;overflow:hidden;
+}
+.progress-bar .fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,#FFD68F,#FFC53D);
+}
+.star-card .progress-meta{
+  display:flex;justify-content:space-between;font-size:10px;opacity:.85;margin-top:6px;
+}
+
+/* === Quick actions === */
+.quick-row{
+  margin:0 12px;padding:18px 6px;background:#fff;border-radius:16px;
+  box-shadow:var(--shadow-sm);position:relative;z-index:2;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+}
+.qa{
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 4px;border-radius:10px;
+  transition:all .15s;text-decoration:none;color:inherit;
+}
+.qa:active{background:var(--primary-50);transform:scale(.96);}
+.qa-ic{
+  width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+}
+.qa span{font-size:11px;color:var(--text-2);font-weight:500;}
+
+/* === Section title === */
+.sec-title{
+  padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;
+}
+.sec-title h3{font-size:15px;font-weight:600;}
+.sec-title h3 small{font-size:11px;color:var(--text-3);font-weight:400;margin-left:6px;}
+.sec-title .more{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:2px;}
+
+/* === Course card === */
+.course-list{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+.course-card{
+  background:#fff;border-radius:14px;padding:14px;display:flex;gap:12px;
+  box-shadow:var(--shadow-sm);transition:all .15s;cursor:pointer;
+}
+.course-card:active{transform:scale(.99);box-shadow:var(--shadow-md);}
+.course-card .c-icon{
+  width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;color:#fff;
+}
+.ci-math{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.ci-eng{background:linear-gradient(135deg,#F29100,#FFD68F);}
+.ci-cs{background:linear-gradient(135deg,#0EA5E9,#7DD3FC);}
+.ci-phy{background:linear-gradient(135deg,#7C5BC1,#B59CE5);}
+.ci-chem{background:linear-gradient(135deg,#1BB975,#A7F3D0);}
+.ci-mech{background:linear-gradient(135deg,#DF2027,#F6BCBE);}
+.course-card .c-text{flex:1;min-width:0;}
+.course-card .c-text h5{font-size:14px;font-weight:600;line-height:1.4;}
+.course-card .c-text .meta{margin-top:6px;display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-3);}
+.course-card .c-text .meta span{display:inline-flex;align-items:center;gap:3px;}
+.course-card .c-tag{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:3px 8px;border-radius:5px;font-size:10px;font-weight:500;
+  background:var(--primary-light);color:var(--primary);align-self:flex-start;
+}
+.c-tag.warning{background:var(--warning-bg);color:var(--warning);}
+.c-tag.success{background:var(--success-bg);color:var(--success);}
+.c-tag.grey{background:#F1F2F3;color:var(--text-3);}
+
+/* === News list === */
+.news-list{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+.news-card{
+  background:#fff;border-radius:12px;padding:12px;display:flex;gap:10px;
+  box-shadow:var(--shadow-sm);
+}
+.news-card .n-icon{
+  width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.news-card h6{font-size:13px;font-weight:500;line-height:1.4;}
+.news-card p{font-size:11px;color:var(--text-3);margin-top:4px;}
+
+/* ===== Star-Apply Overlay ===== */
+.star-overlay{
+  position:absolute;inset:0;background:#F4F6FA;z-index:50;
+  display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+  border-radius:38px;overflow:hidden;
+  visibility:hidden;
+}
+.star-overlay.open{transform:translateY(0);visibility:visible;}
+.star-overlay .so-header{
+  height:56px;background:#fff;display:flex;align-items:center;padding:0 16px;gap:12px;
+  border-bottom:1px solid var(--border-light);flex-shrink:0;
+}
+.star-overlay .so-header .back-btn{
+  width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);background:var(--bg);
+}
+.star-overlay .so-header h3{flex:1;font-size:16px;font-weight:600;}
+.star-overlay .so-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px;}
+.so-section{background:#fff;border-radius:12px;margin:12px;padding:14px;box-shadow:var(--shadow-sm);}
+.so-section-title{
+  font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border-light);
+  display:flex;align-items:center;gap:6px;
+}
+.so-section-title::before{
+  content:"";width:3px;height:14px;background:var(--primary);border-radius:2px;display:block;
+}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-item{display:flex;flex-direction:column;gap:4px;}
+.form-item label{font-size:11px;color:var(--text-3);font-weight:500;}
+.form-item .fi-val{
+  height:36px;border-radius:8px;border:1px solid var(--border);font-size:12px;
+  padding:0 10px;background:#fff;color:var(--text-1);font-family:inherit;outline:none;width:100%;
+}
+.form-item .fi-val.readonly{background:var(--bg);color:var(--text-3);}
+.form-item .fi-val:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(48,135,204,.1);}
+.form-item textarea.fi-val{height:auto;min-height:64px;padding:8px 10px;resize:none;line-height:1.6;}
+.upload-btn{
+  width:100%;height:40px;border-radius:8px;border:1.5px dashed var(--border);
+  background:var(--bg);color:var(--text-3);font-size:12px;display:flex;align-items:center;
+  justify-content:center;gap:6px;cursor:pointer;margin-top:4px;
+}
+.upload-btn:active{background:var(--primary-50);border-color:var(--primary);color:var(--primary);}
+/* Experience table */
+.exp-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:4px;}
+.exp-table th{background:var(--bg);color:var(--text-3);font-weight:500;padding:6px 4px;text-align:left;border-bottom:1px solid var(--border-light);}
+.exp-table td{padding:7px 4px;border-bottom:1px solid var(--border-light);color:var(--text-1);vertical-align:middle;}
+.exp-table .badge-sm{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;}
+/* Radio group */
+.radio-group{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+.radio-card{
+  border:1.5px solid var(--border);border-radius:10px;padding:10px;cursor:pointer;
+  transition:all .15s;position:relative;
+}
+.radio-card.selected{border-color:var(--primary);background:var(--primary-50);}
+.radio-card input{position:absolute;opacity:0;width:0;height:0;}
+.radio-card .rc-title{font-size:13px;font-weight:600;margin-bottom:4px;}
+.radio-card .rc-desc{font-size:10px;color:var(--text-3);line-height:1.5;}
+.radio-card .rc-check{
+  width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);
+  position:absolute;top:8px;right:8px;display:flex;align-items:center;justify-content:center;
+}
+.radio-card.selected .rc-check{border-color:var(--primary);background:var(--primary);}
+.radio-card.selected .rc-check::after{content:"";width:6px;height:6px;border-radius:50%;background:#fff;}
+/* Checklist */
+.check-item{
+  display:flex;align-items:flex-start;gap:8px;padding:6px 0;
+  border-bottom:1px solid var(--border-light);font-size:12px;line-height:1.6;
+}
+.check-item:last-child{border-bottom:none;}
+.check-item .ck{
+  width:18px;height:18px;border-radius:4px;border:1.5px solid var(--border);flex-shrink:0;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;
+}
+.check-item .ck.checked{background:var(--primary);border-color:var(--primary);}
+.check-item .ck.checked::after{content:"✓";font-size:11px;color:#fff;line-height:1;}
+/* Signature */
+.sig-box{
+  height:64px;border-radius:8px;border:1.5px dashed var(--border);background:var(--bg);
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-4);
+  cursor:pointer;margin-top:6px;
+}
+/* Bottom bar */
+.so-foot{
+  position:absolute;bottom:0;left:0;right:0;height:72px;background:#fff;
+  border-top:1px solid var(--border-light);display:flex;align-items:center;gap:10px;
+  padding:0 16px 8px;z-index:2;
+}
+.so-btn{
+  flex:1;height:42px;border-radius:10px;font-size:14px;font-weight:500;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;font-family:inherit;
+}
+.so-btn.ghost{background:var(--bg);color:var(--text-2);border:1px solid var(--border);}
+.so-btn.primary{background:var(--primary);color:#fff;}
+
+/* ===== Bottom Tab Bar ===== */
+.tabbar{
+  position:absolute;bottom:0;left:0;right:0;height:74px;background:#fff;
+  border-top:1px solid var(--border-light);
+  display:flex;align-items:flex-start;justify-content:space-around;
+  padding:8px 0 18px;backdrop-filter:blur(20px);background:rgba(255,255,255,.94);
+  z-index:10;
+}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  color:var(--text-3);font-size:10px;padding:4px 0;
+  transition:all .15s;text-decoration:none;
+}
+.tab.active{color:var(--primary);}
+.tab.active svg{color:var(--primary);}
+.tab svg{width:22px;height:22px;}
+
+/* === Header simple (white) === */
+.m-h-simple{
+  padding:10px 16px 14px;display:flex;align-items:center;justify-content:space-between;
+  background:#fff;
+}
+.m-h-simple .title{font-size:18px;font-weight:600;}
+.m-h-simple .actions{display:flex;gap:8px;}
+.m-h-simple .actions button{
+  width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);background:#F4F6FA;
+}
+
+/* === Search === */
+.search-bar{
+  margin:8px 16px 14px;height:38px;border-radius:12px;background:#fff;
+  display:flex;align-items:center;padding:0 14px;gap:8px;
+  border:1px solid var(--border-light);
+}
+.search-bar input{
+  flex:1;border:none;outline:none;background:transparent;font-size:13px;color:var(--text-1);
+}
+.search-bar input::placeholder{color:var(--text-4);}
+
+/* === Pill filter === */
+.pills{
+  display:flex;gap:8px;padding:0 16px 12px;overflow-x:auto;scrollbar-width:none;
+}
+.pills::-webkit-scrollbar{display:none;}
+.pill{
+  flex-shrink:0;padding:7px 14px;border-radius:999px;background:#fff;border:1px solid var(--border-light);
+  font-size:12px;color:var(--text-2);transition:all .15s;
+}
+.pill.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+
+/* === Subject grid === */
+.subj-grid{
+  padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+}
+.subj-card{
+  background:#fff;border-radius:14px;padding:16px 10px;text-align:center;
+  box-shadow:var(--shadow-sm);transition:all .15s;cursor:pointer;
+}
+.subj-card:active{transform:scale(.96);}
+.subj-card .ic{
+  width:48px;height:48px;border-radius:14px;margin:0 auto 8px;
+  display:flex;align-items:center;justify-content:center;
+}
+.subj-card .name{font-size:13px;font-weight:600;}
+.subj-card .count{font-size:11px;color:var(--text-3);margin-top:2px;}
+
+/* === Hot volunteer === */
+.vol-row{
+  padding:0 16px;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;
+}
+.vol-row::-webkit-scrollbar{display:none;}
+.vol-card{
+  flex-shrink:0;width:130px;background:#fff;border-radius:14px;padding:14px 10px;
+  text-align:center;box-shadow:var(--shadow-sm);
+}
+.vol-card .ava{
+  width:54px;height:54px;border-radius:50%;margin:0 auto 8px;
+  background:linear-gradient(135deg,#9CBFDA,#3087CC);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;
+}
+.vol-card h5{font-size:13px;font-weight:600;}
+.vol-card .subj{font-size:10px;color:var(--text-3);margin-top:2px;}
+.vol-card .stars{display:inline-flex;gap:1px;margin-top:6px;}
+.vol-card .stars svg{width:11px;height:11px;color:#FFC53D;}
+
+/* === QA list === */
+.qa-list{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+.qa-card{
+  background:#fff;border-radius:14px;padding:14px;box-shadow:var(--shadow-sm);
+}
+.qa-card .head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.qa-card .head .ava{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,#9CBFDA,#3087CC);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;
+}
+.qa-card .head .info{flex:1;min-width:0;}
+.qa-card .head .info .n{font-size:12px;font-weight:500;}
+.qa-card .head .info .t{font-size:10px;color:var(--text-3);}
+.qa-card h5{font-size:14px;font-weight:600;line-height:1.4;}
+.qa-card .tags{margin-top:8px;display:flex;gap:6px;}
+.qa-card .tag{
+  font-size:10px;padding:2px 8px;border-radius:4px;
+  background:var(--primary-light);color:var(--primary);
+}
+.qa-card .tag.solved{background:var(--success-bg);color:var(--success);}
+.qa-card .tag.unsolved{background:var(--warning-bg);color:var(--warning);}
+.qa-card .meta{
+  margin-top:10px;padding-top:10px;border-top:1px dashed var(--border-light);
+  display:flex;gap:14px;font-size:11px;color:var(--text-3);
+}
+.qa-card .meta span{display:inline-flex;align-items:center;gap:3px;}
+.qa-card .meta span.like.active{color:var(--danger);}
+
+/* === Resource card === */
+.res-grid{padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.res-card{
+  background:#fff;border-radius:14px;padding:14px;box-shadow:var(--shadow-sm);
+  transition:all .15s;cursor:pointer;
+}
+.res-card:active{transform:scale(.97);}
+.res-card .ftype{
+  width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:11px;font-weight:600;margin-bottom:10px;
+}
+.ftype-pdf{background:linear-gradient(135deg,#DF2027,#FF6B6B);}
+.ftype-ppt{background:linear-gradient(135deg,#F29100,#FFAA33);}
+.ftype-doc{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.ftype-xls{background:linear-gradient(135deg,#1BB975,#34D399);}
+.res-card h5{font-size:13px;font-weight:500;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.res-card .meta{margin-top:8px;display:flex;justify-content:space-between;align-items:center;}
+.res-card .meta .stats{display:flex;gap:6px;font-size:10px;color:var(--text-3);}
+.res-card .meta .stats span{display:inline-flex;align-items:center;gap:2px;}
+
+/* === Profile === */
+.profile-sticky{position:sticky;top:0;z-index:30;background:var(--bg);box-shadow:0 6px 14px rgba(15,32,55,.05);}
+.profile-banner{
+  background:linear-gradient(135deg,#3087CC 0%,#006DAD 100%);
+  color:#fff;padding:22px 16px 18px;position:relative;
+  border-radius:0 0 22px 22px;
+}
+.profile-banner::before{
+  content:"";position:absolute;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%);
+  right:-100px;top:-120px;
+}
+.pro-head{display:flex;align-items:center;gap:14px;position:relative;z-index:1;}
+.pro-head .ava{
+  width:64px;height:64px;border-radius:50%;border:3px solid rgba(255,255,255,.4);
+  background:linear-gradient(135deg,#FFD68F,#F29100);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;
+}
+.pro-head .info h3{font-size:18px;font-weight:600;}
+.pro-head .info p{font-size:12px;opacity:.85;margin-top:4px;}
+.pro-head .info .stars{margin-top:6px;display:flex;gap:2px;}
+.pro-head .info .stars svg{width:14px;height:14px;color:#FFD43B;}
+/* 多重义工身份 */
+.pro-ids{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.pro-ids .id-chip{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+  font-size:11px;font-weight:500;line-height:1.4;white-space:nowrap;
+}
+.pro-stats{
+  position:relative;z-index:1;margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);
+  background:rgba(255,255,255,.16);backdrop-filter:blur(10px);
+  border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,.2);
+}
+.pro-stats .item{text-align:center;border-right:1px solid rgba(255,255,255,.2);}
+.pro-stats .item:last-child{border-right:none;}
+.pro-stats .item strong{font-size:20px;font-weight:700;display:block;}
+.pro-stats .item span{font-size:11px;opacity:.85;}
+
+.pro-menu{
+  margin:-32px 20px 16px;background:#fff;border-radius:16px;padding:8px 0;
+  box-shadow:var(--shadow-sm);position:relative;z-index:2;
+}
+.pro-row{
+  padding:12px 16px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--border-light);text-decoration:none;color:inherit;
+  cursor:pointer;
+}
+.pro-row:last-child{border-bottom:none;}
+.pro-row .ic{
+  width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+}
+.pro-row .info{flex:1;min-width:0;}
+.pro-row .info h6{font-size:14px;font-weight:500;}
+.pro-row .info p{font-size:11px;color:var(--text-3);margin-top:2px;}
+.pro-row .arrow{color:var(--text-4);}
+.pro-row .badge{
+  background:var(--danger);color:#fff;padding:1px 8px;border-radius:8px;font-size:10px;font-weight:500;
+}
+
+/* === Notice card === */
+.notice-card{
+  margin:14px 16px;background:linear-gradient(135deg,#FFF8E1,#FFE0B3);
+  border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;
+  border:1px solid #FFE0B3;
+}
+.notice-card .ic{
+  width:40px;height:40px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center;color:#F29100;flex-shrink:0;
+}
+.notice-card h6{font-size:13px;font-weight:600;color:#9A6500;}
+.notice-card p{font-size:11px;color:#9A6500;opacity:.8;margin-top:2px;line-height:1.4;}
+
+/* === Section in profile === */
+.pro-section{
+  margin:0 20px 14px;background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow-sm);
+}
+.pro-section h4{font-size:14px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;}
+.pro-section h4 a{font-size:11px;color:var(--text-3);font-weight:400;}
+
+/* === Star milestone (mobile) === */
+.milestones{display:flex;justify-content:space-between;align-items:flex-start;margin-top:8px;position:relative;}
+.milestones::before{
+  content:"";position:absolute;left:14px;right:14px;top:14px;height:2px;background:var(--border);
+}
+.milestones .ms{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;
+}
+.ms .dot{
+  width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-3);font-weight:600;
+}
+.ms.done .dot{background:var(--primary);border-color:var(--primary);color:#fff;}
+.ms.current .dot{background:#fff;border-color:var(--success);color:var(--success);box-shadow:0 0 0 4px rgba(27,185,117,.18);}
+.ms .lbl{font-size:10px;color:var(--text-3);text-align:center;}
+.ms.done .lbl,.ms.current .lbl{color:var(--text-1);font-weight:500;}
+
+/* === Detail page header === */
+.nav-header{
+  height:48px;display:flex;align-items:center;padding:0 4px;background:#fff;
+  border-bottom:1px solid var(--border-light);
+}
+.nav-header .back{
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--text-1);
+  background:none;border:none;cursor:pointer;
+}
+.nav-header .title{flex:1;text-align:center;font-size:16px;font-weight:600;}
+.nav-header .right{width:40px;display:flex;justify-content:center;}
+
+/* === Form === */
+.form{padding:14px 16px;}
+.form-group{
+  background:#fff;border-radius:14px;padding:4px 16px;margin-bottom:14px;
+  box-shadow:var(--shadow-sm);
+}
+.form-row{
+  padding:14px 0;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border-light);
+}
+.form-row:last-child{border-bottom:none;}
+.form-row label{
+  font-size:13px;color:var(--text-1);min-width:80px;
+}
+.form-row label .req{color:var(--danger);}
+.form-row input,.form-row select,.form-row textarea{
+  flex:1;border:none;outline:none;font-size:13px;color:var(--text-1);text-align:right;background:transparent;font-family:inherit;
+}
+.form-row input::placeholder{color:var(--text-4);}
+.form-row select{appearance:none;background:transparent;}
+.form-row textarea{text-align:left;resize:none;min-height:72px;}
+.form-actions{padding:18px 0;}
+.btn-block{
+  width:100%;height:46px;border-radius:14px;background:var(--primary);color:#fff;
+  font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .15s;border:none;cursor:pointer;font-family:inherit;
+}
+.btn-block:active{transform:scale(.98);background:var(--primary-dark);}
+
+/* Modal toast */
+.toast{
+  position:fixed;left:50%;top:60px;transform:translate(-50%,-20px);
+  background:#1F2733;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;
+  opacity:0;pointer-events:none;transition:all .25s;z-index:200;
+  box-shadow:var(--shadow-lg);
+}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+
+/* Floating action / notice */
+.floating-tip{
+  position:absolute;left:16px;right:16px;bottom:90px;background:#1F2733;color:#fff;
+  border-radius:12px;padding:12px 14px;font-size:12px;display:flex;gap:10px;align-items:center;
+  z-index:8;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(20px);transition:all .3s;
+  pointer-events:none;
+}
+.floating-tip.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.floating-tip .ic{
+  width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#FFD68F,#F29100);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.floating-tip .text{flex:1;}
+.floating-tip h6{font-size:12px;font-weight:600;}
+.floating-tip p{font-size:10px;opacity:.7;margin-top:2px;}
+.floating-tip button{color:#7DD3FC;font-size:12px;font-weight:500;}
+
+/* Course detail banner */
+.course-detail-banner{
+  margin-top:14px;background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;
+  border-radius:18px;padding:20px;position:relative;overflow:hidden;
+}
+.course-detail-banner::before{
+  content:"";position:absolute;width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 60%);
+  right:-40px;top:-50px;
+}
+
+/* Notice (warning) banner */
+.warn-banner{
+  padding:14px 16px;background:linear-gradient(135deg,#FFF8E1,#FFE0B3);
+  display:flex;align-items:center;gap:12px;
+}
+.warn-banner .ic{
+  width:48px;height:48px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;color:#F29100;
+}
+.warn-banner h3{font-size:15px;font-weight:600;color:#9A6500;}
+.warn-banner p{font-size:11px;color:#9A6500;opacity:.8;margin-top:2px;}
+
+/* Generic small section card */
+.detail-card{
+  margin-top:14px;background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow-sm);
+}
+.detail-card h4{font-size:14px;font-weight:600;margin-bottom:12px;}
+.detail-card .info-list{display:flex;flex-direction:column;gap:10px;font-size:13px;}
+.detail-card .info-list .info-row{display:flex;justify-content:space-between;}
+.detail-card .info-list .info-row span:first-child{color:var(--text-3);}
+.detail-card p{font-size:13px;color:var(--text-2);line-height:1.7;}
+
+#xfjsAiMSearchPill{display:none!important;}
+</style>
+<style>
+/* ==== migrated volunteer features ==== */
+.m-subtabs{display:flex;gap:8px;overflow-x:auto;padding:10px 16px 10px;-webkit-overflow-scrolling:touch;background:var(--bg);}
+.m-subtabs::-webkit-scrollbar{display:none;}
+.m-subtab{flex:0 0 auto;height:34px;padding:0 14px;border-radius:9px;border:1px solid var(--border-light);background:#fff;color:var(--text-2);font-size:13px;font-weight:500;white-space:nowrap;cursor:pointer;font-family:inherit;}
+.m-subtab.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.m-ppane{display:none;}
+.m-ppane.active{display:block;}
+.va-tabs{
+  position:relative;z-index:2;margin:0 0 14px;padding:6px 12px 0;
+  display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+}
+.va-tabs::-webkit-scrollbar{display:block;height:3px;}
+.va-tabs::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+.va-tabs::-webkit-scrollbar-track{background:transparent;}
+.va-tab{
+  flex-shrink:0;padding:9px 14px;border-radius:999px;background:#fff;
+  font-size:12px;color:var(--text-2);border:1px solid var(--border-light);
+  display:inline-flex;align-items:center;gap:5px;transition:all .15s;cursor:pointer;font-family:inherit;font-weight:500;
+}
+.va-tab.active{background:linear-gradient(135deg,#F29100,#FFAA33);color:#fff;border-color:#F29100;box-shadow:0 6px 12px rgba(242,145,0,.28);}
+.va-tab .num{
+  background:rgba(0,0,0,.06);color:var(--text-3);font-size:10px;padding:0 6px;border-radius:8px;font-weight:600;
+}
+.va-tab.active .num{background:rgba(255,255,255,.22);color:#fff;}
+
+.tab-pane{display:none;animation:fadeIn .25s ease;}
+.tab-pane.active{display:block;}
+
+/* 我的课程 */
+.mc-card{background:#fff;border-radius:14px;border:1px solid var(--border-light);padding:14px;margin-bottom:12px;box-shadow:var(--shadow-sm);}
+.mc-card .mc-h{font-size:14px;font-weight:600;margin-bottom:3px;}
+.mc-card .mc-s{font-size:11px;color:var(--text-3);margin-bottom:12px;line-height:1.5;}
+.mc-item{border:1px solid var(--border-light);border-radius:12px;padding:12px;background:#FAFBFD;margin-bottom:10px;}
+.mc-item:last-child{margin-bottom:0;}
+.mc-item .top{display:flex;align-items:flex-start;gap:10px;}
+.mc-item .ic{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:600;flex-shrink:0;}
+.mc-item .nm{font-size:13px;font-weight:600;color:var(--text-1);line-height:1.4;flex:1;}
+.mc-item .mc-tag{font-size:10px;font-weight:500;padding:2px 7px;border-radius:5px;flex-shrink:0;white-space:nowrap;}
+.mc-tag.todo{background:var(--warning-bg);color:var(--warning);}
+.mc-tag.report{background:var(--primary-light);color:var(--primary);}
+.mc-tag.done{background:var(--success-bg);color:var(--success);}
+.mc-tag.src{background:#F4F0FF;color:#7C5BC1;}
+.mc-tag.norm{background:var(--border-light);color:var(--text-3);}
+.mc-item .meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:11px;color:var(--text-3);}
+.mc-item .mc-act{margin-top:10px;}
+.mc-item .mc-act .btn-block{height:36px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+/* 通用卡片 */
+.va-card{
+  margin:14px 16px;background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow-sm);
+}
+.va-card .hd{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;
+  border-bottom:1px dashed var(--border-light);
+}
+.va-card .hd h4{font-size:14px;font-weight:600;display:flex;align-items:center;gap:7px;}
+.va-card .hd .ic-mini{
+  width:26px;height:26px;border-radius:8px;background:var(--primary-light);color:var(--primary);
+  display:flex;align-items:center;justify-content:center;
+}
+.va-card .hd .meta{font-size:11px;color:var(--text-3);}
+.va-card .hd .more{font-size:11px;color:var(--primary);}
+
+.status-tag{
+  display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;
+  font-size:10px;font-weight:500;gap:3px;
+}
+.status-tag.ok{background:var(--success-bg);color:var(--success);}
+.status-tag.process{background:var(--primary-light);color:var(--primary);}
+.status-tag.warn{background:var(--warning-bg);color:var(--warning);}
+.status-tag.danger{background:var(--danger-bg);color:var(--danger);}
+
+/* KPI 2x2 网格 */
+.kpi-2x2{margin:14px 16px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.kpi-cell{
+  background:#fff;border-radius:12px;padding:14px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+}
+.kpi-cell .ic{
+  width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;
+}
+.kpi-cell .lbl{font-size:10px;color:var(--text-3);}
+.kpi-cell .num{font-size:18px;font-weight:700;margin-top:3px;line-height:1.1;}
+.kpi-cell .num small{font-size:10px;font-weight:400;color:var(--text-3);margin-left:2px;}
+.kpi-cell .delta{font-size:10px;margin-top:5px;display:inline-flex;align-items:center;gap:2px;font-weight:500;}
+.kpi-cell .delta.up{color:var(--success);}
+.kpi-cell .stars-mini{margin-top:4px;display:inline-flex;gap:1px;}
+.kpi-cell .stars-mini svg{width:10px;height:10px;color:#FFC53D;}
+.kpi-cell .pbar{margin-top:6px;height:4px;background:var(--bg);border-radius:3px;overflow:hidden;}
+.kpi-cell .pbar .fill{height:100%;background:linear-gradient(90deg,#FFD68F,#F29100);border-radius:3px;}
+
+/* 审批 4 步进度（纵向） */
+.audit-mini{display:flex;flex-direction:column;gap:0;}
+.audit-mini .step{display:flex;gap:10px;position:relative;padding-bottom:14px;}
+.audit-mini .step:last-child{padding-bottom:0;}
+.audit-mini .step::before{
+  content:"";position:absolute;left:11px;top:24px;bottom:0;width:2px;background:var(--border-light);
+}
+.audit-mini .step:last-child::before{display:none;}
+.audit-mini .step.done::before{background:var(--success);}
+.audit-mini .step .dot{
+  width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:11px;font-weight:600;flex-shrink:0;z-index:1;
+}
+.audit-mini .step.done .dot{background:var(--success);border-color:var(--success);color:#fff;}
+.audit-mini .step.current .dot{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 0 0 3px rgba(48,135,204,.16);}
+.audit-mini .step .info{flex:1;min-width:0;}
+.audit-mini .step h6{font-size:13px;font-weight:500;}
+.audit-mini .step p{font-size:11px;color:var(--text-3);margin-top:2px;line-height:1.5;}
+.audit-mini .step .time{font-size:10px;color:var(--text-4);margin-top:2px;}
+.audit-mini .step.done .time{color:var(--success);}
+
+/* 时长趋势柱状图 */
+.chart-bars-mini{
+  display:flex;align-items:flex-end;gap:8px;height:88px;padding:14px 0 4px;
+  border-bottom:1px dashed var(--border-light);
+}
+.chart-bars-mini .bar{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:0;justify-content:flex-end;height:100%;position:relative;
+}
+.chart-bars-mini .bar .b{
+  width:100%;max-width:32px;background:linear-gradient(180deg,#7DD3FC,#3087CC);border-radius:5px 5px 0 0;
+  transition:all .25s;position:relative;
+}
+.chart-bars-mini .bar .b.current{background:linear-gradient(180deg,#FFD68F,#F29100);}
+.chart-bars-mini .bar .b .v{
+  position:absolute;top:-15px;left:50%;transform:translateX(-50%);
+  font-size:9px;font-weight:600;color:var(--text-1);white-space:nowrap;
+}
+.chart-bars-mini .bar .b.current .v{color:var(--warning);}
+.chart-bars-mini-x{display:flex;gap:8px;padding:6px 0 0;}
+.chart-bars-mini-x .lbl{flex:1;text-align:center;font-size:9px;color:var(--text-3);}
+
+/* 时长记录列表 */
+.record-list{display:flex;flex-direction:column;gap:8px;}
+.record-row{
+  display:flex;gap:10px;align-items:center;padding:10px;background:#FAFBFD;border-radius:9px;border:1px solid var(--border-light);
+  cursor:pointer;
+}
+.record-row:active{background:var(--primary-50);}
+.record-row .sub-ic{
+  width:28px;height:28px;border-radius:7px;color:#fff;font-size:11px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.record-row .info{flex:1;min-width:0;}
+.record-row .info h6{font-size:12px;font-weight:500;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.record-row .info p{font-size:10px;color:var(--text-3);margin-top:2px;}
+.record-row .right{text-align:right;}
+.record-row .pts{font-size:11px;font-weight:600;color:var(--primary);}
+.record-row .right .time{font-size:10px;color:var(--text-3);margin-top:2px;}
+
+/* 星级当前进度卡 */
+.star-now-card{
+  margin:14px 16px;background:linear-gradient(135deg,#FFFBF0,#FFF5E5);
+  border:1px solid #FFE0B3;border-radius:14px;padding:16px;
+}
+.star-now-card .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.star-now-card .row1 strong{font-size:20px;font-weight:700;color:#9A6500;}
+.star-now-card .row1 strong small{font-size:12px;font-weight:400;opacity:.7;margin-left:3px;}
+.star-now-card .row1 p{font-size:11px;color:#9A6500;margin-top:2px;}
+.star-now-card .star-row-mini{display:inline-flex;gap:2px;}
+.star-now-card .star-row-mini svg{width:14px;height:14px;color:#F29100;}
+.star-now-card .progress{height:6px;background:rgba(242,145,0,.18);border-radius:4px;overflow:hidden;}
+.star-now-card .progress .fill{height:100%;background:linear-gradient(90deg,#FFD68F,#F29100);border-radius:4px;}
+.star-now-card .scale{display:flex;justify-content:space-between;font-size:9px;color:#9A6500;margin-top:6px;}
+.star-now-card .scale .now{color:#653A00;font-weight:600;}
+.star-now-card .btn-claim{
+  width:100%;height:42px;border-radius:11px;background:linear-gradient(135deg,#F29100,#FFAA33);
+  color:#fff;border:none;font-size:13px;font-weight:600;margin-top:12px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  box-shadow:0 6px 16px rgba(242,145,0,.32);font-family:inherit;cursor:pointer;
+}
+.star-now-card .btn-claim:active{transform:scale(.98);}
+
+/* 5 级评定列表 */
+.star-rules{display:flex;flex-direction:column;gap:8px;}
+.star-rule-row{
+  display:flex;gap:10px;padding:10px;background:#FAFBFD;border-radius:9px;border:1px solid var(--border-light);
+  align-items:center;
+}
+.star-rule-row.current{background:linear-gradient(135deg,#FFFBF0,#FFF5E5);border-color:#FFE0B3;}
+.star-rule-row.target{background:#F4FAFE;border-color:#BFDDF6;}
+.star-rule-row .lv{
+  width:32px;height:32px;border-radius:50%;color:#fff;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.star-rule-row.s1 .lv{background:linear-gradient(135deg,#9CBFDA,#3087CC);}
+.star-rule-row.s2 .lv{background:linear-gradient(135deg,#7DD3FC,#0EA5E9);}
+.star-rule-row.s3 .lv{background:linear-gradient(135deg,#A7F3D0,#1BB975);}
+.star-rule-row.s4 .lv{background:linear-gradient(135deg,#FFD68F,#F29100);}
+.star-rule-row.s5 .lv{background:linear-gradient(135deg,#FFAA33,#FF6B6B);}
+.star-rule-row .info{flex:1;min-width:0;}
+.star-rule-row .info h6{font-size:13px;font-weight:600;}
+.star-rule-row .info p{font-size:11px;color:var(--text-3);margin-top:2px;line-height:1.5;}
+.star-rule-row .stat{font-size:11px;font-weight:600;flex-shrink:0;}
+.star-rule-row .stat.ok{color:var(--success);}
+.star-rule-row .stat.miss{color:var(--danger);}
+.star-rule-row .stat.now{color:var(--warning);}
+
+/* 反馈概览 */
+.appeal-overview{margin:14px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.appeal-overview .item{
+  background:#fff;border-radius:10px;padding:10px 4px;text-align:center;border:1px solid var(--border-light);
+}
+.appeal-overview .item .num{font-size:18px;font-weight:700;}
+.appeal-overview .item .num.ok{color:var(--success);}
+.appeal-overview .item .num.warn{color:var(--warning);}
+.appeal-overview .item .num.process{color:var(--primary);}
+.appeal-overview .item .lbl{font-size:9px;color:var(--text-3);margin-top:2px;}
+
+.appeal-list{display:flex;flex-direction:column;gap:8px;}
+.appeal-row{
+  display:flex;gap:10px;align-items:flex-start;padding:10px;background:#FAFBFD;border-radius:9px;
+  border:1px solid var(--border-light);cursor:pointer;
+}
+.appeal-row:active{background:var(--primary-50);}
+.appeal-row .ic{
+  width:28px;height:28px;border-radius:8px;background:var(--primary-light);color:var(--primary);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.appeal-row .ic.warn{background:var(--warning-bg);color:var(--warning);}
+.appeal-row .ic.danger{background:var(--danger-bg);color:var(--danger);}
+.appeal-row .info{flex:1;min-width:0;}
+.appeal-row .info .top{display:flex;justify-content:space-between;align-items:center;gap:6px;}
+.appeal-row .info h6{font-size:12px;font-weight:600;line-height:1.4;}
+.appeal-row .info .sub{font-size:10px;color:var(--text-3);margin-top:3px;line-height:1.5;}
+.appeal-row .info .reply{
+  margin-top:6px;padding:6px 8px;background:#fff;border-radius:6px;border:1px dashed var(--border-light);
+  font-size:10px;color:var(--text-2);line-height:1.5;
+}
+.appeal-row .info .reply strong{color:var(--success);}
+
+/* 提交按钮 */
+/* ===== Mobile Overlay ===== */
+.m-overlay{
+  position:absolute;inset:0;z-index:60;background:#fff;
+  transform:translateY(100%);transition:transform .3s ease;
+  display:flex;flex-direction:column;overflow:hidden;
+  border-radius:38px;
+}
+.m-overlay.open{transform:translateY(0);}
+.m-overlay .m-topbar{
+  height:48px;display:flex;align-items:center;padding:0 4px;background:#fff;
+  border-bottom:1px solid var(--border-light);flex-shrink:0;
+}
+.m-overlay .m-topbar .back{
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  background:none;border:none;cursor:pointer;color:var(--text-1);
+}
+.m-overlay .m-topbar h3{flex:1;text-align:center;font-size:16px;font-weight:600;}
+.m-overlay .m-topbar .right-ph{width:40px;}
+.m-overlay .m-body{flex:1;overflow-y:auto;padding:0 0 90px;background:var(--bg);}
+.m-overlay .m-foot{
+  position:absolute;bottom:0;left:0;right:0;padding:12px 16px;background:#fff;
+  border-top:1px solid var(--border-light);display:flex;gap:10px;
+  border-radius:0 0 38px 38px;
+}
+.m-foot .btn-block{flex:1;height:42px;font-size:14px;}
+
+/* Overlay form sections */
+.m-section{background:#fff;border-radius:14px;padding:16px;margin:14px 16px;box-shadow:var(--shadow-sm);}
+.m-sec-head{
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;
+  border-bottom:2px solid var(--primary);
+}
+.m-sec-head .ic{
+  width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  background:var(--primary-light);color:var(--primary);
+}
+.m-sec-head h4{font-size:14px;font-weight:600;}
+
+/* Form fields */
+.fld{
+  padding:11px 0;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border-light);
+}
+.fld:last-child{border-bottom:none;}
+.fld label{font-size:13px;color:var(--text-1);min-width:80px;flex-shrink:0;}
+.fld label .req{color:var(--danger);margin-left:2px;}
+.fld input,.fld select,.fld textarea{
+  flex:1;border:none;outline:none;font-size:13px;color:var(--text-1);
+  text-align:right;background:transparent;font-family:inherit;
+}
+.fld input::placeholder,.fld textarea::placeholder{color:var(--text-4);}
+.fld input[readonly]{color:var(--text-3);}
+.fld select{appearance:none;background:transparent;}
+.fld.col{flex-direction:column;align-items:stretch;gap:8px;}
+.fld.col label{min-width:auto;}
+.fld.col textarea{
+  text-align:left;resize:none;min-height:78px;line-height:1.5;
+  padding:8px 10px;background:#F8FAFC;border-radius:8px;
+}
+.fld.col textarea:focus{background:#fff;box-shadow:inset 0 0 0 1px var(--primary);}
+input.eg,textarea.eg{color:var(--text-4);}
+input.eg:focus,textarea.eg:focus{color:var(--text-1);}
+
+/* Read-only KV pairs */
+.m-kv{padding:10px 0;border-bottom:1px solid var(--border-light);}
+.m-kv:last-child{border-bottom:none;}
+.m-kv label{font-size:11px;color:var(--text-3);display:block;margin-bottom:3px;}
+.m-kv span{font-size:13px;color:var(--text-1);}
+
+/* Upload */
+.upload-row{
+  margin-top:8px;border:1.5px dashed var(--border);border-radius:10px;padding:14px;
+  display:flex;align-items:center;gap:10px;color:var(--text-3);font-size:12px;
+  background:#FAFBFD;cursor:pointer;transition:all .15s;
+}
+.upload-row:active{border-color:var(--primary);background:var(--primary-50);color:var(--primary);}
+.upload-row .ic{
+  width:34px;height:34px;border-radius:8px;background:#fff;color:var(--primary);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  border:1px solid var(--border-light);
+}
+.upload-row .info strong{display:block;font-size:13px;color:var(--text-1);font-weight:500;}
+.upload-row .info span{font-size:10px;}
+
+/* 协议 */
+.agree-row{
+  display:flex;align-items:flex-start;gap:8px;padding:10px 0;font-size:12px;color:var(--text-2);line-height:1.5;
+}
+.checkbox{
+  width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;cursor:pointer;
+  position:relative;transition:all .15s;margin-top:1px;
+}
+.checkbox.checked{background:var(--primary);border-color:var(--primary);}
+.checkbox.checked::after{
+  content:"";position:absolute;left:4px;top:1px;width:5px;height:9px;
+  border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg);
+}
+
+/* 申请类别卡片 */
+.ao-cat-card{
+  border:2px solid var(--border-light);border-radius:12px;padding:14px;margin-bottom:10px;
+  cursor:pointer;transition:all .15s;
+}
+.ao-cat-card.active{border-color:var(--primary);background:var(--primary-50);}
+.ao-cat-card .ao-cat-title{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.ao-cat-card .ao-cat-desc{font-size:11px;color:var(--text-3);margin-top:4px;line-height:1.5;}
+.ao-cat-card .ao-cat-radios{margin-top:8px;display:flex;flex-direction:column;gap:6px;}
+.ao-cat-radio{
+  display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2);cursor:pointer;
+  padding:6px 8px;border-radius:8px;border:1px solid var(--border-light);background:#FAFBFD;
+}
+.ao-cat-radio.active{border-color:var(--primary);background:var(--primary-50);color:var(--primary);font-weight:500;}
+.rd{width:14px;height:14px;min-width:14px;min-height:14px;border-radius:50%;border:2px solid #bbb;flex-shrink:0;position:relative;}
+.ao-cat-radio.active .rd{border-color:var(--primary);}
+.ao-cat-radio.active .rd::after{
+  content:"";position:absolute;left:2px;top:2px;width:6px;height:6px;border-radius:50%;background:var(--primary);
+}
+
+/* 辅导组别 */
+.ao-grp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px;}
+.ao-grp-radio{
+  display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2);cursor:pointer;
+  padding:8px 10px;border-radius:8px;border:1px solid var(--border-light);background:#FAFBFD;
+}
+.ao-grp-radio.active{border-color:var(--primary);background:var(--primary-50);color:var(--primary);font-weight:500;}
+.ao-grp-radio.active .rd{border-color:var(--primary);}
+.ao-grp-radio.active .rd::after{
+  content:"";position:absolute;left:2px;top:2px;width:6px;height:6px;border-radius:50%;background:var(--primary);
+}
+
+/* 课程成绩表格 */
+.m-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px;}
+.m-table th{background:var(--bg);padding:8px 4px;font-weight:600;text-align:center;border-bottom:1px solid var(--border);}
+.m-table td{padding:8px 4px;text-align:center;border-bottom:1px solid var(--border-light);}
+
+/* 课程成绩卡片 */
+.m-course-cards{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+.m-course-card{border:1px solid var(--border-light);border-radius:12px;padding:12px;background:#FAFBFD;}
+.m-course-card.on{border-color:var(--primary);background:var(--primary-50);}
+.m-course-card .cc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.m-course-card .cc-name{font-size:14px;font-weight:600;color:var(--text-1);line-height:1.4;word-break:break-word;flex:1;}
+.m-course-card .cc-show{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-3);flex-shrink:0;white-space:nowrap;cursor:pointer;}
+.m-course-card .cc-show input{width:15px;height:15px;accent-color:var(--primary);}
+.m-course-card .cc-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:8px;font-size:12px;color:var(--text-3);}
+.m-course-card .cc-meta .cc-score{margin-left:auto;color:var(--primary);font-weight:600;font-size:13px;}
+
+/* 英语水平多项 */
+.m-eng-list{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+.m-eng-row{display:flex;align-items:center;gap:8px;}
+.m-eng-row select{flex:1;min-width:0;}
+.m-eng-row input{width:90px;flex-shrink:0;}
+.m-eng-row .eng-del{width:30px;height:34px;flex-shrink:0;border:1px solid var(--border);background:#fff;border-radius:8px;color:var(--text-3);font-size:18px;line-height:1;cursor:pointer;}
+.eng-add-btn{margin-top:8px;display:inline-flex;align-items:center;gap:4px;padding:7px 12px;border-radius:8px;border:1px dashed var(--primary);background:var(--primary-50);color:var(--primary);font-size:13px;font-weight:500;cursor:pointer;}
+
+/* 审核记录 */
+.audit-record{margin-top:10px;}
+.audit-record .ar-item{
+  display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-light);
+}
+.audit-record .ar-item:last-child{border-bottom:none;}
+.audit-record .ar-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0;margin-top:4px;
+}
+.audit-record .ar-dot.pending{background:var(--warning);}
+.audit-record .ar-dot.fail{background:var(--danger);}
+.audit-record .ar-info{flex:1;}
+.audit-record .ar-info h6{font-size:12px;font-weight:500;}
+.audit-record .ar-info p{font-size:11px;color:var(--text-3);margin-top:2px;}
+
+/* 小按钮 */
+.btn-sm{
+  display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:6px;
+  font-size:11px;font-weight:500;background:var(--primary);color:#fff;
+  border:none;cursor:pointer;font-family:inherit;white-space:nowrap;
+}
+.btn-sm:active{opacity:.8;}
+.btn-sm.ghost{background:transparent;color:var(--primary);border:1px solid var(--primary);}
+
+</style>
+</head>
+<body>
+<div class="phone-shell">
+  <div class="screen">
+    <div class="status-bar dark"></div>
+    <div class="app">
+      <div class="pages">
+        <div class="page">
+        <div class="profile-sticky">
+          <div class="profile-banner">
+            <div class="pro-head">
+              <div class="ava">王</div>
+              <div class="info">
+                <h3>王诗韵</h3>
+                <p>外国语学院 · 英语 2023</p>
+                <div class="stars">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="rgba(255,255,255,.4)"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <span style="font-size:11px;margin-left:4px;opacity:.85;">四星级义工</span>
+                </div>
+                <div class="pro-ids">
+                  <span class="id-chip">知新馆辅学义工</span>
+                  <span class="id-chip">院级辅学义工</span>
+                  <span class="id-chip">56度中南辅学义工</span>
+                </div>
+              </div>
+            </div>
+            <div class="pro-stats">
+              <div class="item"><strong>182</strong><span>累计时长</span></div>
+              <div class="item"><strong>56</strong><span>解答数</span></div>
+              <div class="item"><strong>1856</strong><span>获赞</span></div>
+            </div>
+            <!-- 积分入口 -->
+            <div onclick="openPointsPanel('earn')" style="position:relative;z-index:1;margin-top:10px;background:rgba(255,255,255,.16);backdrop-filter:blur(10px);border-radius:12px;padding:12px 14px;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .15s;" onmouseenter="this.style.background='rgba(255,255,255,.24)'" onmouseleave="this.style.background='rgba(255,255,255,.16)'">
+              <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,rgba(255,212,79,.9),rgba(245,166,35,.9));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div style="flex:1;">
+                <div style="font-size:11px;opacity:.8;margin-bottom:2px;">当前积分</div>
+                <div style="display:flex;align-items:baseline;gap:4px;">
+                  <strong style="font-size:22px;font-weight:700;line-height:1;">1,280</strong>
+                  <span style="font-size:11px;opacity:.75;">积分</span>
+                </div>
+              </div>
+              <div style="opacity:.7;display:flex;align-items:center;gap:2px;">
+                <span style="font-size:10px;opacity:.8;">明细</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="m-subtabs">
+            <button class="m-subtab active" data-ptab="overview" onclick="pSwitchTab('overview')">概览</button>
+            <button class="m-subtab" data-ptab="mycourses" onclick="pSwitchTab('mycourses')">我的课程</button>
+            <button class="m-subtab" data-ptab="progress" onclick="pSwitchTab('progress')">时长 & 积分</button>
+            <button class="m-subtab" data-ptab="stars" onclick="pSwitchTab('stars')">星级申报</button>
+          </div>
+        </div><!-- /.profile-sticky -->
+
+        <div class="m-ppane active" id="mppane-overview">
+          <style>
+            .ov-chip{flex-shrink:0;padding:6px 12px;border-radius:999px;background:var(--bg);border:1px solid var(--border-light);font-size:12px;color:var(--text-2);white-space:nowrap;cursor:pointer;}
+            .ov-chip.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+            .ov-tab{flex:1;padding:8px;border-radius:8px;background:var(--bg);border:1px solid var(--border-light);font-size:12px;color:var(--text-2);cursor:pointer;}
+            .ov-tab.active{background:var(--primary-light);color:var(--primary);border-color:var(--primary-light);font-weight:600;}
+            .ov-book{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:10px;cursor:pointer;}
+            .ov-book .bic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;}
+            .ov-qa{padding:11px 12px;background:var(--bg);border-radius:10px;cursor:pointer;}
+          </style>
+
+          <!-- 星级冲刺进度 -->
+          <div class="pro-section">
+            <h4>星级冲刺进度</h4>
+            <p style="font-size:12px;color:var(--text-3);">距 5 星仅差 18h，再坚持几节课就能拿到 🌟</p>
+            <div class="milestones" style="margin-top:14px;">
+              <div class="ms done"><div class="dot">1</div><div class="lbl">10h<br/>一星</div></div>
+              <div class="ms done"><div class="dot">2</div><div class="lbl">30h<br/>二星</div></div>
+              <div class="ms done"><div class="dot">3</div><div class="lbl">60h<br/>三星</div></div>
+              <div class="ms done"><div class="dot">4</div><div class="lbl">100h<br/>四星</div></div>
+              <div class="ms current"><div class="dot">5</div><div class="lbl">200h<br/>五星</div></div>
+            </div>
+            <button class="btn-block" style="margin-top:16px;background:linear-gradient(135deg,#F29100,#FFAA33);" onclick="pSwitchTab('stars')">提交星级申报</button>
+          </div>
+
+          <!-- 我的义工申请 状态 -->
+          <div class="pro-section" style="background:linear-gradient(135deg,#F4FAFE,#E3F1F9);border:1px solid #BFDDF6;">
+            <h4 style="color:var(--primary-dark);">我的义工申请</h4>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.6;">2026 春季学期辅学义工招募已开启 · 审核通过后默认授予一星级义工</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:10px 12px;background:rgba(255,255,255,.72);border-radius:10px;">
+              <div>
+                <div style="font-size:11px;color:var(--text-3);">当前申请状态</div>
+                <div style="font-size:13px;font-weight:600;color:var(--success);margin-top:2px;">✓ 审核通过 · 四星级</div>
+              </div>
+              <a class="btn-block sm" href="volunteer-apply.html" style="width:auto;padding:0 16px;">再次申请</a>
+            </div>
+          </div>
+
+          <!-- 我的预约 / 报名 -->
+          <div class="pro-section">
+            <h4>我的预约 / 报名</h4>
+            <div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;-webkit-overflow-scrolling:touch;scrollbar-width:none;" id="mBookChips">
+              <button class="ov-chip active" onclick="mFilterBook('all',this)">全部</button>
+              <button class="ov-chip" onclick="mFilterBook('course',this)">课程报名</button>
+              <button class="ov-chip" onclick="mFilterBook('venue',this)">场地预约</button>
+              <button class="ov-chip" onclick="mFilterBook('ended',this)">已结束</button>
+            </div>
+            <div id="mBookList" style="display:flex;flex-direction:column;gap:8px;">
+              <div class="ov-book" data-type="course" onclick="showToast('查看报名详情')">
+                <div class="bic ci-math"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+                <div style="flex:1;min-width:0;"><h6 style="font-size:13px;font-weight:600;">高等数学A · 微分方程专题</h6><p style="font-size:11px;color:var(--text-3);margin-top:3px;">04-30 10:00–12:00 · 知新馆 301</p></div>
+                <span class="c-tag success" style="flex-shrink:0;">已报名</span>
+              </div>
+              <div class="ov-book" data-type="venue" onclick="showToast('查看预约详情')">
+                <div class="bic" style="background:var(--primary);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                <div style="flex:1;min-width:0;"><h6 style="font-size:13px;font-weight:600;">知新馆 301 · 场地预约</h6><p style="font-size:11px;color:var(--text-3);margin-top:3px;">04-30 14:00–16:00 · 微分方程小组讨论</p></div>
+                <span class="c-tag success" style="flex-shrink:0;">已批准</span>
+              </div>
+              <div class="ov-book" data-type="course" onclick="showToast('查看报名详情')">
+                <div class="bic ci-eng"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+                <div style="flex:1;min-width:0;"><h6 style="font-size:13px;font-weight:600;">大学英语六级 · 真题精讲</h6><p style="font-size:11px;color:var(--text-3);margin-top:3px;">04-29 14:00–16:00 · 知新馆 205</p></div>
+                <span class="c-tag warning" style="flex-shrink:0;">待确认</span>
+              </div>
+              <div class="ov-book" data-type="ended" onclick="showToast('查看结束记录')" style="opacity:.72;">
+                <div class="bic ci-phy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+                <div style="flex:1;min-width:0;"><h6 style="font-size:13px;font-weight:600;">大学物理 · 电磁学专题</h6><p style="font-size:11px;color:var(--text-3);margin-top:3px;">04-20 14:00–16:00 · 知新馆 B101</p></div>
+                <span class="c-tag grey" style="flex-shrink:0;">已结束</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 问答记录 -->
+          <div class="pro-section">
+            <h4>问答记录 <a href="qa.html">查看全部</a></h4>
+            <div style="display:flex;gap:8px;margin-bottom:12px;">
+              <button class="ov-tab active" onclick="mSwitchQaTab('q',this)">我的提问</button>
+              <button class="ov-tab" onclick="mSwitchQaTab('a',this)">我的回答</button>
+            </div>
+            <div id="mQaQ" style="display:flex;flex-direction:column;gap:8px;">
+              <div class="ov-qa" onclick="showToast('查看问答详情')">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;"><h6 style="font-size:13px;font-weight:500;line-height:1.5;flex:1;">英语六级写作如何积累高级词汇和句型？</h6><span class="c-tag success" style="flex-shrink:0;">已解决</span></div>
+                <p style="font-size:11px;color:var(--text-3);margin-top:6px;">提问于 5h 前 · 15 个回答</p>
+              </div>
+              <div class="ov-qa" onclick="showToast('查看问答详情')">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;"><h6 style="font-size:13px;font-weight:500;line-height:1.5;flex:1;">六级听力如何快速提升？</h6><span class="c-tag warning" style="flex-shrink:0;">待回答</span></div>
+                <p style="font-size:11px;color:var(--text-3);margin-top:6px;">提问于 1d 前 · 0 个回答</p>
+              </div>
+            </div>
+            <div id="mQaA" style="display:none;flex-direction:column;gap:8px;">
+              <div class="ov-qa" onclick="showToast('查看问答详情')">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;"><h6 style="font-size:13px;font-weight:500;line-height:1.5;flex:1;">高数期末如何高效复习才能 90+？</h6><span class="c-tag" style="flex-shrink:0;">已采纳</span></div>
+                <p style="font-size:11px;color:var(--text-3);margin-top:6px;">回答于 2d 前 · 👍 12 个赞</p>
+              </div>
+              <div class="ov-qa" onclick="showToast('查看问答详情')">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;"><h6 style="font-size:13px;font-weight:500;line-height:1.5;flex:1;">考研数学一近 3 年真题在哪里可以找到？</h6><span class="c-tag grey" style="flex-shrink:0;">已回答</span></div>
+                <p style="font-size:11px;color:var(--text-3);margin-top:6px;">回答于 3d 前 · 👍 6 个赞</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 我上传的资料 -->
+          <div class="pro-section">
+            <h4>我上传的资料 <a href="library.html">查看全部</a></h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="res-card" onclick="showToast('查看资料详情')">
+                <div class="ftype ftype-pdf">PDF</div>
+                <h5>英语六级写作高分模板</h5>
+                <div class="meta"><span style="font-size:10px;color:var(--text-3);">学涯规划类</span><span class="c-tag success" style="font-size:9px;">已通过</span></div>
+              </div>
+              <div class="res-card" onclick="showToast('查看资料详情')">
+                <div class="ftype ftype-doc">DOC</div>
+                <h5>英语六级听力技巧</h5>
+                <div class="meta"><span style="font-size:10px;color:var(--text-3);">笔记讲义</span><span class="c-tag warning" style="font-size:9px;">待审核</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="height:20px;"></div>
+        </div><!-- /#mppane-overview -->
+<div class="m-ppane" id="mppane-mycourses">
+            <div class="mc-card">
+              <div class="mc-h">待授课 · 组长已分配</div>
+              <div class="mc-s">学生报名或个人报课需求经组长分配后的课程，请按排课时间准时授课</div>
+              <div class="mc-item">
+                <div class="top">
+                  <div class="ic" style="background:linear-gradient(135deg,#7C5BC1,#B59CE5);">听</div>
+                  <div class="nm">六级听力 · 专项强化</div>
+                  <span class="mc-tag src">个人报课需求</span>
+                </div>
+                <div class="meta"><span>🕒 05-10 09:00-11:00</span><span>📍 知新馆 205</span><span>👤 学员 刘晨曦</span><span>1对多辅导</span></div>
+                <div class="mc-act"><button class="btn-block sm" onclick="openOverlay('reqDetailOverlay')">查看详情</button></div>
+              </div>
+              <div class="mc-item">
+                <div class="top">
+                  <div class="ic" style="background:linear-gradient(135deg,#3087CC,#9CBFDA);">高</div>
+                  <div class="nm">高等数学A · 微分方程专题</div>
+                  <span class="mc-tag norm">课程报名</span>
+                </div>
+                <div class="meta"><span>🕒 05-08 10:00-12:00</span><span>📍 知新馆 301</span><span>👥 已报名 24 人</span></div>
+                <div class="mc-act"><button class="btn-block sm" onclick="openMyCourseDetail(1)">查看详情</button></div>
+              </div>
+              <div class="mc-item">
+                <div class="top">
+                  <div class="ic" style="background:linear-gradient(135deg,#F29100,#FFD68F);">英</div>
+                  <div class="nm">大学英语六级 · 真题精讲</div>
+                  <span class="mc-tag norm">课程报名</span>
+                </div>
+                <div class="meta"><span>🕒 05-10 14:00-16:00</span><span>📍 知新馆 205</span><span>👥 已报名 18 人</span></div>
+                <div class="mc-act"><button class="btn-block sm" onclick="openMyCourseDetail(2)">查看详情</button></div>
+              </div>
+            </div>
+            <div class="mc-card">
+              <div class="mc-h">已授课 · 可申报时长</div>
+              <div class="mc-s">完成授课后，选择对应课程申报本次辅导时长</div>
+              <div class="mc-item">
+                <div class="top">
+                  <div class="ic" style="background:linear-gradient(135deg,#3087CC,#9CBFDA);">高</div>
+                  <div class="nm">高等数学A · 微分方程专题</div>
+                  <span class="mc-tag report">待申报</span>
+                </div>
+                <div class="meta"><span>🕒 04-30 10:00-12:00</span><span>📍 知新馆 301</span><span>👥 实到 28 人</span></div>
+                <div class="mc-act"><button class="btn-block sm" onclick="openNewHourForm('高等数学A · 微分方程专题')">申报时长</button></div>
+              </div>
+              <div class="mc-item">
+                <div class="top">
+                  <div class="ic" style="background:linear-gradient(135deg,#7C5BC1,#B59CE5);">线</div>
+                  <div class="nm">线性代数 · 行列式专题</div>
+                  <span class="mc-tag done">审核中</span>
+                </div>
+                <div class="meta"><span>🕒 04-22 14:00-16:00</span><span>📍 知新馆 202</span><span>👥 实到 20 人</span></div>
+                <div class="mc-act"><button class="btn-block secondary sm" onclick="pSwitchTab('progress')">查看进度</button></div>
+              </div>
+            </div>
+          </div><!-- /#pane-mycourses -->
+
+
+          <!-- ===== Tab 2：时长&积分 ===== -->
+          
+<div class="m-ppane" id="mppane-progress">
+            <div class="kpi-2x2">
+              <div class="kpi-cell">
+                <div class="ic" style="background:var(--primary-light);color:var(--primary);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <div class="lbl">累计辅学时长</div>
+                <div class="num">182<small>小时</small></div>
+                <span class="delta up">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 15 12 9 18 15"/></svg>
+                  本月 +18h
+                </span>
+              </div>
+              <div class="kpi-cell">
+                <div class="ic" style="background:#F4F0FF;color:#7C5BC1;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                <div class="lbl">累计服务积分</div>
+                <div class="num">2,460<small>分</small></div>
+                <span class="delta up">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 15 12 9 18 15"/></svg>
+                  +12.6%
+                </span>
+              </div>
+              <div class="kpi-cell">
+                <div class="ic" style="background:#FFF8E1;color:#F29100;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                </div>
+                <div class="lbl">当前星级</div>
+                <div class="num">四星级</div>
+                <span class="stars-mini">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="rgba(242,145,0,.25)"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                </span>
+              </div>
+              <div class="kpi-cell">
+                <div class="ic" style="background:var(--success-bg);color:var(--success);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div class="lbl">距下一星级</div>
+                <div class="num">18<small>h · 91%</small></div>
+                <div class="pbar"><div class="fill" style="width:91%;"></div></div>
+              </div>
+            </div>
+
+            <!-- 时长趋势 -->
+            <div class="va-card">
+              <div class="hd">
+                <h4>
+                  <span class="ic-mini">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  </span>
+                  月度时长趋势
+                </h4>
+                <div class="meta">月均 30.3h</div>
+              </div>
+              <div class="chart-bars-mini">
+                <div class="bar"><div class="b" style="height:42%;"><span class="v">26h</span></div></div>
+                <div class="bar"><div class="b" style="height:55%;"><span class="v">34h</span></div></div>
+                <div class="bar"><div class="b" style="height:75%;"><span class="v">46h</span></div></div>
+                <div class="bar"><div class="b" style="height:62%;"><span class="v">38h</span></div></div>
+                <div class="bar"><div class="b" style="height:32%;"><span class="v">20h</span></div></div>
+                <div class="bar"><div class="b current" style="height:30%;"><span class="v">18h</span></div></div>
+              </div>
+              <div class="chart-bars-mini-x">
+                <div class="lbl">11月</div><div class="lbl">12月</div><div class="lbl">1月</div>
+                <div class="lbl">2月</div><div class="lbl">3月</div><div class="lbl">4月</div>
+              </div>
+            </div>
+
+            <!-- 时长记录 -->
+            <div class="va-card">
+              <div class="hd">
+                <h4>
+                  <span class="ic-mini" style="background:var(--warning-bg);color:var(--warning);">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                  </span>
+                  最近时长
+                </h4>
+                <div style="display:flex;gap:6px;align-items:center;">
+                  
+                  <button class="btn-sm" onclick="openNewHourForm()">+ 申报新时长</button>
+                </div>
+              </div>
+              <div class="record-list">
+                <div class="record-row" onclick="openHourDetail(0)">
+                  <div class="sub-ic" style="background:linear-gradient(135deg,#F29100,#FFD68F);">英</div>
+                  <div class="info">
+                    <h6>大学英语六级 · 真题精讲</h6>
+                    <p>04-26 14:00-16:00 · 2.0h</p>
+                  </div>
+                  <div class="right">
+                    <div class="pts">+30</div>
+                    <span class="status-tag ok" style="margin-top:3px;">已审</span>
+                  </div>
+                </div>
+                <div class="record-row" onclick="openHourDetail(1)">
+                  <div class="sub-ic" style="background:linear-gradient(135deg,#3087CC,#5BA8DE);">数</div>
+                  <div class="info">
+                    <h6>高数答疑 · 周三晚自习</h6>
+                    <p>04-24 19:00-21:00 · 2.0h</p>
+                  </div>
+                  <div class="right">
+                    <div class="pts">+30</div>
+                    <span class="status-tag ok" style="margin-top:3px;">已审</span>
+                  </div>
+                </div>
+                <div class="record-row" onclick="openHourDetail(2)">
+                  <div class="sub-ic" style="background:linear-gradient(135deg,#F29100,#FFD68F);">英</div>
+                  <div class="info">
+                    <h6>四级写作工作坊</h6>
+                    <p>04-21 10:00-12:00 · 2.0h</p>
+                  </div>
+                  <div class="right">
+                    <div class="pts">+35</div>
+                    <span class="status-tag process" style="margin-top:3px;">审核中</span>
+                  </div>
+                </div>
+                <div class="record-row" onclick="openHourDetail(3)" style="background:#FFF5E5;border-color:#FFE0B3;">
+                  <div class="sub-ic" style="background:linear-gradient(135deg,#1BB975,#A7F3D0);">资</div>
+                  <div class="info">
+                    <h6>资料整理 · 六级真题</h6>
+                    <p>04-15 · 3.0h</p>
+                  </div>
+                  <div class="right">
+                    <div class="pts" style="color:var(--warning);">+25</div>
+                    <span class="status-tag warn" style="margin-top:3px;">已驳回</span>
+                    <button class="btn-sm" style="margin-top:6px;" onclick="event.stopPropagation();openEditRejectedHour()">编辑重提</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 积分兑换入口 -->
+            <div class="va-card" style="background:linear-gradient(135deg,#FFF8E1,#FFEFC2);border-color:#FFE0B3;cursor:pointer;" onclick="openPointsPanel('shop')">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:42px;height:42px;border-radius:11px;background:#fff;color:#F29100;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                </div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:14px;font-weight:600;color:#8A6D00;">积分兑换商城</div>
+                  <div style="font-size:11px;color:#A0791A;margin-top:2px;">1,280 可用积分 · 1 分 ≈ 6 元 · 开放至 7-10</div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A6D00" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+
+            <!-- 积分换算说明 -->
+            <div class="va-card">
+              <div class="hd">
+                <h4>
+                  <span class="ic-mini">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+                  </span>
+                  积分换算说明
+                </h4>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;">
+                <div style="display:flex;justify-content:space-between;padding:7px 10px;background:#FAFBFD;border-radius:7px;"><span>课程辅导（小时）</span><strong style="color:var(--primary);">15 分</strong></div>
+                <div style="display:flex;justify-content:space-between;padding:7px 10px;background:#FAFBFD;border-radius:7px;"><span>讲座 / 工作坊（次）</span><strong style="color:var(--primary);">25 分</strong></div>
+                <div style="display:flex;justify-content:space-between;padding:7px 10px;background:#FAFBFD;border-radius:7px;"><span>1 对 1 答疑（小时）</span><strong style="color:var(--primary);">12 分</strong></div>
+                <div style="display:flex;justify-content:space-between;padding:7px 10px;background:#FAFBFD;border-radius:7px;"><span>资料贡献（4条 · 通过审核）</span><strong style="color:var(--primary);">8 分</strong></div>
+              </div>
+            </div>
+          </div><!-- /#pane-progress -->
+
+
+          <!-- ===== Tab 3：星级申报 ===== -->
+          
+<div class="m-ppane" id="mppane-stars">
+            <div class="star-now-card">
+              <div class="row1">
+                <div>
+                  <strong>182<small>h / 200h</small></strong>
+                  <p>四星级义工 · 距 5 星仅差 18h</p>
+                </div>
+                <span class="star-row-mini">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="rgba(242,145,0,.25)"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                </span>
+              </div>
+              <div class="progress"><div class="fill" style="width:91%;"></div></div>
+              <div class="scale">
+                <span>0h</span><span>10h·1星</span><span>30h·2星</span>
+                <span>60h·3星</span><span class="now">100h·4星</span><span>200h·5星</span>
+              </div>
+              <button class="btn-claim" onclick="showToast('已开启冲刺提醒')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                开启星级冲刺提醒
+              </button>
+            </div>
+
+            <!-- 5 级标准列表 -->
+            <div class="va-card">
+              <div class="hd">
+                <h4>
+                  <span class="ic-mini" style="background:#FFF8E1;color:#F29100;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  </span>
+                  星级评定标准
+                </h4>
+                <div class="meta">达标可自助申报</div>
+              </div>
+              <div class="star-rules">
+                <div class="star-rule-row s1">
+                  <div class="lv">1</div>
+                  <div class="info"><h6>一星级</h6><p>≥ 10h</p></div>
+                  <div class="stat ok">✓ 达标</div>
+                </div>
+                <div class="star-rule-row s2">
+                  <div class="lv">2</div>
+                  <div class="info"><h6>二星级</h6><p>≥ 30h</p></div>
+                  <div class="stat ok">✓ 达标</div>
+                </div>
+                <div class="star-rule-row s3">
+                  <div class="lv">3</div>
+                  <div class="info"><h6>三星级</h6><p>≥ 60h</p></div>
+                  <div class="stat ok">✓ 达标</div>
+                </div>
+                <div class="star-rule-row s4 current">
+                  <div class="lv">4</div>
+                  <div class="info"><h6>四星级 · 当前</h6><p>≥ 100h</p></div>
+                  <div class="stat now">当前</div>
+                </div>
+                <div class="star-rule-row s5 target">
+                  <div class="lv">5</div>
+                  <div class="info"><h6>五星级 · 目标</h6><p>≥ 200h · 申请后需参与线下答辩</p></div>
+                  <button class="btn-sm" onclick="openStarApplyForm()" style="flex-shrink:0;">申请</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 申报历史 -->
+            <div class="va-card">
+              <div class="hd">
+                <h4>
+                  <span class="ic-mini" style="background:var(--success-bg);color:var(--success);">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </span>
+                  星级申报历史
+                </h4>
+                <div class="meta">4 次 · 全部通过</div>
+              </div>
+              <div class="star-rules">
+                <div class="star-rule-row s4" onclick="openStarHistoryDetail(0)" style="cursor:pointer;">
+                  <div class="lv">4</div>
+                  <div class="info"><h6>申报四星级</h6><p>102h</p></div>
+                  <div class="stat ok">✓</div>
+                </div>
+                <div class="star-rule-row s3" onclick="openStarHistoryDetail(1)" style="cursor:pointer;">
+                  <div class="lv">3</div>
+                  <div class="info"><h6>申报三星级</h6><p>64h</p></div>
+                  <div class="stat ok">✓</div>
+                </div>
+                <div class="star-rule-row s2" onclick="openStarHistoryDetail(2)" style="cursor:pointer;">
+                  <div class="lv">2</div>
+                  <div class="info"><h6>申报二星级</h6><p>32h</p></div>
+                  <div class="stat ok">✓</div>
+                </div>
+                <div class="star-rule-row s1" onclick="openStarHistoryDetail(3)" style="cursor:pointer;">
+                  <div class="lv">1</div>
+                  <div class="info"><h6>授予一星级</h6><p>15h</p></div>
+                  <div class="stat ok">✓</div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /#pane-stars -->
+        </div>
+      </div>
+      <nav class="tabbar"></nav>
+<div class="m-overlay" id="reqDetailOverlay">
+      <div class="m-topbar">
+        <button class="back" onclick="closeOverlay('reqDetailOverlay')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <h3>个人报课需求详情</h3>
+        <div class="right-ph"></div>
+      </div>
+      <div class="m-body">
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h4>学员信息</h4></div>
+          <div class="m-kv"><label>学员姓名</label><span>刘晨曦</span></div>
+          <div class="m-kv"><label>学员信息</label><span>外国语学院 · 英语 2024</span></div>
+          <div class="m-kv"><label>联系方式</label><span>188****6021</span></div>
+        </div>
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic" style="background:#F4F0FF;color:#7C5BC1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h4>报课需求</h4></div>
+          <div class="m-kv"><label>需求课程名称</label><span>六级听力 · 专项强化</span></div>
+          <div class="m-kv"><label>所属学科</label><span>英语类</span></div>
+          <div class="m-kv"><label>辅导形式</label><span>1对多辅导</span></div>
+          <div class="m-kv"><label>上课次数</label><span>一次性</span></div>
+          <div class="m-kv"><label>偏好时间段</label><span>周末上午</span></div>
+          <div class="m-kv"><label>当前状态</label><span>待授课</span></div>
+          <div class="m-kv"><label>具体学习需求</label><span style="line-height:1.7;">需要针对六级听力部分的强化训练，特别是长对话和讲座题型，目前正确率约 55%，希望突破到 75% 以上。</span></div>
+        </div>
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic" style="background:var(--success-bg);color:var(--success);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><h4>排课与分配</h4></div>
+          <div class="m-kv"><label>排课时间</label><span>2026-05-10 09:00 ~ 11:00</span></div>
+          <div class="m-kv"><label>上课地点</label><span>知新馆 205</span></div>
+          <div class="m-kv"><label>分配人</label><span>知新馆英语组 · 李组长</span></div>
+          <div class="m-kv"><label>分配时间</label><span>2026-05-02 11:30</span></div>
+        </div>
+      </div>
+      <div class="m-foot">
+        <button class="btn-block" onclick="closeOverlay('reqDetailOverlay')">关闭</button>
+      </div>
+    </div>
+
+    <!-- ===== Overlay: 我自己报的课 · 申报详情 ===== -->
+    <div class="m-overlay" id="myCourseDetailOverlay">
+      <div class="m-topbar">
+        <button class="back" onclick="closeOverlay('myCourseDetailOverlay')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <h3>申报详情</h3>
+        <div class="right-ph"></div>
+      </div>
+      <div class="m-body" id="myCourseDetailBody"></div>
+      <div class="m-foot" id="myCourseDetailFoot"></div>
+    </div>
+
+    <!-- ===== Overlay 3: 时长申请详情 ===== -->
+    <div class="m-overlay" id="hourDetailOverlay">
+      <div class="m-topbar">
+        <button class="back" onclick="closeHourDetail()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <h3>时长申请详情</h3>
+        <div class="right-ph"></div>
+      </div>
+      <div class="m-body" id="hourDetailBody"></div>
+      <div class="m-foot" id="hourDetailFoot">
+        <button class="btn-block" onclick="closeHourDetail()">关闭</button>
+      </div>
+    </div>
+
+    <!-- ===== Overlay 4: 申报新时长 ===== -->
+    <div class="m-overlay" id="newHourOverlay">
+      <div class="m-topbar">
+        <button class="back" onclick="closeNewHourForm()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <h3>申报新时长</h3>
+        <div class="right-ph"></div>
+      </div>
+      <div class="m-body">
+        <div id="editRejectNote" style="display:none;background:var(--danger-bg);border:1px solid #F6BCBE;border-radius:10px;padding:10px 12px;margin-bottom:12px;">
+          <div style="font-size:12px;font-weight:600;color:var(--danger);">该时长申报曾被驳回</div>
+          <div style="font-size:11px;color:var(--text-2);margin-top:3px;line-height:1.5;" id="editRejectReason"></div>
+        </div>
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h4>基本信息</h4></div>
+          <div class="fld"><label>姓名/学号 <span class="req">*</span></label><input value="王诗韵 / 2023XX0042" readonly /></div>
+          <div class="fld"><label>义工类别 <span class="req">*</span></label>
+            <select><option selected>知新馆辅学义工</option><option>56度中南辅学义工</option><option>院级辅学义工</option></select>
+          </div>
+        </div>
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic" style="background:var(--warning-bg);color:var(--warning);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><h4>上课信息</h4></div>
+          <div class="fld"><label>辅导课程名称 <span class="req">*</span></label>
+            <input placeholder="请输入课程辅导名称" />
+          </div>
+          <div class="fld"><label>学期 <span class="req">*</span></label>
+            <select><option>2025-2026 秋学期</option><option selected>2025-2026 春学期</option></select>
+          </div>
+          <div class="fld"><label>开始时间 <span class="req">*</span></label><input type="datetime-local" /></div>
+          <div class="fld"><label>结束时间 <span class="req">*</span></label><input type="datetime-local" /></div>
+          <div class="fld"><label>上课地点 <span class="req">*</span></label><input placeholder="如：知新馆 B203" /></div>
+          <div class="fld"><label>辅导类型 <span class="req">*</span></label>
+            <select><option selected>一对多辅导</option><option>一对一辅导</option></select>
+          </div>
+          <div class="fld"><label>辅导时长 <span class="req">*</span></label><input value="自动计算" readonly /></div>
+          <div class="fld"><label>上课人数 <span class="req">*</span></label><input type="number" placeholder="请输入人数" /></div>
+          <div class="fld col">
+            <label>辅导内容 <span class="req">*</span></label>
+            <textarea placeholder="请简要描述本次辅导的主要内容"></textarea>
+          </div>
+          <div class="fld col">
+            <label>辅导照片 <span class="req">*</span></label>
+            <div class="upload-row" onclick="showToast('请选择辅导照片')">
+              <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+              <div class="info" style="flex:1;"><strong>上传辅导照片</strong><span>支持 JPG/PNG · 不超过 5MB</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="m-foot">
+        <button class="btn-block secondary" onclick="showToast('已保存草稿');closeNewHourForm()">保存草稿</button>
+        <button class="btn-block" onclick="submitNewHour()">提交申请</button>
+      </div>
+    </div>
+
+    <!-- ===== Overlay 5: 星级申报申请 ===== -->
+    <div class="m-overlay" id="starApplyOverlay">
+      <div class="m-topbar">
+        <button class="back" onclick="closeStarApplyForm()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <h3>星级申报申请</h3>
+        <div class="right-ph"></div>
+      </div>
+      <div class="m-body">
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h4>基本信息</h4></div>
+          <div class="fld"><label>姓名/学号 <span class="req">*</span></label><input value="王诗韵 / 2023XX0042" readonly /></div>
+          <div class="fld"><label>义工类别 <span class="req">*</span></label>
+            <select><option selected>知新馆辅学义工</option><option>56度中南辅学义工</option><option>院级辅学义工</option></select>
+          </div>
+          <div class="fld"><label>当前星级 <span class="req">*</span></label><input value="四星级" readonly /></div>
+          <div class="fld"><label>服务时长 <span class="req">*</span></label><input value="182 小时" readonly /></div>
+        </div>
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic" style="background:#FFF8E1;color:#F29100;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg></div><h4>星级申请</h4></div>
+          <div class="fld"><label>申请星级 <span class="req">*</span></label>
+            <select><option>一星级</option><option>二星级</option><option>三星级</option><option>四星级</option><option selected>五星级</option></select>
+          </div>
+          <div class="fld col">
+            <label style="display:flex;align-items:center;justify-content:space-between;">
+              <span>辅学义工工作总结 <span class="req">*</span></span>
+              
+            </label>
+            <textarea placeholder="请总结您的辅学义工工作情况"></textarea>
+          </div>
+          <div class="fld col">
+            <label style="display:flex;align-items:center;justify-content:space-between;">
+              <span>申请理由与优势 <span class="req">*</span></span>
+              
+            </label>
+            <textarea placeholder="请描述申请该星级的理由和个人优势"></textarea>
+          </div>
+          <div class="fld col">
+            <label style="display:flex;align-items:center;justify-content:space-between;">
+              <span>未来工作计划 <span class="req">*</span></span>
+              
+            </label>
+            <textarea placeholder="请描述未来的辅学义工工作计划"></textarea>
+          </div>
+          <div class="fld col">
+            <label style="display:flex;align-items:center;justify-content:space-between;">
+              <span>相关思考与建议 <span class="req">*</span></span>
+              
+            </label>
+            <textarea placeholder="对辅学义工工作的相关思考与建议"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="m-foot">
+        <button class="btn-block secondary" onclick="showToast('已保存草稿');closeStarApplyForm()">保存草稿</button>
+        <button class="btn-block" onclick="submitStarApply()">提交申请</button>
+      </div>
+    </div>
+
+    <!-- ===== Overlay 6: 星级申报详情 ===== -->
+    <div class="m-overlay" id="starHistoryOverlay">
+      <div class="m-topbar">
+        <button class="back" onclick="closeStarHistoryDetail()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <h3>星级申报详情</h3>
+        <div class="right-ph"></div>
+      </div>
+      <div class="m-body" id="starHistoryBody"></div>
+      <div class="m-foot">
+        <button class="btn-block" onclick="closeStarHistoryDetail()">关闭</button>
+      </div>
+    </div>
+
+    <!-- ===== Overlay 7: 新增反馈 ===== -->
+    
+<div id="photoPreview" onclick="closePhotoPreview()" style="display:none;position:absolute;inset:0;z-index:200;background:rgba(15,32,55,.85);backdrop-filter:blur(6px);border-radius:38px;align-items:center;justify-content:center;cursor:pointer;transition:opacity .25s;opacity:0;">
+      <img id="photoPreviewImg" src="" style="max-width:70%;max-height:60%;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.4);transition:transform .3s ease;transform:scale(.8);" />
+    </div>
+
+      <!-- ===== 积分详情全屏面板 ===== -->
+      <div class="star-overlay" id="pointsPanel">
+        <div class="so-header">
+          <button class="back-btn" onclick="closePointsPanel()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <h3>我的积分</h3>
+          <div style="width:36px;"></div>
+        </div>
+        <div class="so-body" style="padding:0;">
+          <!-- 积分汇总卡片 -->
+          <div style="background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;padding:20px 16px 28px;position:relative;overflow:hidden;">
+            <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.1);right:-60px;top:-80px;"></div>
+            <div style="position:relative;z-index:1;text-align:center;">
+              <div style="font-size:12px;opacity:.8;margin-bottom:4px;">当前可用积分</div>
+              <div id="mPtAvail" style="font-size:48px;font-weight:800;line-height:1;letter-spacing:-2px;">1,280</div>
+              <div style="font-size:11px;opacity:.7;margin-top:6px;">积分</div>
+            </div>
+            <div style="position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin-top:16px;background:rgba(255,255,255,.15);border-radius:12px;overflow:hidden;">
+              <div style="padding:10px;text-align:center;border-right:1px solid rgba(255,255,255,.15);">
+                <div id="mPtEarned" style="font-size:18px;font-weight:700;">1,580</div>
+                <div style="font-size:10px;opacity:.8;margin-top:2px;">累计获取</div>
+              </div>
+              <div style="padding:10px;text-align:center;border-right:1px solid rgba(255,255,255,.15);">
+                <div id="mPtRedeemed" style="font-size:18px;font-weight:700;">300</div>
+                <div style="font-size:10px;opacity:.8;margin-top:2px;">已兑换</div>
+              </div>
+              <div style="padding:10px;text-align:center;">
+                <div id="mPtBalance" style="font-size:18px;font-weight:700;">1,280</div>
+                <div style="font-size:10px;opacity:.8;margin-top:2px;">可用余额</div>
+              </div>
+            </div>
+          </div>
+          <!-- Tab 切换 -->
+          <div style="display:flex;background:#fff;border-bottom:1px solid var(--border-light);position:sticky;top:0;z-index:2;">
+            <button id="ptab-shop" onclick="switchPointsTab('shop')" style="flex:1;height:44px;border:none;background:none;font-size:13px;font-weight:500;color:var(--primary);border-bottom:2px solid var(--primary);cursor:pointer;font-family:inherit;">积分商城</button>
+            <button id="ptab-earn" onclick="switchPointsTab('earn')" style="flex:1;height:44px;border:none;background:none;font-size:13px;font-weight:400;color:var(--text-3);border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;">获取记录</button>
+            <button id="ptab-redeem" onclick="switchPointsTab('redeem')" style="flex:1;height:44px;border:none;background:none;font-size:13px;font-weight:400;color:var(--text-3);border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;">兑换记录</button>
+          </div>
+          <!-- 记录列表 -->
+          <div id="pointsListWrap" style="padding:0 0 80px;">
+            <div id="pointsShopList"></div>
+            <div id="pointsEarnList" style="display:none;"></div>
+            <div id="pointsRedeemList" style="display:none;"></div>
+          </div>
+        </div>
+        <!-- 反馈按钮 -->
+        <div style="position:fixed;bottom:0;left:0;right:0;padding:12px 16px;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-top:1px solid var(--border-light);z-index:10;">
+          <a href="volunteer-apply.html#appeal" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:44px;border-radius:12px;background:linear-gradient(135deg,#F4F6FA,#E8ECF2);color:var(--text-2);font-size:13px;font-weight:500;text-decoration:none;border:1px solid var(--border);transition:all .15s;" onmouseenter="this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-2)'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            积分有疑问？前往反馈中心
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script>
+// ====== 移动端公共脚本（Tab 渲染、状态栏、Toast） ======
+
+const MOBILE_TABS = [
+  {id:'home',name:'首页',href:'home.html',icon:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'},
+  {id:'courses',name:'选课',href:'courses.html',icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'},
+  {id:'qa',name:'问答',href:'qa.html',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+  {id:'library',name:'资料库',href:'library.html',icon:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'},
+  {id:'profile',name:'我的',href:'profile.html',icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'}
+];
+
+function renderTabbar(activeId){
+  const tabbar = document.querySelector('.tabbar');
+  if(!tabbar) return;
+  tabbar.innerHTML = MOBILE_TABS.map(t=>{
+    return `<a class="tab ${t.id===activeId?'active':''}" href="${t.href}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg>
+      ${t.name}
+    </a>`;
+  }).join('');
+}
+
+function renderStatusBar(dark=false){
+  const sb = document.querySelector('.status-bar');
+  if(!sb) return;
+  sb.classList.toggle('dark',dark);
+  sb.innerHTML = `
+    <span>9:41</span>
+    <span class="right">
+      <svg width="16" height="10" viewBox="0 0 17 11" fill="currentColor"><rect y="6" width="3" height="5" rx=".5"/><rect x="4" y="4" width="3" height="7" rx=".5"/><rect x="8" y="2" width="3" height="9" rx=".5"/><rect x="12" width="3" height="11" rx=".5"/></svg>
+      <svg width="14" height="10" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 9.5C5.6 9.5 3.4 8.5 1.7 7L8 1l6.3 6c-1.7 1.5-3.9 2.5-6.3 2.5z" fill="currentColor"/></svg>
+      <svg width="22" height="10" viewBox="0 0 24 11" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="1" y="1" width="20" height="9" rx="2" stroke-opacity=".5"/><rect x="22" y="4" width="1.5" height="3" rx=".5" fill="currentColor" stroke="none"/><rect x="2.5" y="2.5" width="14" height="6" rx="1" fill="currentColor"/></svg>
+    </span>
+  `;
+}
+
+// ============= Toast =============
+function showToast(msg){
+  let toast = document.getElementById('toast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id='toast';toast.className='toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent=msg;
+  toast.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer=setTimeout(()=>toast.classList.remove('show'),1800);
+}
+
+// ============= Pills toggle =============
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.pills').forEach(g=>{
+    g.querySelectorAll('.pill').forEach(p=>{
+      p.addEventListener('click',()=>{
+        g.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+        p.classList.add('active');
+      });
+    });
+  });
+});
+
+// ===== 积分详情面板 =====
+const POINTS_EARN = [
+  {icon:'course', desc:'辅学课程：高等数学A · 微分方程专题', date:'2026-05-12', pts:+30},
+  {icon:'course', desc:'辅学课程：英语写作 · 议论文技巧', date:'2026-05-08', pts:+30},
+  {icon:'answer', desc:'问答平台：解答数学问题 ×3', date:'2026-05-05', pts:+15},
+  {icon:'upload', desc:'上传资料：高等数学复习笔记', date:'2026-04-28', pts:+10},
+  {icon:'signin', desc:'连续签到奖励（7天）', date:'2026-04-25', pts:+15},
+  {icon:'course', desc:'辅学课程：Python 实战编程入门', date:'2026-04-20', pts:+30},
+  {icon:'answer', desc:'问答平台：解答英语问题 ×2', date:'2026-04-18', pts:+10},
+  {icon:'event', desc:'参与"学习打卡"主题活动', date:'2026-04-15', pts:+20},
+  {icon:'course', desc:'辅学课程：大学英语六级真题精讲', date:'2026-04-10', pts:+30},
+  {icon:'upload', desc:'上传资料：物理期末错题整理', date:'2026-04-05', pts:+10},
+  {icon:'signin', desc:'连续签到奖励（14天）', date:'2026-04-01', pts:+30},
+  {icon:'answer', desc:'问答平台：解答物理问题 ×1', date:'2026-03-28', pts:+5},
+];
+const POINTS_REDEEM = [
+  {icon:'voucher', desc:'兑换：图书馆延时服务 1次', date:'2026-05-01', pts:-100, status:'已领取'},
+  {icon:'gift', desc:'兑换：知新馆纪念品（保温杯）', date:'2026-04-10', pts:-200, status:'已领取'},
+];
+
+// ===== 积分兑换商城（约 1 积分 ≈ 6 元）=====
+const REWARDS = [
+  {id:'r1', name:'挂脖风扇', cat:'生活好物', price:49, cost:8, emoji:'🌀', img:'../assets/rewards/r1.svg'},
+  {id:'r2', name:'620ml 便当盒', cat:'生活好物', price:45, cost:8, emoji:'🍱', img:'../assets/rewards/r2.svg'},
+  {id:'r3', name:'电动榨汁机', cat:'生活好物', price:69, cost:12, emoji:'🥤', img:'../assets/rewards/r3.svg'},
+  {id:'r4', name:'小米智能护眼台灯', cat:'数码周边', price:99, cost:17, emoji:'💡', img:'../assets/rewards/r4.svg'},
+  {id:'r5', name:'小米蓝牙音响', cat:'数码周边', price:109, cost:18, emoji:'🔊', img:'../assets/rewards/r5.svg'},
+  {id:'r6', name:'滑轮款电脑椅', cat:'学习装备', price:169, cost:28, emoji:'🪑', img:'../assets/rewards/r6.svg'},
+  {id:'r7', name:'华为 FreeBuds SE 2 耳机', cat:'数码周边', price:149, cost:25, emoji:'🎧', img:'../assets/rewards/r7.svg'},
+  {id:'r8', name:'奥克斯多功能按摩仪', cat:'生活好物', price:89, cost:15, emoji:'💆', img:'../assets/rewards/r8.svg'},
+  {id:'r9', name:'TIGER 480ml 保温杯', cat:'生活好物', price:199, cost:33, emoji:'🍵', img:'../assets/rewards/r9.svg'},
+  {id:'r10', name:'华为手环 9', cat:'数码周边', price:269, cost:45, emoji:'⌚', img:'../assets/rewards/r10.svg'},
+  {id:'r11', name:'匡威 GO 2 双肩包', cat:'潮流单品', price:199, cost:33, emoji:'🎒', img:'../assets/rewards/r11.svg'},
+  {id:'r12', name:'PGG 眼部按摩仪', cat:'生活好物', price:99, cost:17, emoji:'👓', img:'../assets/rewards/r12.svg'},
+  {id:'r13', name:'卡西欧石英表（女款）', cat:'潮流单品', price:399, cost:67, emoji:'⌚', img:'../assets/rewards/r13.svg'},
+  {id:'r14', name:'卡西欧石英表（男款）', cat:'潮流单品', price:399, cost:67, emoji:'⌚', img:'../assets/rewards/r14.svg'},
+  {id:'r15', name:'科尔航智能无人机', cat:'数码周边', price:299, cost:50, emoji:'🚁', img:'../assets/rewards/r15.svg'},
+  {id:'r16', name:'富士 instax mini 拍立得', cat:'数码周边', price:499, cost:83, emoji:'📷', img:'../assets/rewards/r16.svg'},
+];
+const mPoints = {avail:1280, earned:1580, redeemed:300};
+
+const _ptIconMap = {
+  course:  {bg:'rgba(48,135,204,.12)',  color:'#1a78c2',  svg:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'},
+  answer:  {bg:'rgba(245,166,35,.12)',  color:'#F29100',  svg:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+  upload:  {bg:'rgba(27,185,117,.12)',  color:'#1BB975',  svg:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>'},
+  signin:  {bg:'rgba(124,91,193,.12)', color:'#7C5BC1',  svg:'<polyline points="20 6 9 17 4 12"/>'},
+  event:   {bg:'rgba(239,68,68,.12)',  color:'#EF4444',  svg:'<polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/>'},
+  voucher: {bg:'rgba(245,166,35,.12)', color:'#F29100',  svg:'<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>'},
+  gift:    {bg:'rgba(236,72,153,.12)', color:'#EC4899',  svg:'<polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>'},
+};
+
+function renderPointsList(type){
+  const data = type==='earn' ? POINTS_EARN : POINTS_REDEEM;
+  const isEarn = type==='earn';
+  if(!data.length) return '<div style="text-align:center;padding:32px 0;color:var(--text-3);font-size:13px;">暂无记录</div>';
+  return data.map((item,i)=>{
+    const ic=_ptIconMap[item.icon]||_ptIconMap.event;
+    return `<div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border-light);background:#fff;">
+      <div style="width:36px;height:36px;border-radius:10px;background:${ic.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${ic.color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ic.svg}</svg>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;color:var(--text-1);line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.desc}</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:3px;">${item.date}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;white-space:nowrap;">
+        <div style="font-size:16px;font-weight:700;color:${isEarn?'var(--success)':'var(--danger)'};">
+          ${isEarn?'+':''}${item.pts}
+          <span style="font-size:10px;font-weight:400;"> 积分</span>
+        </div>
+        ${!isEarn&&item.status?`<div style="margin-top:2px;font-size:10px;font-weight:500;color:${item.status==='已领取'?'var(--success)':'var(--warning)'};">${item.status}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== 兑换商城 =====
+function renderShopList(){
+  const banner=`<div style="margin:14px 16px;padding:11px 13px;border-radius:12px;background:linear-gradient(135deg,#FFF8E1,#FFEFC2);border:1px solid #FFE0B3;display:flex;gap:8px;align-items:flex-start;">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    <div style="font-size:11px;color:#8A6D00;line-height:1.6;">本学期兑换通道<strong>开放中</strong>（截止 7-10）。1 积分 ≈ 6 元，兑换后请到<strong>知新馆</strong>登记领取；积分在校期间长期有效。</div>
+  </div>`;
+  const cards=REWARDS.map(r=>{
+    const ok=mPoints.avail>=r.cost;
+    return `<div style="border:1px solid var(--border-light);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px;background:#fff;">
+      <div style="height:88px;border-radius:9px;background:linear-gradient(135deg,#F4FAFE,#EAF4FC);display:flex;align-items:center;justify-content:center;font-size:30px;overflow:hidden;">${r.img?`<img src="${r.img}" alt="${r.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.outerHTML='${r.emoji||'🎁'}'">`:(r.emoji||'🎁')}</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text-1);line-height:1.35;min-height:32px;">${r.name}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:14px;font-weight:800;color:#F29100;">${r.cost}<span style="font-size:10px;font-weight:500;color:var(--text-3);">分</span></span>
+        <span style="font-size:10px;color:var(--text-4);">¥${r.price}</span>
+      </div>
+      <button onclick="mRedeem('${r.id}')" ${ok?'':'disabled'} style="height:30px;border-radius:8px;border:none;font-size:12px;font-weight:600;font-family:inherit;color:#fff;background:${ok?'var(--primary)':'#C7CDD6'};">${ok?'兑换':'积分不足'}</button>
+    </div>`;
+  }).join('');
+  return banner+`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:2px 16px 20px;">${cards}</div>`;
+}
+
+function mUpdatePointsSummary(){
+  const fmt=n=>n.toLocaleString();
+  document.getElementById('mPtAvail').textContent=fmt(mPoints.avail);
+  document.getElementById('mPtEarned').textContent=fmt(mPoints.earned);
+  document.getElementById('mPtRedeemed').textContent=fmt(mPoints.redeemed);
+  document.getElementById('mPtBalance').textContent=fmt(mPoints.avail);
+}
+
+function mRedeem(id){
+  const r=REWARDS.find(x=>x.id===id);if(!r)return;
+  if(mPoints.avail<r.cost){showToast('积分不足，无法兑换');return;}
+  if(!confirm(`确认使用 ${r.cost} 积分兑换「${r.name}」？\n提交后由知新馆工作人员联系购置，请留意领取通知。`))return;
+  mPoints.avail-=r.cost;
+  mPoints.redeemed+=r.cost;
+  const today=new Date().toISOString().slice(0,10);
+  POINTS_REDEEM.unshift({icon:'gift', desc:'兑换：'+r.name, date:today, pts:-r.cost, status:'待领取'});
+  mUpdatePointsSummary();
+  document.getElementById('pointsShopList').innerHTML=renderShopList();
+  document.getElementById('pointsRedeemList').innerHTML=renderPointsList('redeem');
+  showToast('兑换申请已提交，请留意领取通知');
+}
+
+let _curPointsTab = 'shop';
+function switchPointsTab(tab){
+  _curPointsTab = tab;
+  document.getElementById('pointsShopList').style.display = tab==='shop'?'':'none';
+  document.getElementById('pointsEarnList').style.display = tab==='earn'?'':'none';
+  document.getElementById('pointsRedeemList').style.display = tab==='redeem'?'':'none';
+  const onCss='flex:1;height:44px;border:none;background:none;font-size:13px;font-weight:500;color:var(--primary);border-bottom:2px solid var(--primary);cursor:pointer;font-family:inherit;';
+  const offCss='flex:1;height:44px;border:none;background:none;font-size:13px;font-weight:400;color:var(--text-3);border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;';
+  [['shop','ptab-shop'],['earn','ptab-earn'],['redeem','ptab-redeem']].forEach(([t,id])=>{
+    document.getElementById(id).style.cssText = tab===t?onCss:offCss;
+  });
+}
+
+function openPointsPanel(tab){
+  mUpdatePointsSummary();
+  document.getElementById('pointsShopList').innerHTML = renderShopList();
+  document.getElementById('pointsEarnList').innerHTML = renderPointsList('earn');
+  document.getElementById('pointsRedeemList').innerHTML = renderPointsList('redeem');
+  document.getElementById('pointsPanel').classList.add('open');
+  const body = document.getElementById('pointsPanel').querySelector('.so-body');
+  if(body) body.scrollTop = 0;
+  switchPointsTab(tab||'shop');
+}
+function closePointsPanel(){
+  document.getElementById('pointsPanel').classList.remove('open');
+}
+function selectRadio(card){
+  document.querySelectorAll('#radioGroup .radio-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+}
+function toggleCheck(item){
+  item.querySelector('.ck').classList.toggle('checked');
+}
+
+</script>
+<script>
+  renderStatusBar(true);
+  renderTabbar('profile');
+</script>
+
+<script>
+function openOverlay(id){const o=document.getElementById(id);if(o)o.classList.add('open');}
+function closeOverlay(id){const o=document.getElementById(id);if(o)o.classList.remove('open');}
+function openPhotoPreview(src){
+  const overlay=document.getElementById('photoPreview');
+  const img=document.getElementById('photoPreviewImg');
+  img.src=src;
+  overlay.style.display='flex';
+  requestAnimationFrame(()=>{
+    overlay.style.opacity='1';
+    img.style.transform='scale(1)';
+  });
+}
+function closePhotoPreview(){
+  const overlay=document.getElementById('photoPreview');
+  const img=document.getElementById('photoPreviewImg');
+  overlay.style.opacity='0';
+  img.style.transform='scale(.8)';
+  setTimeout(()=>{ overlay.style.display='none'; },250);
+}
+
+
+// ====== 我自己报的课 · 申报详情 ======
+const MY_PUBLISHED_COURSES=[
+  {id:1, name:'高等数学A · 微分方程专题', type:'答疑坊', subtype:'朋辈辅导', subject:'数学类',
+   source:'义工申请', points:30, applyTime:'2026-04-26 19:30', status:'已通过',
+   time:'2026-05-08 10:00-12:00', loc:'知新馆 301', cap:30, enrollCount:24, starLevel:'三星级',
+   desc:'系统讲解一阶 / 二阶常微分方程的解法、可降阶方程与典型应用题，配合期中真题精讲。',
+   auditLog:[
+     {op:'提交申报', time:'2026-04-26 19:30', user:'王诗韵', desc:''},
+     {op:'初审通过', time:'2026-04-27 10:12', user:'知新馆数学组 · 张老师', desc:'内容符合要求'},
+     {op:'终审通过 · 课程发布', time:'2026-04-28 09:40', user:'学工部', desc:'已发布并开放报名'}
+   ],
+   enrollStudents:[
+     {name:'陈彦', sid:'2024XX0181', dept:'数学与统计学院', enrollTime:'05-01 12:20'},
+     {name:'李欣怡', sid:'2024XX0264', dept:'机械工程学院', enrollTime:'05-02 09:05'},
+     {name:'王浩', sid:'2024XX0312', dept:'计算机学院', enrollTime:'05-02 18:44'}
+   ]},
+  {id:2, name:'大学英语六级 · 真题精讲', type:'答疑坊', subtype:'朋辈辅导', subject:'英语类',
+   source:'义工申请', points:30, applyTime:'2026-04-29 20:14', status:'已通过',
+   time:'2026-05-10 14:00-16:00', loc:'知新馆 205', cap:30, enrollCount:18, starLevel:'三星级',
+   desc:'六级真题阅读与翻译专项，逐题解析高频考点与答题技巧，附词汇与长难句训练。',
+   auditLog:[
+     {op:'提交申报', time:'2026-04-29 20:14', user:'王诗韵', desc:''},
+     {op:'初审通过', time:'2026-04-30 11:02', user:'知新馆英语组 · 李老师', desc:'义工经验充足'},
+     {op:'终审通过 · 课程发布', time:'2026-05-01 09:18', user:'学工部', desc:'已发布并开放报名'}
+   ],
+   enrollStudents:[
+     {name:'赵敏', sid:'2024XX0455', dept:'外国语学院', enrollTime:'05-03 10:11'},
+     {name:'孙琪', sid:'2024XX0501', dept:'经济管理学院', enrollTime:'05-04 14:33'}
+   ]}
+];
+function openMyCourseDetail(id){
+  const a=MY_PUBLISHED_COURSES.find(x=>x.id===id); if(!a) return;
+  const starIcons='★'.repeat({'一星级':1,'二星级':2,'三星级':3,'四星级':4,'五星级':5}[a.starLevel]||3);
+  const banner=`<div style="background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;border-radius:12px;padding:16px;margin:14px;position:relative;overflow:hidden;">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:10px;margin-bottom:8px;">
+      <span style="background:rgba(255,255,255,.2);padding:3px 9px;border-radius:4px;">${a.type}</span>
+      ${a.subtype?`<span style="background:rgba(255,255,255,.2);padding:3px 9px;border-radius:4px;">${a.subtype}</span>`:''}
+    </div>
+    <div style="font-size:15px;font-weight:600;line-height:1.4;">${a.name}</div>
+    <div style="font-size:11px;opacity:.85;margin-top:5px;">${a.time} · ${a.loc}</div>
+  </div>`;
+  const auditHtml=(a.auditLog||[]).map((lg,i,arr)=>`
+    <div style="display:flex;gap:12px;">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div style="width:9px;height:9px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:4px;"></div>
+        ${i<arr.length-1?'<div style="width:2px;flex:1;background:var(--border-light);min-height:24px;"></div>':''}
+      </div>
+      <div style="padding-bottom:14px;flex:1;">
+        <div style="font-size:13px;font-weight:600;">${lg.op} <span style="font-size:11px;color:var(--text-3);font-weight:400;">${lg.time}</span></div>
+        <div style="font-size:12px;color:var(--text-2);margin-top:2px;">操作人：${lg.user}${lg.desc?' · '+lg.desc:''}</div>
+      </div>
+    </div>`).join('');
+  const rows=(a.enrollStudents||[]).map((s,i)=>`<tr><td>${i+1}</td><td>${s.name}</td><td>${s.sid}</td><td>${s.dept}</td><td>${s.enrollTime}</td></tr>`).join('');
+  document.getElementById('myCourseDetailBody').innerHTML=`
+    ${banner}
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><h4>课程信息</h4></div>
+      <div class="m-kv"><label>关联活动课程</label><span>无</span></div>
+      <div class="m-kv"><label>申报人</label><span>王诗韵 / 2023141101</span></div>
+      <div class="m-kv"><label>义工星级</label><span><span style="color:#F5A623;">${starIcons}</span> ${a.starLevel}</span></div>
+      <div class="m-kv"><label>所属学科</label><span>${a.subject}</span></div>
+      <div class="m-kv"><label>课程来源</label><span>${a.source}</span></div>
+      <div class="m-kv"><label>申报时间</label><span>${a.applyTime}</span></div>
+      <div class="m-kv"><label>招生名额</label><span>${a.cap} 人</span></div>
+      <div class="m-kv"><label>已报名人数</label><span>${a.enrollCount} 人</span></div>
+      <div class="m-kv"><label>积分奖励</label><span style="color:var(--primary);font-weight:600;">+${a.points} 积分</span></div>
+      <div class="m-kv"><label>课程简介</label><span style="line-height:1.7;">${a.desc}</span></div>
+    </div>
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic" style="background:#F4F0FF;color:#7C5BC1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h4>审核记录</h4></div>
+      ${auditHtml}
+    </div>
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic" style="background:var(--success-bg);color:var(--success);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h4>报名情况（${a.enrollCount} 人）</h4></div>
+      ${(a.enrollStudents||[]).length<a.enrollCount?'<div style="font-size:11px;color:var(--text-3);margin-bottom:8px;">以下为最近报名名单</div>':''}
+      <div style="overflow-x:auto;"><table class="m-table"><thead><tr><th>#</th><th>姓名</th><th>学号</th><th>学院</th><th>报名时间</th></tr></thead><tbody>${rows}</tbody></table></div>
+    </div>`;
+  document.getElementById('myCourseDetailFoot').innerHTML=`
+    <button class="btn-block" onclick="closeOverlay('myCourseDetailOverlay');openNewHourForm('${a.name}')">申报时长</button>`;
+  openOverlay('myCourseDetailOverlay');
+}
+
+// ====== Hour Records Data ======
+const hourRecords=[
+  {course:'大学英语六级·真题精讲',term:'2025-2026 春学期',timeStart:'2026-04-26 14:00',timeEnd:'2026-04-26 16:00',loc:'知新馆 B203',type:'一对多辅导',h:'2.0h',ppl:'15',content:'针对六级考试真题进行分段精讲，重点解析阅读理解与翻译策略。',audit:[{role:'初审·学生助理',date:'2026-04-26',result:'通过',pass:true,remark:'签到人数与照片匹配。'},{role:'终审·知新馆英语组',date:'2026-04-27',result:'通过',pass:true,remark:'内容充实，予以认定。'}]},
+  {course:'高数答疑·周三晚自习',term:'2025-2026 春学期',timeStart:'2026-04-24 19:00',timeEnd:'2026-04-24 21:00',loc:'知新馆 A106',type:'一对多辅导',h:'2.0h',ppl:'12',content:'高等数学B期末重难点答疑。',audit:[{role:'初审·学生助理',date:'2026-04-24',result:'通过',pass:true,remark:''},{role:'终审·知新馆数学组',date:'2026-04-25',result:'通过',pass:true,remark:'答疑记录完整。'}]},
+  {course:'四级写作工作坊',term:'2025-2026 春学期',timeStart:'2026-04-21 10:00',timeEnd:'2026-04-21 12:00',loc:'知新馆 C301',type:'一对多辅导',h:'2.0h',ppl:'20',content:'四级写作模板讲解与实战练习。',audit:[{role:'初审·学生助理',date:'2026-04-22',result:'待审核',pass:null,remark:''}]},
+  {course:'资料整理·六级真题',term:'2025-2026 春学期',timeStart:'2026-04-15 09:00',timeEnd:'2026-04-15 12:00',loc:'知新馆资料室',type:'资料整理',h:'3.0h',ppl:'1',content:'整理六级历年真题及答案解析。',audit:[{role:'初审·知新馆英语组',date:'2026-04-16',result:'驳回',pass:false,remark:'学科组类目有误，请确认后重新提交。'}]}
+];
+
+function openHourDetail(idx){
+  const d=hourRecords[idx]; if(!d) return;
+  const isRejected=d.audit.some(a=>a.pass===false);
+  const body=document.getElementById('hourDetailBody');
+  let auditHtml=d.audit.map(a=>`
+    <div class="ar-item">
+      <div class="ar-dot${a.pass===true?'':a.pass===false?' fail':' pending'}"></div>
+      <div class="ar-info"><h6>${a.role}</h6><p>${a.date} · ${a.result}${a.remark?' · '+a.remark:''}</p></div>
+    </div>`).join('');
+  body.innerHTML=`
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h4>基本信息</h4></div>
+      <div class="m-kv"><label>姓名/学号 <span class="req">*</span></label><span>王诗韵 / 2023XX0042</span></div>
+      <div class="m-kv"><label>辅学义工类别 <span class="req">*</span></label><span>知新馆辅学义工</span></div>
+    </div>
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic" style="background:var(--warning-bg);color:var(--warning);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><h4>上课信息</h4></div>
+      <div class="m-kv"><label>辅导课程名称 <span class="req">*</span></label><span>${d.course}</span></div>
+      <div class="m-kv"><label>学期 <span class="req">*</span></label><span>${d.term}</span></div>
+      <div class="m-kv"><label>上课时间 <span class="req">*</span></label><span>${d.timeStart} ~ ${d.timeEnd.split(' ')[1]||d.timeEnd}</span></div>
+      <div class="m-kv"><label>上课地点 <span class="req">*</span></label><span>${d.loc}</span></div>
+      <div class="m-kv"><label>辅导类型 <span class="req">*</span></label><span>${d.type}</span></div>
+      <div class="m-kv"><label>辅导时长 <span class="req">*</span></label><span>${d.h}</span></div>
+      <div class="m-kv"><label>上课人数 <span class="req">*</span></label><span>${d.ppl} 人</span></div>
+      <div class="m-kv"><label>辅导内容 <span class="req">*</span></label><span>${d.content}</span></div>
+      <div class="m-kv"><label>辅导照片 <span class="req">*</span></label><span><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='60' viewBox='0 0 80 60'%3E%3Crect width='80' height='60' rx='6' fill='%23E3F1F9'/%3E%3Crect x='10' y='8' width='60' height='34' rx='4' fill='%239CBFDA'/%3E%3Ccircle cx='28' cy='22' r='6' fill='%23E3F1F9'/%3E%3Cpolygon points='18,42 40,22 62,42' fill='%23E3F1F9' opacity='.6'/%3E%3Ctext x='40' y='54' text-anchor='middle' fill='%239096A2' font-size='8' font-family='sans-serif'%3E辅导现场%3C/text%3E%3C/svg%3E" style="width:64px;height:48px;border-radius:6px;border:1px solid var(--border-light);cursor:pointer;object-fit:cover;" onclick="openPhotoPreview(this.src)" /></span></div>
+    </div>
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic" style="background:var(--success-bg);color:var(--success);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h4>审核记录</h4></div>
+      <div class="audit-record">${auditHtml}</div>
+    </div>`;
+  const foot=document.getElementById('hourDetailFoot');
+  if(isRejected){
+    foot.innerHTML=`
+      <button class="btn-block secondary" onclick="showToast('已保存草稿');closeHourDetail()">保存草稿</button>
+      <button class="btn-block" onclick="showToast('已重新提交');setTimeout(closeHourDetail,600)">提交申请</button>`;
+  } else {
+    foot.innerHTML=`<button class="btn-block" onclick="closeHourDetail()">关闭</button>`;
+  }
+  openOverlay('hourDetailOverlay');
+}
+function closeHourDetail(){ closeOverlay('hourDetailOverlay'); }
+
+// ====== New Hour Form ======
+function openNewHourForm(courseName){
+  const ov=document.getElementById('newHourOverlay');
+  const title=ov.querySelector('h3'); if(title) title.textContent='申报新时长';
+  const note=document.getElementById('editRejectNote'); if(note) note.style.display='none';
+  if(ov){
+    const inp=ov.querySelector('input[placeholder="请输入课程辅导名称"]');
+    if(inp) inp.value=courseName||'';
+  }
+  openOverlay('newHourOverlay');
+}
+// 编辑驳回时长 · 重新提交
+function openEditRejectedHour(){
+  const ov=document.getElementById('newHourOverlay');
+  const title=ov.querySelector('h3'); if(title) title.textContent='编辑驳回时长';
+  const inp=ov.querySelector('input[placeholder="请输入课程辅导名称"]');
+  if(inp) inp.value='资料整理 · 六级真题';
+  const note=document.getElementById('editRejectNote');
+  const reason=document.getElementById('editRejectReason');
+  if(reason) reason.textContent='初审 · 知新馆英语组：学科组类目有误，请确认后重新提交。';
+  if(note) note.style.display='block';
+  openOverlay('newHourOverlay');
+}
+function closeNewHourForm(){ closeOverlay('newHourOverlay'); }
+function submitNewHour(){ showToast('时长申报已提交'); setTimeout(closeNewHourForm,600); }
+
+// ====== Star Apply ======
+function openStarApplyForm(){ openOverlay('starApplyOverlay'); }
+function closeStarApplyForm(){ closeOverlay('starApplyOverlay'); }
+function submitStarApply(){ showToast('星级申报已提交'); setTimeout(closeStarApplyForm,600); }
+
+// ====== Star History Data ======
+const starHistoryData=[
+  {level:'四星级',cat:'知新馆辅学义工',curStar:'三星级',hours:'102 小时',summary:'累计完成 60 次辅导服务，涵盖高等数学与大学英语两门课程。',reason:'课程评分稳定在 4.7 以上，学员好评率达 89%。',plan:'计划在下学期增开线性代数辅导专场。',thought:'建议建立义工之间的经验分享机制。',audit:[{role:'学院专干一审',date:'2025-09-20',result:'通过',pass:true,remark:'推荐通过。'},{role:'知新馆指导老师二审',date:'2025-09-22',result:'通过',pass:true,remark:'同意授予四星级。'}]},
+  {level:'三星级',cat:'知新馆辅学义工',curStar:'二星级',hours:'64 小时',summary:'累计完成 32 次辅导服务。',reason:'英语辅导成效显著。',plan:'拓展六级辅导内容。',thought:'建议为义工提供更多培训。',audit:[{role:'学院专干一审',date:'2025-04-13',result:'通过',pass:true,remark:'达标。'},{role:'知新馆指导老师二审',date:'2025-04-15',result:'通过',pass:true,remark:'同意授予三星级。'}]},
+  {level:'二星级',cat:'知新馆辅学义工',curStar:'一星级',hours:'32 小时',summary:'累计完成 16 次辅导服务。',reason:'数学基础扎实，辅导耐心。',plan:'增加英语辅导科目。',thought:'希望有更灵活的排班机制。',audit:[{role:'学院专干一审',date:'2024-12-06',result:'通过',pass:true,remark:''},{role:'知新馆指导老师二审',date:'2024-12-08',result:'通过',pass:true,remark:'同意晋升。'}]},
+  {level:'一星级',cat:'知新馆辅学义工',curStar:'—',hours:'0 小时',summary:'义工招募申请审核通过。',reason:'系统自动授予。',plan:'积极参与辅学服务。',thought:'期待学习成长。',audit:[{role:'系统自动',date:'2024-09-17',result:'通过',pass:true,remark:'默认授予一星级。'}]}
+];
+
+function openStarHistoryDetail(idx){
+  const d=starHistoryData[idx]; if(!d) return;
+  const body=document.getElementById('starHistoryBody');
+  let auditHtml=d.audit.map(a=>`
+    <div class="ar-item">
+      <div class="ar-dot${a.pass?'':' fail'}"></div>
+      <div class="ar-info"><h6>${a.role}</h6><p>${a.date} · ${a.result}${a.remark?' · '+a.remark:''}</p></div>
+    </div>`).join('');
+  body.innerHTML=`
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h4>基本信息</h4></div>
+      <div class="m-kv"><label>姓名/学号</label><span>王诗韵 / 2023XX0042</span></div>
+      <div class="m-kv"><label>辅学义工类别</label><span>${d.cat}</span></div>
+      <div class="m-kv"><label>申请时星级</label><span>${d.curStar}</span></div>
+      <div class="m-kv"><label>志愿服务时长</label><span>${d.hours}</span></div>
+    </div>
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic" style="background:#FFF8E1;color:#F29100;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg></div><h4>星级申请</h4></div>
+      <div class="m-kv"><label>申请星级</label><span>${d.level}</span></div>
+      <div class="m-kv"><label>辅学义工工作总结</label><span>${d.summary}</span></div>
+      <div class="m-kv"><label>申请理由与优势</label><span>${d.reason}</span></div>
+      <div class="m-kv"><label>未来工作计划</label><span>${d.plan}</span></div>
+      <div class="m-kv"><label>相关思考与建议</label><span>${d.thought}</span></div>
+    </div>
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic" style="background:var(--success-bg);color:var(--success);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h4>审核记录</h4></div>
+      <div class="audit-record">${auditHtml}</div>
+    </div>`;
+  openOverlay('starHistoryOverlay');
+}
+function closeStarHistoryDetail(){ closeOverlay('starHistoryOverlay'); }
+
+
+
+function pSwitchTab(name){
+  document.querySelectorAll('.m-subtab').forEach(b=>b.classList.toggle('active', b.dataset.ptab===name));
+  document.querySelectorAll('.m-ppane').forEach(p=>p.classList.toggle('active', p.id==='mppane-'+name));
+  if(history.replaceState) history.replaceState(null,'','#'+name);
+  const pages=document.querySelector('.pages'); if(pages) pages.scrollTo({top:0,behavior:'smooth'});
+}
+// ===== 概览：预约/报名 筛选 =====
+function mFilterBook(type,el){
+  document.querySelectorAll('#mBookChips .ov-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#mBookList .ov-book').forEach(it=>{
+    it.style.display=(type==='all'||it.dataset.type===type)?'flex':'none';
+  });
+}
+// ===== 概览：问答记录 Tab =====
+function mSwitchQaTab(tab,el){
+  document.querySelectorAll('.ov-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('mQaQ').style.display=tab==='q'?'flex':'none';
+  document.getElementById('mQaA').style.display=tab==='a'?'flex':'none';
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const h=(location.hash||'').replace('#','');
+  if(['mycourses','progress','stars','overview'].includes(h)) pSwitchTab(h);
+});
+</script>
+</body>
+</html>

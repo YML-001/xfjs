@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>辅学义工申请 · 学风建设</title>
+<style>
+:root{
+  --primary:#3087CC;
+  --primary-light:#E3F1F9;
+  --primary-dark:#006DAD;
+  --primary-50:#F4FAFE;
+  --text-1:#3C444F;
+  --text-2:#696F7D;
+  --text-3:#9096A2;
+  --text-4:#ABB0BA;
+  --border:#E5E8EE;
+  --border-light:#EFF1F5;
+  --bg:#F4F6FA;
+  --bg-card:#FFFFFF;
+  --success:#1BB975;
+  --success-bg:#E8FCF4;
+  --warning:#F29100;
+  --warning-bg:#FFF5E5;
+  --danger:#DF2027;
+  --danger-bg:#FCE8EA;
+  --shadow-sm:0 1px 3px rgba(15,32,55,.05);
+  --shadow-md:0 6px 20px rgba(15,32,55,.06);
+  --shadow-lg:0 12px 32px rgba(15,32,55,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:"OPPOSans","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;color:var(--text-1);background:#E8ECF2;-webkit-font-smoothing:antialiased;font-size:14px;}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+svg{display:block;flex-shrink:0;}
+::-webkit-scrollbar{display:none;}
+
+.phone-shell{
+  width:390px;height:844px;background:#1F2733;border-radius:48px;padding:10px;
+  box-shadow:0 40px 80px rgba(31,39,51,.32),0 8px 24px rgba(31,39,51,.16);
+  position:relative;
+}
+.phone-shell::before{
+  content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);
+  width:120px;height:32px;background:#1F2733;border-radius:0 0 22px 22px;z-index:5;
+}
+.phone-shell::after{
+  content:"";position:absolute;left:50%;bottom:6px;transform:translateX(-50%);
+  width:130px;height:5px;background:#fff;border-radius:3px;z-index:5;
+}
+.screen{
+  width:100%;height:100%;background:var(--bg);border-radius:38px;overflow:hidden;
+  position:relative;display:flex;flex-direction:column;
+}
+
+.status-bar{
+  height:44px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px 0 32px;font-size:14px;font-weight:600;
+  background:transparent;color:var(--text-1);flex-shrink:0;
+}
+.status-bar.dark{color:#fff;}
+.status-bar .right{display:flex;gap:6px;align-items:center;}
+
+.app{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.pages{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative;}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.page{animation:slideIn .3s ease;}
+
+/* 头部导航 */
+.nav-header{
+  height:48px;display:flex;align-items:center;padding:0 4px;background:#fff;
+  border-bottom:1px solid var(--border-light);position:sticky;top:0;z-index:5;
+}
+.nav-header .back{
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--text-1);
+  background:none;border:none;cursor:pointer;
+}
+.nav-header .title{flex:1;text-align:center;font-size:16px;font-weight:600;}
+.nav-header .right{width:40px;display:flex;justify-content:center;font-size:12px;color:var(--primary);}
+
+/* 顶部 Banner */
+.va-hero{
+  background:linear-gradient(135deg,#3087CC 0%,#006DAD 60%,#7C5BC1 130%);
+  color:#fff;padding:22px 18px 60px;margin-bottom:-44px;position:relative;overflow:hidden;
+}
+.va-hero::before{
+  content:"";position:absolute;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,213,143,.25),transparent 60%);
+  right:-100px;top:-120px;
+}
+.va-hero::after{
+  content:"";position:absolute;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);
+  left:-60px;bottom:-100px;
+}
+.va-hero .badge-h{
+  position:relative;display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:999px;font-size:11px;font-weight:500;
+  background:rgba(255,255,255,.18);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.25);
+}
+.va-hero h2{font-size:22px;font-weight:700;margin-top:14px;line-height:1.3;position:relative;}
+.va-hero h2 strong{
+  background:linear-gradient(90deg,#FFD68F,#FFAA33);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.va-hero p{font-size:12px;opacity:.85;margin-top:6px;line-height:1.6;position:relative;}
+.va-hero .stat-row{margin-top:14px;display:flex;gap:12px;position:relative;}
+.va-hero .stat-row .it{
+  flex:1;background:rgba(255,255,255,.16);backdrop-filter:blur(10px);
+  border-radius:10px;padding:10px;border:1px solid rgba(255,255,255,.22);text-align:center;
+}
+.va-hero .stat-row .it strong{font-size:17px;font-weight:700;display:block;}
+.va-hero .stat-row .it span{font-size:10px;opacity:.85;}
+
+/* Tab 导航 */
+.va-tabs{
+  position:relative;z-index:2;margin:0 0 14px;padding:6px 12px 0;
+  display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+}
+.va-tabs::-webkit-scrollbar{display:block;height:3px;}
+.va-tabs::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+.va-tabs::-webkit-scrollbar-track{background:transparent;}
+.va-tab{
+  flex-shrink:0;padding:9px 14px;border-radius:999px;background:#fff;
+  font-size:12px;color:var(--text-2);border:1px solid var(--border-light);
+  display:inline-flex;align-items:center;gap:5px;transition:all .15s;cursor:pointer;font-family:inherit;font-weight:500;
+}
+.va-tab.active{background:linear-gradient(135deg,#F29100,#FFAA33);color:#fff;border-color:#F29100;box-shadow:0 6px 12px rgba(242,145,0,.28);}
+.va-tab .num{
+  background:rgba(0,0,0,.06);color:var(--text-3);font-size:10px;padding:0 6px;border-radius:8px;font-weight:600;
+}
+.va-tab.active .num{background:rgba(255,255,255,.22);color:#fff;}
+
+.tab-pane{display:none;animation:fadeIn .25s ease;}
+.tab-pane.active{display:block;}
+
+/* 我的课程 */
+.mc-card{background:#fff;border-radius:14px;border:1px solid var(--border-light);padding:14px;margin-bottom:12px;box-shadow:var(--shadow-sm);}
+.mc-card .mc-h{font-size:14px;font-weight:600;margin-bottom:3px;}
+.mc-card .mc-s{font-size:11px;color:var(--text-3);margin-bottom:12px;line-height:1.5;}
+.mc-item{border:1px solid var(--border-light);border-radius:12px;padding:12px;background:#FAFBFD;margin-bottom:10px;}
+.mc-item:last-child{margin-bottom:0;}
+.mc-item .top{display:flex;align-items:flex-start;gap:10px;}
+.mc-item .ic{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:600;flex-shrink:0;}
+.mc-item .nm{font-size:13px;font-weight:600;color:var(--text-1);line-height:1.4;flex:1;}
+.mc-item .mc-tag{font-size:10px;font-weight:500;padding:2px 7px;border-radius:5px;flex-shrink:0;white-space:nowrap;}
+.mc-tag.todo{background:var(--warning-bg);color:var(--warning);}
+.mc-tag.report{background:var(--primary-light);color:var(--primary);}
+.mc-tag.done{background:var(--success-bg);color:var(--success);}
+.mc-tag.src{background:#F4F0FF;color:#7C5BC1;}
+.mc-tag.norm{background:var(--border-light);color:var(--text-3);}
+.mc-item .meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:11px;color:var(--text-3);}
+.mc-item .mc-act{margin-top:10px;}
+.mc-item .mc-act .btn-block{height:36px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+/* 通用卡片 */
+.va-card{
+  margin:14px 16px;background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow-sm);
+}
+.va-card .hd{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;
+  border-bottom:1px dashed var(--border-light);
+}
+.va-card .hd h4{font-size:14px;font-weight:600;display:flex;align-items:center;gap:7px;}
+.va-card .hd .ic-mini{
+  width:26px;height:26px;border-radius:8px;background:var(--primary-light);color:var(--primary);
+  display:flex;align-items:center;justify-content:center;
+}
+.va-card .hd .meta{font-size:11px;color:var(--text-3);}
+.va-card .hd .more{font-size:11px;color:var(--primary);}
+
+.status-tag{
+  display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;
+  font-size:10px;font-weight:500;gap:3px;
+}
+.status-tag.ok{background:var(--success-bg);color:var(--success);}
+.status-tag.process{background:var(--primary-light);color:var(--primary);}
+.status-tag.warn{background:var(--warning-bg);color:var(--warning);}
+.status-tag.danger{background:var(--danger-bg);color:var(--danger);}
+
+/* KPI 2x2 网格 */
+.kpi-2x2{margin:14px 16px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.kpi-cell{
+  background:#fff;border-radius:12px;padding:14px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+}
+.kpi-cell .ic{
+  width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;
+}
+.kpi-cell .lbl{font-size:10px;color:var(--text-3);}
+.kpi-cell .num{font-size:18px;font-weight:700;margin-top:3px;line-height:1.1;}
+.kpi-cell .num small{font-size:10px;font-weight:400;color:var(--text-3);margin-left:2px;}
+.kpi-cell .delta{font-size:10px;margin-top:5px;display:inline-flex;align-items:center;gap:2px;font-weight:500;}
+.kpi-cell .delta.up{color:var(--success);}
+.kpi-cell .stars-mini{margin-top:4px;display:inline-flex;gap:1px;}
+.kpi-cell .stars-mini svg{width:10px;height:10px;color:#FFC53D;}
+.kpi-cell .pbar{margin-top:6px;height:4px;background:var(--bg);border-radius:3px;overflow:hidden;}
+.kpi-cell .pbar .fill{height:100%;background:linear-gradient(90deg,#FFD68F,#F29100);border-radius:3px;}
+
+/* 审批 4 步进度（纵向） */
+.audit-mini{display:flex;flex-direction:column;gap:0;}
+.audit-mini .step{display:flex;gap:10px;position:relative;padding-bottom:14px;}
+.audit-mini .step:last-child{padding-bottom:0;}
+.audit-mini .step::before{
+  content:"";position:absolute;left:11px;top:24px;bottom:0;width:2px;background:var(--border-light);
+}
+.audit-mini .step:last-child::before{display:none;}
+.audit-mini .step.done::before{background:var(--success);}
+.audit-mini .step .dot{
+  width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:11px;font-weight:600;flex-shrink:0;z-index:1;
+}
+.audit-mini .step.done .dot{background:var(--success);border-color:var(--success);color:#fff;}
+.audit-mini .step.current .dot{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 0 0 3px rgba(48,135,204,.16);}
+.audit-mini .step .info{flex:1;min-width:0;}
+.audit-mini .step h6{font-size:13px;font-weight:500;}
+.audit-mini .step p{font-size:11px;color:var(--text-3);margin-top:2px;line-height:1.5;}
+.audit-mini .step .time{font-size:10px;color:var(--text-4);margin-top:2px;}
+.audit-mini .step.done .time{color:var(--success);}
+
+/* 时长趋势柱状图 */
+.chart-bars-mini{
+  display:flex;align-items:flex-end;gap:8px;height:88px;padding:14px 0 4px;
+  border-bottom:1px dashed var(--border-light);
+}
+.chart-bars-mini .bar{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:0;justify-content:flex-end;height:100%;position:relative;
+}
+.chart-bars-mini .bar .b{
+  width:100%;max-width:32px;background:linear-gradient(180deg,#7DD3FC,#3087CC);border-radius:5px 5px 0 0;
+  transition:all .25s;position:relative;
+}
+.chart-bars-mini .bar .b.current{background:linear-gradient(180deg,#FFD68F,#F29100);}
+.chart-bars-mini .bar .b .v{
+  position:absolute;top:-15px;left:50%;transform:translateX(-50%);
+  font-size:9px;font-weight:600;color:var(--text-1);white-space:nowrap;
+}
+.chart-bars-mini .bar .b.current .v{color:var(--warning);}
+.chart-bars-mini-x{display:flex;gap:8px;padding:6px 0 0;}
+.chart-bars-mini-x .lbl{flex:1;text-align:center;font-size:9px;color:var(--text-3);}
+
+/* 时长记录列表 */
+.record-list{display:flex;flex-direction:column;gap:8px;}
+.record-row{
+  display:flex;gap:10px;align-items:center;padding:10px;background:#FAFBFD;border-radius:9px;border:1px solid var(--border-light);
+  cursor:pointer;
+}
+.record-row:active{background:var(--primary-50);}
+.record-row .sub-ic{
+  width:28px;height:28px;border-radius:7px;color:#fff;font-size:11px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.record-row .info{flex:1;min-width:0;}
+.record-row .info h6{font-size:12px;font-weight:500;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.record-row .info p{font-size:10px;color:var(--text-3);margin-top:2px;}
+.record-row .right{text-align:right;}
+.record-row .pts{font-size:11px;font-weight:600;color:var(--primary);}
+.record-row .right .time{font-size:10px;color:var(--text-3);margin-top:2px;}
+
+/* 星级当前进度卡 */
+.star-now-card{
+  margin:14px 16px;background:linear-gradient(135deg,#FFFBF0,#FFF5E5);
+  border:1px solid #FFE0B3;border-radius:14px;padding:16px;
+}
+.star-now-card .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.star-now-card .row1 strong{font-size:20px;font-weight:700;color:#9A6500;}
+.star-now-card .row1 strong small{font-size:12px;font-weight:400;opacity:.7;margin-left:3px;}
+.star-now-card .row1 p{font-size:11px;color:#9A6500;margin-top:2px;}
+.star-now-card .star-row-mini{display:inline-flex;gap:2px;}
+.star-now-card .star-row-mini svg{width:14px;height:14px;color:#F29100;}
+.star-now-card .progress{height:6px;background:rgba(242,145,0,.18);border-radius:4px;overflow:hidden;}
+.star-now-card .progress .fill{height:100%;background:linear-gradient(90deg,#FFD68F,#F29100);border-radius:4px;}
+.star-now-card .scale{display:flex;justify-content:space-between;font-size:9px;color:#9A6500;margin-top:6px;}
+.star-now-card .scale .now{color:#653A00;font-weight:600;}
+.star-now-card .btn-claim{
+  width:100%;height:42px;border-radius:11px;background:linear-gradient(135deg,#F29100,#FFAA33);
+  color:#fff;border:none;font-size:13px;font-weight:600;margin-top:12px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  box-shadow:0 6px 16px rgba(242,145,0,.32);font-family:inherit;cursor:pointer;
+}
+.star-now-card .btn-claim:active{transform:scale(.98);}
+
+/* 5 级评定列表 */
+.star-rules{display:flex;flex-direction:column;gap:8px;}
+.star-rule-row{
+  display:flex;gap:10px;padding:10px;background:#FAFBFD;border-radius:9px;border:1px solid var(--border-light);
+  align-items:center;
+}
+.star-rule-row.current{background:linear-gradient(135deg,#FFFBF0,#FFF5E5);border-color:#FFE0B3;}
+.star-rule-row.target{background:#F4FAFE;border-color:#BFDDF6;}
+.star-rule-row .lv{
+  width:32px;height:32px;border-radius:50%;color:#fff;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.star-rule-row.s1 .lv{background:linear-gradient(135deg,#9CBFDA,#3087CC);}
+.star-rule-row.s2 .lv{background:linear-gradient(135deg,#7DD3FC,#0EA5E9);}
+.star-rule-row.s3 .lv{background:linear-gradient(135deg,#A7F3D0,#1BB975);}
+.star-rule-row.s4 .lv{background:linear-gradient(135deg,#FFD68F,#F29100);}
+.star-rule-row.s5 .lv{background:linear-gradient(135deg,#FFAA33,#FF6B6B);}
+.star-rule-row .info{flex:1;min-width:0;}
+.star-rule-row .info h6{font-size:13px;font-weight:600;}
+.star-rule-row .info p{font-size:11px;color:var(--text-3);margin-top:2px;line-height:1.5;}
+.star-rule-row .stat{font-size:11px;font-weight:600;flex-shrink:0;}
+.star-rule-row .stat.ok{color:var(--success);}
+.star-rule-row .stat.miss{color:var(--danger);}
+.star-rule-row .stat.now{color:var(--warning);}
+
+/* 反馈概览 */
+.appeal-overview{margin:14px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.appeal-overview .item{
+  background:#fff;border-radius:10px;padding:10px 4px;text-align:center;border:1px solid var(--border-light);
+}
+.appeal-overview .item .num{font-size:18px;font-weight:700;}
+.appeal-overview .item .num.ok{color:var(--success);}
+.appeal-overview .item .num.warn{color:var(--warning);}
+.appeal-overview .item .num.process{color:var(--primary);}
+.appeal-overview .item .lbl{font-size:9px;color:var(--text-3);margin-top:2px;}
+
+.appeal-list{display:flex;flex-direction:column;gap:8px;}
+.appeal-row{
+  display:flex;gap:10px;align-items:flex-start;padding:10px;background:#FAFBFD;border-radius:9px;
+  border:1px solid var(--border-light);cursor:pointer;
+}
+.appeal-row:active{background:var(--primary-50);}
+.appeal-row .ic{
+  width:28px;height:28px;border-radius:8px;background:var(--primary-light);color:var(--primary);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.appeal-row .ic.warn{background:var(--warning-bg);color:var(--warning);}
+.appeal-row .ic.danger{background:var(--danger-bg);color:var(--danger);}
+.appeal-row .info{flex:1;min-width:0;}
+.appeal-row .info .top{display:flex;justify-content:space-between;align-items:center;gap:6px;}
+.appeal-row .info h6{font-size:12px;font-weight:600;line-height:1.4;}
+.appeal-row .info .sub{font-size:10px;color:var(--text-3);margin-top:3px;line-height:1.5;}
+.appeal-row .info .reply{
+  margin-top:6px;padding:6px 8px;background:#fff;border-radius:6px;border:1px dashed var(--border-light);
+  font-size:10px;color:var(--text-2);line-height:1.5;
+}
+.appeal-row .info .reply strong{color:var(--success);}
+
+/* 提交按钮 */
+.btn-block{
+  width:100%;height:48px;border-radius:14px;background:var(--primary);color:#fff;
+  font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .15s;border:none;cursor:pointer;font-family:inherit;
+  box-shadow:0 8px 20px rgba(48,135,204,.28);
+}
+.btn-block:active{transform:scale(.98);background:var(--primary-dark);}
+.btn-block.secondary{
+  background:#fff;color:var(--primary);border:1px solid var(--primary);box-shadow:none;
+}
+.btn-block.secondary:active{background:var(--primary-light);}
+.btn-block.sm{height:36px;font-size:13px;border-radius:10px;}
+
+/* Toast */
+.toast{
+  position:fixed;left:50%;top:60px;transform:translate(-50%,-20px);
+  background:#1F2733;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;
+  opacity:0;pointer-events:none;transition:all .25s;z-index:200;
+  box-shadow:var(--shadow-lg);
+}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+
+/* ===== Mobile Overlay ===== */
+.m-overlay{
+  position:absolute;inset:0;z-index:60;background:#fff;
+  transform:translateY(100%);transition:transform .3s ease;
+  display:flex;flex-direction:column;overflow:hidden;
+  border-radius:38px;
+}
+.m-overlay.open{transform:translateY(0);}
+.m-overlay .m-topbar{
+  height:48px;display:flex;align-items:center;padding:0 4px;background:#fff;
+  border-bottom:1px solid var(--border-light);flex-shrink:0;
+}
+.m-overlay .m-topbar .back{
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  background:none;border:none;cursor:pointer;color:var(--text-1);
+}
+.m-overlay .m-topbar h3{flex:1;text-align:center;font-size:16px;font-weight:600;}
+.m-overlay .m-topbar .right-ph{width:40px;}
+.m-overlay .m-body{flex:1;overflow-y:auto;padding:0 0 90px;background:var(--bg);}
+.m-overlay .m-foot{
+  position:absolute;bottom:0;left:0;right:0;padding:12px 16px;background:#fff;
+  border-top:1px solid var(--border-light);display:flex;gap:10px;
+  border-radius:0 0 38px 38px;
+}
+.m-foot .btn-block{flex:1;height:42px;font-size:14px;}
+
+/* Overlay form sections */
+.m-section{background:#fff;border-radius:14px;padding:16px;margin:14px 16px;box-shadow:var(--shadow-sm);}
+.m-sec-head{
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;
+  border-bottom:2px solid var(--primary);
+}
+.m-sec-head .ic{
+  width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  background:var(--primary-light);color:var(--primary);
+}
+.m-sec-head h4{font-size:14px;font-weight:600;}
+
+/* Form fields */
+.fld{
+  padding:11px 0;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border-light);
+}
+.fld:last-child{border-bottom:none;}
+.fld label{font-size:13px;color:var(--text-1);min-width:80px;flex-shrink:0;}
+.fld label .req{color:var(--danger);margin-left:2px;}
+.fld input,.fld select,.fld textarea{
+  flex:1;border:none;outline:none;font-size:13px;color:var(--text-1);
+  text-align:right;background:transparent;font-family:inherit;
+}
+.fld input::placeholder,.fld textarea::placeholder{color:var(--text-4);}
+.fld input[readonly]{color:var(--text-3);}
+.fld select{appearance:none;background:transparent;}
+.fld.col{flex-direction:column;align-items:stretch;gap:8px;}
+.fld.col label{min-width:auto;}
+.fld.col textarea{
+  text-align:left;resize:none;min-height:78px;line-height:1.5;
+  padding:8px 10px;background:#F8FAFC;border-radius:8px;
+}
+.fld.col textarea:focus{background:#fff;box-shadow:inset 0 0 0 1px var(--primary);}
+input.eg,textarea.eg{color:var(--text-4);}
+input.eg:focus,textarea.eg:focus{color:var(--text-1);}
+
+/* Read-only KV pairs */
+.m-kv{padding:10px 0;border-bottom:1px solid var(--border-light);}
+.m-kv:last-child{border-bottom:none;}
+.m-kv label{font-size:11px;color:var(--text-3);display:block;margin-bottom:3px;}
+.m-kv span{font-size:13px;color:var(--text-1);}
+
+/* Upload */
+.upload-row{
+  margin-top:8px;border:1.5px dashed var(--border);border-radius:10px;padding:14px;
+  display:flex;align-items:center;gap:10px;color:var(--text-3);font-size:12px;
+  background:#FAFBFD;cursor:pointer;transition:all .15s;
+}
+.upload-row:active{border-color:var(--primary);background:var(--primary-50);color:var(--primary);}
+.upload-row .ic{
+  width:34px;height:34px;border-radius:8px;background:#fff;color:var(--primary);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  border:1px solid var(--border-light);
+}
+.upload-row .info strong{display:block;font-size:13px;color:var(--text-1);font-weight:500;}
+.upload-row .info span{font-size:10px;}
+
+/* 协议 */
+.agree-row{
+  display:flex;align-items:flex-start;gap:8px;padding:10px 0;font-size:12px;color:var(--text-2);line-height:1.5;
+}
+.checkbox{
+  width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;cursor:pointer;
+  position:relative;transition:all .15s;margin-top:1px;
+}
+.checkbox.checked{background:var(--primary);border-color:var(--primary);}
+.checkbox.checked::after{
+  content:"";position:absolute;left:4px;top:1px;width:5px;height:9px;
+  border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg);
+}
+
+/* 申请类别卡片 */
+.ao-cat-card{
+  border:2px solid var(--border-light);border-radius:12px;padding:14px;margin-bottom:10px;
+  cursor:pointer;transition:all .15s;
+}
+.ao-cat-card.active{border-color:var(--primary);background:var(--primary-50);}
+.ao-cat-card .ao-cat-title{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.ao-cat-card .ao-cat-desc{font-size:11px;color:var(--text-3);margin-top:4px;line-height:1.5;}
+.ao-cat-card .ao-cat-radios{margin-top:8px;display:flex;flex-direction:column;gap:6px;}
+.ao-cat-radio{
+  display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2);cursor:pointer;
+  padding:6px 8px;border-radius:8px;border:1px solid var(--border-light);background:#FAFBFD;
+}
+.ao-cat-radio.active{border-color:var(--primary);background:var(--primary-50);color:var(--primary);font-weight:500;}
+.rd{width:14px;height:14px;min-width:14px;min-height:14px;border-radius:50%;border:2px solid #bbb;flex-shrink:0;position:relative;}
+.ao-cat-radio.active .rd{border-color:var(--primary);}
+.ao-cat-radio.active .rd::after{
+  content:"";position:absolute;left:2px;top:2px;width:6px;height:6px;border-radius:50%;background:var(--primary);
+}
+
+/* 辅导组别 */
+.ao-grp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px;}
+.ao-grp-radio{
+  display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2);cursor:pointer;
+  padding:8px 10px;border-radius:8px;border:1px solid var(--border-light);background:#FAFBFD;
+}
+.ao-grp-radio.active{border-color:var(--primary);background:var(--primary-50);color:var(--primary);font-weight:500;}
+.ao-grp-radio.active .rd{border-color:var(--primary);}
+.ao-grp-radio.active .rd::after{
+  content:"";position:absolute;left:2px;top:2px;width:6px;height:6px;border-radius:50%;background:var(--primary);
+}
+
+/* 课程成绩表格 */
+.m-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px;}
+.m-table th{background:var(--bg);padding:8px 4px;font-weight:600;text-align:center;border-bottom:1px solid var(--border);}
+.m-table td{padding:8px 4px;text-align:center;border-bottom:1px solid var(--border-light);}
+
+/* 课程成绩卡片 */
+.m-course-cards{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+.m-course-card{border:1px solid var(--border-light);border-radius:12px;padding:12px;background:#FAFBFD;}
+.m-course-card.on{border-color:var(--primary);background:var(--primary-50);}
+.m-course-card .cc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.m-course-card .cc-name{font-size:14px;font-weight:600;color:var(--text-1);line-height:1.4;word-break:break-word;flex:1;}
+.m-course-card .cc-show{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-3);flex-shrink:0;white-space:nowrap;cursor:pointer;}
+.m-course-card .cc-show input{width:15px;height:15px;accent-color:var(--primary);}
+.m-course-card .cc-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:8px;font-size:12px;color:var(--text-3);}
+.m-course-card .cc-meta .cc-score{margin-left:auto;color:var(--primary);font-weight:600;font-size:13px;}
+
+/* 英语水平多项 */
+.m-eng-list{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+.m-eng-row{display:flex;align-items:center;gap:8px;}
+.m-eng-row select{flex:1;min-width:0;}
+.m-eng-row input{width:90px;flex-shrink:0;}
+.m-eng-row .eng-del{width:30px;height:34px;flex-shrink:0;border:1px solid var(--border);background:#fff;border-radius:8px;color:var(--text-3);font-size:18px;line-height:1;cursor:pointer;}
+.eng-add-btn{margin-top:8px;display:inline-flex;align-items:center;gap:4px;padding:7px 12px;border-radius:8px;border:1px dashed var(--primary);background:var(--primary-50);color:var(--primary);font-size:13px;font-weight:500;cursor:pointer;}
+
+/* 审核记录 */
+.audit-record{margin-top:10px;}
+.audit-record .ar-item{
+  display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-light);
+}
+.audit-record .ar-item:last-child{border-bottom:none;}
+.audit-record .ar-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0;margin-top:4px;
+}
+.audit-record .ar-dot.pending{background:var(--warning);}
+.audit-record .ar-dot.fail{background:var(--danger);}
+.audit-record .ar-info{flex:1;}
+.audit-record .ar-info h6{font-size:12px;font-weight:500;}
+.audit-record .ar-info p{font-size:11px;color:var(--text-3);margin-top:2px;}
+
+/* 小按钮 */
+.btn-sm{
+  display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:6px;
+  font-size:11px;font-weight:500;background:var(--primary);color:#fff;
+  border:none;cursor:pointer;font-family:inherit;white-space:nowrap;
+}
+.btn-sm:active{opacity:.8;}
+.btn-sm.ghost{background:transparent;color:var(--primary);border:1px solid var(--primary);}
+
+</style>
+</head>
+<body>
+<div class="phone-shell">
+  <div class="screen">
+    <div class="status-bar"></div>
+    <div class="app">
+      <div class="pages">
+        <div class="nav-header">
+          <button class="back" onclick="history.back()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="title">辅学义工申请</div>
+          <div class="right"></div>
+        </div>
+
+        <div class="page">
+          <!-- Hero -->
+          <div class="va-hero">
+            <span class="badge-h">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+              2026 春季学期 · 招募中
+            </span>
+            <h2>加入<strong>辅学义工</strong><br/>用所长 · 助他人 · 共成长</h2>
+            <p>面向全校学生开放报名 · 截止 2026-05-15</p>
+            <div class="stat-row">
+              <div class="it"><strong>1,248</strong><span>在任义工</span></div>
+              <div class="it"><strong>6</strong><span>学科组别</span></div>
+              <div class="it"><strong>5</strong><span>星级阶梯</span></div>
+            </div>
+          </div>
+
+          <!-- Tab 导航 -->
+          <div class="va-tabs" id="vaTabs">
+            <button class="va-tab active" data-tab="apply">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              申请中心
+            </button>
+            <button class="va-tab" data-tab="appeal">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              反馈中心 <span class="num">2</span>
+            </button>
+          </div>
+
+          <!-- ===== Tab 1：申请中心 ===== -->
+          <div class="tab-pane active" id="pane-apply">
+            <div class="va-card">
+              <div class="hd">
+                <h4>
+                  <span class="ic-mini" style="background:var(--success-bg);color:var(--success);">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  我的申请
+                </h4>
+                <span class="status-tag ok">✓ 已通过</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;margin-bottom:14px;">
+                <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-3);">申请编号</span><span>VA-2024-09-1287</span></div>
+                <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-3);">申请类型</span><span>知新馆辅学义工</span></div>
+                <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-3);">提交时间</span><span>2024-09-12 14:23</span></div>
+                <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-3);">审核通过</span><span>2024-09-17 09:30</span></div>
+              </div>
+              <div class="audit-mini">
+                <div class="step done">
+                  <div class="dot"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="info"><h6>提交申请</h6><p>VA-2024-09-1287</p><div class="time">2024-09-12 14:23</div></div>
+                </div>
+                <div class="step done">
+                  <div class="dot"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="info"><h6>学院专干一审</h6><p>外国语 · 张老师 · 通过</p><div class="time">2024-09-13 10:15</div></div>
+                </div>
+                <div class="step done">
+                  <div class="dot"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="info"><h6>指导老师二审</h6><p>知新馆 · 李老师 · 通过</p><div class="time">2024-09-15 16:42</div></div>
+                </div>
+                <div class="step done">
+                  <div class="dot"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="info"><h6>学工部终审</h6><p>正式成为义工 · 已开通账号</p><div class="time">2024-09-17 09:30</div></div>
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:14px;">
+                <button class="btn-block secondary sm" style="flex:1;" onclick="openApplyDetail()">查看详情</button>
+                <button class="btn-block sm" style="flex:1;" onclick="openApplyForm()">新增身份申请</button>
+              </div>
+            </div>
+
+            <!-- 5 级星级阶梯 -->
+            <div class="va-card">
+              <div class="hd">
+                <h4>
+                  <span class="ic-mini" style="background:#FFF8E1;color:#F29100;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  </span>
+                  5 级星级阶梯
+                </h4>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#9CBFDA,#3087CC);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">1</div><div><div style="font-size:13px;font-weight:600;">一星级 · 10h</div><div style="font-size:11px;color:var(--text-3);">初心者 · 通过审核即获</div></div></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#1BB975,#34D399);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">2</div><div><div style="font-size:13px;font-weight:600;">二星级 · 30h</div><div style="font-size:11px;color:var(--text-3);">实践者 · 累计 30 小时</div></div></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#0EA5E9,#7DD3FC);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">3</div><div><div style="font-size:13px;font-weight:600;">三星级 · 60h</div><div style="font-size:11px;color:var(--text-3);">能手 · 累计 60 小时</div></div></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#7C5BC1,#B59CE5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">4</div><div><div style="font-size:13px;font-weight:600;">四星级 · 100h</div><div style="font-size:11px;color:var(--text-3);">骨干 · 累计 100 小时</div></div></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#F29100,#FFD68F);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">5</div><div><div style="font-size:13px;font-weight:600;">五星级 · 200h</div><div style="font-size:11px;color:var(--text-3);">荣誉 · 累计 200 小时 · 颁发证书</div></div></div>
+              </div>
+            </div>
+
+            <!-- 三级审核流程 -->
+            <div class="va-card">
+              <div class="hd">
+                <h4>
+                  <span class="ic-mini" style="background:var(--primary-light);color:var(--primary);">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  三级审核流程
+                </h4>
+              </div>
+              <div class="audit-mini">
+                <div class="step done">
+                  <div class="dot"><span style="font-size:10px;font-weight:700;">1</span></div>
+                  <div class="info"><h6>学院专干 · 一审</h6><p>核验学籍、绩点等基本信息</p><div class="time">约 1-2 个工作日</div></div>
+                </div>
+                <div class="step done">
+                  <div class="dot"><span style="font-size:10px;font-weight:700;">2</span></div>
+                  <div class="info"><h6>知新馆指导老师 · 二审</h6><p>评估服务意向与组别匹配度</p><div class="time">约 2-3 个工作日</div></div>
+                </div>
+                <div class="step done">
+                  <div class="dot"><span style="font-size:10px;font-weight:700;">3</span></div>
+                  <div class="info"><h6>学工部管理员 · 终审</h6><p>授权一星级义工身份与初始权限</p><div class="time">约 1-2 个工作日</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 义工权益 -->
+            <div class="va-card" style="background:linear-gradient(135deg,#FFFBF0,#FFF8E1);border-color:#FFE0B3;">
+              <div class="hd">
+                <h4 style="color:#9A6500;">
+                  <span class="ic-mini" style="background:#fff;color:#F29100;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/></svg>
+                  </span>
+                  义工权益
+                </h4>
+              </div>
+              <ul style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:#9A6500;line-height:1.6;list-style:none;margin:0;padding:0;">
+                <li style="display:flex;gap:8px;"><span style="flex-shrink:0;">✓</span><span>累计服务时长可申报志愿时长（计入综合素质评价）</span></li>
+                <li style="display:flex;gap:8px;"><span style="flex-shrink:0;">✓</span><span>满 200h 颁发<strong>校长签发的五星级证书</strong></span></li>
+                <li style="display:flex;gap:8px;"><span style="flex-shrink:0;">✓</span><span>优先获得知新馆讲座、奖学金推荐资格</span></li>
+                <li style="display:flex;gap:8px;"><span style="flex-shrink:0;">✓</span><span>校内辅学坊、竞赛与暑期项目优先名额</span></li>
+                <li style="display:flex;gap:8px;"><span style="flex-shrink:0;">✓</span><span>同辈导师网络 · 学涯规划资源全开放</span></li>
+              </ul>
+            </div>
+
+            <!-- 常见问答 -->
+            <div class="va-card">
+              <div class="hd">
+                <h4>
+                  <span class="ic-mini" style="background:var(--success-bg);color:var(--success);">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </span>
+                  常见问答
+                </h4>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div><p style="font-size:12px;font-weight:600;">Q：申请有学院 / 年级限制吗？</p><p style="font-size:12px;color:var(--text-3);margin-top:4px;line-height:1.6;">A：面向全校全年级学生开放。鼓励大二、大三同学申请，大一新生需绩点达标。</p></div>
+                <div><p style="font-size:12px;font-weight:600;">Q：每周必须服务多少小时？</p><p style="font-size:12px;color:var(--text-3);margin-top:4px;line-height:1.6;">A：建议每周不少于 2h，可灵活安排时段。重要考试季可暂停申报。</p></div>
+                <div><p style="font-size:12px;font-weight:600;">Q：审核被退回怎么办？</p><p style="font-size:12px;color:var(--text-3);margin-top:4px;line-height:1.6;">A：会在站内消息中说明具体原因，按建议修改后可再次提交。</p></div>
+              </div>
+            </div>
+          </div><!-- /#pane-apply -->
+
+
+          <!-- ===== Tab：我的课程 ===== -->
+          <div class="tab-pane" id="pane-appeal">
+            <div class="appeal-overview">
+              <div class="item"><div class="num">5</div><div class="lbl">累计</div></div>
+              <div class="item"><div class="num process">2</div><div class="lbl">处理中</div></div>
+              <div class="item"><div class="num ok">3</div><div class="lbl">已采纳</div></div>
+              <div class="item"><div class="num warn">2.1d</div><div class="lbl">平均</div></div>
+            </div>
+
+            <!-- 反馈记录 -->
+            <div class="va-card">
+              <div class="hd">
+                <h4>
+                  <span class="ic-mini" style="background:var(--success-bg);color:var(--success);">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </span>
+                  反馈记录
+                </h4>
+                <button class="btn-sm" onclick="openNewAppealForm()">+ 新增反馈</button>
+              </div>
+              <div class="appeal-list">
+                <div class="appeal-row" onclick="openAppealDetail(0)">
+                  <div class="ic warn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="6" x2="12" y2="12"/></svg>
+                  </div>
+                  <div class="info">
+                    <div class="top">
+                      <h6>AP-2026-04-22 · 资料整理</h6>
+                      <span class="status-tag process">处理中</span>
+                    </div>
+                    <div class="sub">时长记录异议 · 李老师 · 已 1 天</div>
+                  </div>
+                </div>
+                <div class="appeal-row" onclick="openAppealDetail(1)">
+                  <div class="ic warn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="6" x2="12" y2="12"/></svg>
+                  </div>
+                  <div class="info">
+                    <div class="top">
+                      <h6>AP-2026-04-18 · 学涯访谈</h6>
+                      <span class="status-tag process">二级复核</span>
+                    </div>
+                    <div class="sub">服务积分异议 · 已 5 天</div>
+                  </div>
+                </div>
+                <div class="appeal-row" onclick="openAppealDetail(2)">
+                  <div class="ic">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div class="info">
+                    <div class="top">
+                      <h6>AP-2026-03-15 · 四星评议</h6>
+                      <span class="status-tag ok">✓ 已采纳</span>
+                    </div>
+                    <div class="sub">星级评定异议 · 处理 2.5 天</div>
+                    <div class="reply"><strong>结果：</strong>2025 年 8-9 月共 12h 漏录已补录，星级已通过</div>
+                  </div>
+                </div>
+                <div class="appeal-row" onclick="openAppealDetail(3)">
+                  <div class="ic">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div class="info">
+                    <div class="top">
+                      <h6>AP-2025-12-10 · 周三晚自习</h6>
+                      <span class="status-tag ok">✓ 已采纳</span>
+                    </div>
+                    <div class="sub">时长记录异议 · 处理 1.8 天</div>
+                    <div class="reply"><strong>结果：</strong>系统签到漏记，补录 2.0h、+30 积分</div>
+                  </div>
+                </div>
+                <div class="appeal-row" onclick="openAppealDetail(4)">
+                  <div class="ic danger">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </div>
+                  <div class="info">
+                    <div class="top">
+                      <h6>AP-2025-10-08 · 学员评价</h6>
+                      <span class="status-tag danger">已驳回</span>
+                    </div>
+                    <div class="sub">学员评价异议 · 处理 3.2 天</div>
+                    <div class="reply"><strong>结果：</strong>评价匿名提交，内容真实，建议改进教学方式</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 反馈须知 -->
+            <div class="va-card" style="background:linear-gradient(135deg,#FCE8EA,#F6BCBE);border:1px solid #F6BCBE;">
+              <div class="hd" style="border-color:rgba(223,32,39,.18);">
+                <h4 style="color:#7F1D1D;">
+                  <span class="ic-mini" style="background:#fff;color:var(--danger);">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  </span>
+                  反馈须知
+                </h4>
+              </div>
+              <ul style="display:flex;flex-direction:column;gap:5px;font-size:11px;color:#7F1D1D;line-height:1.6;list-style:none;">
+                <li>• 反馈一般由管理员在 <strong>5 个工作日</strong> 答复</li>
+                <li>• 同一事项最多反馈 <strong>2 次</strong></li>
+                <li>• 恶意 / 虚假反馈将影响星级评定</li>
+				<li>• 处理结果作为最终结论 · 可继续向学工部反映</li>
+              </ul>
+            </div>
+          </div><!-- /#pane-appeal -->
+
+        </div><!-- /.page -->
+      </div><!-- /.pages -->
+    </div><!-- /.app -->
+
+    <!-- ===== Overlay 1: 辅学义工申请表单 ===== -->
+    <div class="m-overlay" id="applyFormOverlay">
+      <div class="m-topbar">
+        <button class="back" onclick="closeApplyForm()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <h3>辅学义工申请</h3>
+        <div class="right-ph"></div>
+      </div>
+      <div class="m-body">
+        <!-- 申请类型 -->
+        <div class="m-section">
+          <div class="m-sec-head">
+            <div class="ic" style="background:var(--success-bg);color:var(--success);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+            <h4>申请类型</h4>
+          </div>
+          <div class="fld col">
+            <label>辅学义工类别 <span class="req">*</span></label>
+            <div class="ao-cat-card active" onclick="selectCatCard(this)">
+              <div class="ao-cat-title"><span class="rd" style="border-color:var(--primary);"><span style="position:absolute;left:2px;top:2px;width:6px;height:6px;border-radius:50%;background:var(--primary);"></span></span> 校级辅学义工</div>
+              <div class="ao-cat-desc">包含知新馆辅学义工和 56 度中南辅学义工</div>
+              <div class="ao-cat-radios">
+                <label class="ao-cat-radio active" onclick="event.stopPropagation();selectSubRadio(this)"><span class="rd"></span> 知新馆辅学义工</label>
+                <label class="ao-cat-radio" onclick="event.stopPropagation();selectSubRadio(this)"><span class="rd"></span> 56度中南辅学义工</label>
+              </div>
+            </div>
+            <div class="ao-cat-card" onclick="selectCatCard(this)">
+              <div class="ao-cat-title"><span class="rd"></span> 院级辅学义工</div>
+              <div class="ao-cat-desc">由各二级学院自主管理的辅学义工</div>
+            </div>
+          </div>
+          <div class="fld col" id="m-grp-section">
+            <label>辅导组别 <span class="req">*</span>（仅知新馆义工填写）</label>
+            <div class="ao-grp-grid">
+              <label class="ao-grp-radio active" onclick="selectGrpRadio(this)"><span class="rd"></span> 知新馆数学组</label>
+              <label class="ao-grp-radio" onclick="selectGrpRadio(this)"><span class="rd"></span> 知新馆物理组</label>
+              <label class="ao-grp-radio" onclick="selectGrpRadio(this)"><span class="rd"></span> 知新馆化学组</label>
+              <label class="ao-grp-radio" onclick="selectGrpRadio(this)"><span class="rd"></span> 知新馆英语组</label>
+              <label class="ao-grp-radio" onclick="selectGrpRadio(this)"><span class="rd"></span> 知新馆力学组</label>
+              <label class="ao-grp-radio" onclick="selectGrpRadio(this)"><span class="rd"></span> 知新馆计算机组</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 基本信息 -->
+        <div class="m-section">
+          <div class="m-sec-head">
+            <div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+            <h4>基本信息</h4>
+          </div>
+          <div class="fld"><label>姓名 <span class="req">*</span></label><input value="王诗韵" readonly /></div>
+          <div class="fld"><label>学院 <span class="req">*</span></label><input value="外国语学院" readonly /></div>
+          <div class="fld"><label>学号 <span class="req">*</span></label><input value="2023XX0042" readonly /></div>
+          <div class="fld"><label>专业 <span class="req">*</span></label><input value="英语" readonly /></div>
+          <div class="fld"><label>性别 <span class="req">*</span></label><input value="女" readonly /></div>
+          <div class="fld"><label>年级 <span class="req">*</span></label><input value="2023级" readonly /></div>
+          <div class="fld"><label>民族 <span class="req">*</span></label><input value="汉族" readonly /></div>
+          <div class="fld"><label>班级 <span class="req">*</span></label><input value="英语2301班" readonly /></div>
+          <div class="fld"><label>出生日期 <span class="req">*</span></label><input value="2005-03-15" readonly /></div>
+          <div class="fld"><label>学籍状态 <span class="req">*</span></label>
+            <select><option selected>在学</option><option>休学</option><option>已毕业</option></select>
+          </div>
+          <div class="fld"><label>联系方式 <span class="req">*</span></label><input placeholder="请输入手机号" type="tel" class="eg" value="138****1234" /></div>
+          <div class="fld"><label>电子邮箱 <span class="req">*</span></label><input placeholder="用于通知" type="email" class="eg" value="wangsy@csu.edu.cn" /></div>
+          <div class="fld col">
+            <label>照片 <span class="req">*</span></label>
+            <div class="upload-row" onclick="showToast('请选择个人证件照')">
+              <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+              <div class="info" style="flex:1;"><strong>上传证件照</strong><span>JPG/PNG · 不超过 2MB</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 学业信息 -->
+        <div class="m-section">
+          <div class="m-sec-head">
+            <div class="ic" style="background:var(--warning-bg);color:var(--warning);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+            <h4>学业信息</h4>
+          </div>
+          <div class="fld"><label>专业排名 <span class="req">*</span></label><input value="5/120" readonly /></div>
+          <div class="fld"><label>排名百分比 <span class="req">*</span></label><input value="前 4.2%" readonly /></div>
+          <div class="fld"><label>在读学位 <span class="req">*</span></label><input value="本科" readonly /></div>
+          <div class="fld"><label>平均成绩/GPA <span class="req">*</span></label><input value="3.78 / 4.0" readonly /></div>
+          <div class="fld col">
+            <label>英语水平 <span class="req">*</span> <span style="font-weight:400;color:var(--text-3);font-size:11px;">（可添加多项）</span></label>
+            <div class="m-eng-list" id="m-eng-list">
+              <div class="m-eng-row">
+                <select>
+                  <option>CET-4</option><option selected>CET-6</option><option>雅思 IELTS</option><option>托福 TOEFL</option><option>GRE</option><option>专四 TEM-4</option><option>专八 TEM-8</option><option>其他</option>
+                </select>
+                <input class="eg" placeholder="分数" value="586" />
+                <button type="button" class="eng-del" onclick="mRemoveEng(this)">×</button>
+              </div>
+              <div class="m-eng-row">
+                <select>
+                  <option>CET-4</option><option>CET-6</option><option selected>雅思 IELTS</option><option>托福 TOEFL</option><option>GRE</option><option>专四 TEM-4</option><option>专八 TEM-8</option><option>其他</option>
+                </select>
+                <input class="eg" placeholder="分数" value="6.5" />
+                <button type="button" class="eng-del" onclick="mRemoveEng(this)">×</button>
+              </div>
+            </div>
+            <button type="button" class="eng-add-btn" onclick="mAddEng()">+ 添加英语成绩</button>
+          </div>
+          <div class="fld col">
+            <label>相关课程成绩 <span class="req">*</span> <span style="font-weight:400;color:var(--text-3);font-size:11px;">（勾选需展示的课程）</span></label>
+            <div class="m-course-cards">
+              <div class="m-course-card on">
+                <div class="cc-top">
+                  <div class="cc-name">高等数学A</div>
+                  <label class="cc-show"><input type="checkbox" checked onchange="mToggleCourse(this)" /> 显示</label>
+                </div>
+                <div class="cc-meta"><span>2023-2024 学年</span><span>秋季学期</span><span class="cc-score">成绩 92</span></div>
+              </div>
+              <div class="m-course-card on">
+                <div class="cc-top">
+                  <div class="cc-name">大学英语（一）</div>
+                  <label class="cc-show"><input type="checkbox" checked onchange="mToggleCourse(this)" /> 显示</label>
+                </div>
+                <div class="cc-meta"><span>2023-2024 学年</span><span>秋季学期</span><span class="cc-score">成绩 95</span></div>
+              </div>
+              <div class="m-course-card on">
+                <div class="cc-top">
+                  <div class="cc-name">线性代数</div>
+                  <label class="cc-show"><input type="checkbox" checked onchange="mToggleCourse(this)" /> 显示</label>
+                </div>
+                <div class="cc-meta"><span>2023-2024 学年</span><span>春季学期</span><span class="cc-score">成绩 88</span></div>
+              </div>
+              <div class="m-course-card">
+                <div class="cc-top">
+                  <div class="cc-name">概率论与数理统计</div>
+                  <label class="cc-show"><input type="checkbox" onchange="mToggleCourse(this)" /> 显示</label>
+                </div>
+                <div class="cc-meta"><span>2024-2025 学年</span><span>秋季学期</span><span class="cc-score">成绩 90</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 辅学信息 -->
+        <div class="m-section">
+          <div class="m-sec-head">
+            <div class="ic" style="background:var(--success-bg);color:var(--success);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <h4>辅学信息</h4>
+          </div>
+          <div class="fld"><label>可辅导科目 <span class="req">*</span></label><input placeholder="请手动输入，如：高等数学、大学英语" class="eg" value="大学英语、英语写作" /></div>
+          <div class="fld col">
+            <label>辅学经历 <span class="req">*</span></label>
+            <div style="display:flex;justify-content:flex-end;margin-bottom:4px;"></div>
+          <textarea class="eg" placeholder="请描述相关辅学或教学经历">曾担任学习委员两年，辅导同学英语四六级备考。</textarea>
+          </div>
+          <div class="fld col">
+            <label>相关证书 <span class="req">*</span></label>
+            <div class="upload-row" onclick="showToast('请选择证书文件')">
+              <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+              <div class="info" style="flex:1;"><strong>上传相关证书</strong><span>选填 · 竞赛/三好学生等</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 申请理由 -->
+        <div class="m-section">
+          <div class="m-sec-head">
+            <div class="ic" style="background:#F4F0FF;color:#7C5BC1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <h4>申请理由</h4>
+          </div>
+          <div class="fld col">
+            <label style="display:flex;align-items:center;justify-content:space-between;">
+              <span>申请理由与个人优势 <span class="req">*</span></span>
+              
+            </label>
+            <textarea id="applyReasonTa" class="eg" placeholder="请描述申请理由和个人优势">英语专业背景扎实，CET-6 586 分，热爱教学辅导。</textarea>
+          </div>
+          <div class="fld col">
+            <label style="display:flex;align-items:center;justify-content:space-between;">
+              <span>预期目标 <span class="req">*</span></span>
+              
+            </label>
+            <textarea id="applyGoalTa" class="eg" placeholder="请描述预期目标">希望帮助更多同学提升英语水平，计划每周服务 4-6 小时。</textarea>
+          </div>
+        </div>
+
+        <!-- 承诺与声明 -->
+        <div class="m-section">
+          <div class="m-sec-head">
+            <div class="ic" style="background:var(--danger-bg);color:var(--danger);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+            <h4>承诺与声明 <span class="req">*</span></h4>
+          </div>
+          <div class="agree-row" style="border-bottom:1px solid var(--border-light);padding-bottom:10px;">
+            <span class="checkbox" id="applyCb1"></span>
+            <div style="flex:1;font-size:12px;line-height:1.6;">我承诺所填写的信息真实有效，如有虚假，愿意承担相应责任。</div>
+          </div>
+          <div class="agree-row" style="border-bottom:1px solid var(--border-light);padding-bottom:10px;">
+            <span class="checkbox" id="applyCb2"></span>
+            <div style="flex:1;font-size:12px;line-height:1.6;">我承诺遵守辅学义工管理规定，认真履行辅学义工职责。</div>
+          </div>
+          <div class="agree-row" style="border-bottom:1px solid var(--border-light);padding-bottom:10px;">
+            <span class="checkbox" id="applyCb3"></span>
+            <div style="flex:1;font-size:12px;line-height:1.6;">我承诺按时参加辅学活动，不无故缺席或迟到早退。</div>
+          </div>
+          <div class="agree-row">
+            <span class="checkbox" id="applyCb4"></span>
+            <div style="flex:1;font-size:12px;line-height:1.6;">我承诺尊重学生隐私，不泄露学生个人信息。</div>
+          </div>
+          <div class="fld"><label>电子签名 <span class="req">*</span></label><input placeholder="请输入姓名作为电子签名" class="eg" value="王诗韵" /></div>
+          <div class="fld"><label>日期 <span class="req">*</span></label><input value="" id="applyDate" readonly /></div>
+        </div>
+      </div>
+      <div class="m-foot">
+        <button class="btn-block secondary" onclick="showToast('已保存草稿');closeApplyForm()">存为草稿</button>
+        <button class="btn-block" onclick="submitApplyForm()">提交申请</button>
+      </div>
+    </div>
+
+    <!-- ===== Overlay 2: 辅学义工申请详情 ===== -->
+    <div class="m-overlay" id="applyDetailOverlay">
+      <div class="m-topbar">
+        <button class="back" onclick="closeApplyDetail()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <h3>申请详情</h3>
+        <div class="right-ph"></div>
+      </div>
+      <div class="m-body">
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h4>基本信息</h4></div>
+          <div class="m-kv"><label>姓名</label><span>王诗韵</span></div>
+          <div class="m-kv"><label>学院</label><span>外国语学院</span></div>
+          <div class="m-kv"><label>学号</label><span>2023XX0042</span></div>
+          <div class="m-kv"><label>专业</label><span>英语</span></div>
+          <div class="m-kv"><label>性别</label><span>女</span></div>
+          <div class="m-kv"><label>年级</label><span>2023级</span></div>
+          <div class="m-kv"><label>民族</label><span>汉族</span></div>
+          <div class="m-kv"><label>班级</label><span>英语2301班</span></div>
+          <div class="m-kv"><label>出生日期</label><span>2005-03-15</span></div>
+          <div class="m-kv"><label>学籍状态</label><span>在学</span></div>
+          <div class="m-kv"><label>联系方式</label><span>138****1234</span></div>
+          <div class="m-kv"><label>电子邮箱</label><span>wangsy@csu.edu.cn</span></div>
+          <div class="m-kv"><label>义工照片</label><span><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='80' viewBox='0 0 60 80'%3E%3Crect width='60' height='80' rx='6' fill='%23E3F1F9'/%3E%3Ccircle cx='30' cy='28' r='12' fill='%239CBFDA'/%3E%3Cellipse cx='30' cy='58' rx='18' ry='14' fill='%239CBFDA'/%3E%3Ctext x='30' y='32' text-anchor='middle' fill='white' font-size='14' font-weight='600' font-family='sans-serif'%3E王%3C/text%3E%3C/svg%3E" style="width:48px;height:64px;border-radius:6px;border:1px solid var(--border-light);cursor:pointer;object-fit:cover;" onclick="openPhotoPreview(this.src)" /></span></div>
+        </div>
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic" style="background:var(--warning-bg);color:var(--warning);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><h4>学业信息</h4></div>
+          <div class="m-kv"><label>专业排名</label><span>5/120</span></div>
+          <div class="m-kv"><label>排名百分比</label><span>前 4.2%</span></div>
+          <div class="m-kv"><label>在读学位</label><span>本科</span></div>
+          <div class="m-kv"><label>平均成绩/GPA</label><span>3.78 / 4.0</span></div>
+          <div class="m-kv"><label>英语水平</label><span>CET-6</span></div>
+          <div class="m-kv"><label>具体分数</label><span>586</span></div>
+          <div style="margin-top:8px;overflow-x:auto;">
+            <table class="m-table">
+              <thead><tr><th>序号</th><th>学年</th><th>学期</th><th>课程</th><th>成绩</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>2023-2024</td><td>秋</td><td>高等数学A</td><td>92</td></tr>
+                <tr><td>2</td><td>2023-2024</td><td>秋</td><td>大学英语</td><td>95</td></tr>
+                <tr><td>3</td><td>2023-2024</td><td>春</td><td>线性代数</td><td>88</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic" style="background:var(--success-bg);color:var(--success);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h4>辅学信息</h4></div>
+          <div class="m-kv"><label>辅学义工类别</label><span>校级辅学义工 · 知新馆辅学义工</span></div>
+          <div class="m-kv"><label>辅导组别</label><span>知新馆英语组</span></div>
+          <div class="m-kv"><label>可辅导科目</label><span>大学英语、英语写作</span></div>
+          <div class="m-kv"><label>辅学经历</label><span>曾担任学习委员两年，辅导同学英语四六级备考。</span></div>
+        </div>
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic" style="background:#F4F0FF;color:#7C5BC1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h4>申请理由</h4></div>
+          <div class="m-kv"><label>申请理由与个人优势</label><span>英语专业背景扎实，CET-6 586 分，热爱教学辅导。</span></div>
+          <div class="m-kv"><label>预期目标</label><span>希望帮助更多同学提升英语水平，计划每周服务 4-6 小时。</span></div>
+        </div>
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic" style="background:var(--danger-bg);color:var(--danger);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h4>承诺与声明</h4></div>
+          <div class="m-kv"><label>承诺内容</label><span style="line-height:1.8;">1. 我承诺所填写的信息真实有效，如有虚假，愿意承担相应责任。<br/>2. 我承诺遵守辅学义工管理规定，认真履行辅学义工职责。<br/>3. 我承诺按时参加辅学活动，不无故缺席或迟到早退。<br/>4. 我承诺尊重学生隐私，不泄露学生个人信息。</span></div>
+          <div class="m-kv"><label>电子签名</label><span>王诗韵</span></div>
+          <div class="m-kv"><label>日期</label><span>2024-09-12</span></div>
+        </div>
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h4>审批记录</h4></div>
+          <div class="m-kv"><label>学院专干一审</label><span>张老师：该生学业成绩优秀，推荐通过。(2024-09-13)</span></div>
+          <div class="m-kv"><label>指导老师二审</label><span>李老师：英语能力突出，同意分配英语组。(2024-09-15)</span></div>
+          <div class="m-kv"><label>学工部终审</label><span>审核通过，授予义工身份。(2024-09-17)</span></div>
+        </div>
+      </div>
+      <div class="m-foot">
+        <button class="btn-block" onclick="closeApplyDetail()">关闭</button>
+      </div>
+    </div>
+
+    <!-- ===== Overlay: 个人报课需求详情 ===== -->
+    <div class="m-overlay" id="newAppealOverlay">
+      <div class="m-topbar">
+        <button class="back" onclick="closeNewAppealForm()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <h3>新增反馈</h3>
+        <div class="right-ph"></div>
+      </div>
+      <div class="m-body">
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h4>基本信息</h4></div>
+          <div class="fld"><label>姓名/学号</label><input value="王诗韵 / 2023XX0042" readonly /></div>
+          <div class="fld"><label>义工类别</label>
+            <select><option selected>知新馆辅学义工</option><option>56度中南辅学义工</option><option>院级辅学义工</option></select>
+          </div>
+        </div>
+        <div class="m-section">
+          <div class="m-sec-head"><div class="ic" style="background:var(--danger-bg);color:var(--danger);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h4>反馈内容</h4></div>
+          <div class="fld"><label>反馈分类 <span class="req">*</span></label>
+            <select><option selected>时长记录异议</option><option>服务积分异议</option><option>星级评级异议</option><option>其他</option></select>
+          </div>
+          <div class="fld col">
+            <label style="display:flex;align-items:center;justify-content:space-between;">
+              <span>反馈内容 <span class="req">*</span></span>
+              
+            </label>
+            <textarea id="newAppealContentM" placeholder="请客观、详细描述异议事项与事实经过…"></textarea>
+          </div>
+          <div class="fld col">
+            <label>证明材料<span class="req">*</span></label>
+            <div class="upload-row" onclick="showToast('请选择证明材料')">
+              <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+              <div class="info" style="flex:1;"><strong>上传证明材料</strong><span>选填 · 截图、邮件等</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="m-foot">
+        <button class="btn-block secondary" onclick="showToast('已暂存');closeNewAppealForm()">暂存</button>
+        <button class="btn-block" onclick="showToast('反馈已提交');setTimeout(closeNewAppealForm,600)">提交审核</button>
+      </div>
+    </div>
+
+    <!-- ===== Overlay 8: 反馈详情 ===== -->
+    <div class="m-overlay" id="appealDetailOverlay">
+      <div class="m-topbar">
+        <button class="back" onclick="closeAppealDetail()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <h3>反馈详情</h3>
+        <div class="right-ph"></div>
+      </div>
+      <div class="m-body" id="appealDetailBody"></div>
+      <div class="m-foot" id="appealDetailFoot">
+        <button class="btn-block" onclick="closeAppealDetail()">关闭</button>
+      </div>
+    </div>
+
+    <!-- 照片预览遮罩 -->
+    <div id="photoPreview" onclick="closePhotoPreview()" style="display:none;position:absolute;inset:0;z-index:200;background:rgba(15,32,55,.85);backdrop-filter:blur(6px);border-radius:38px;align-items:center;justify-content:center;cursor:pointer;transition:opacity .25s;opacity:0;">
+      <img id="photoPreviewImg" src="" style="max-width:70%;max-height:60%;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.4);transition:transform .3s ease;transform:scale(.8);" />
+    </div>
+
+  </div><!-- /.screen -->
+</div><!-- /.phone-shell -->
+
+<script>
+// ====== Status Bar ======
+function renderStatusBar(dark=false){
+  const sb=document.querySelector('.status-bar');
+  if(!sb)return;
+  sb.classList.toggle('dark',dark);
+  sb.innerHTML=`
+    <span>9:41</span>
+    <span class="right">
+      <svg width="16" height="10" viewBox="0 0 17 11" fill="currentColor"><rect y="6" width="3" height="5" rx=".5"/><rect x="4" y="4" width="3" height="7" rx=".5"/><rect x="8" y="2" width="3" height="9" rx=".5"/><rect x="12" width="3" height="11" rx=".5"/></svg>
+      <svg width="14" height="10" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 9.5C5.6 9.5 3.4 8.5 1.7 7L8 1l6.3 6c-1.7 1.5-3.9 2.5-6.3 2.5z" fill="currentColor"/></svg>
+      <svg width="22" height="10" viewBox="0 0 24 11" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="1" y="1" width="20" height="9" rx="2" stroke-opacity=".5"/><rect x="22" y="4" width="1.5" height="3" rx=".5" fill="currentColor" stroke="none"/><rect x="2.5" y="2.5" width="14" height="6" rx="1" fill="currentColor"/></svg>
+    </span>
+  `;
+}
+
+// ====== Toast ======
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t);}
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+// ====== Click Delegation ======
+document.addEventListener('click',e=>{
+  const cb=e.target.closest('.checkbox');
+  if(cb){cb.classList.toggle('checked');}
+});
+
+// ====== Tab Switching ======
+function switchTab(tabName){
+  document.querySelectorAll('.va-tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.tab===tabName);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p=>{
+    p.classList.toggle('active', p.id===`pane-${tabName}`);
+  });
+  const pages=document.querySelector('.pages');
+  if(pages) pages.scrollTo({top:0, behavior:'smooth'});
+  if(history.replaceState) history.replaceState(null,'',`#${tabName}`);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.va-tab').forEach(t=>{
+    t.addEventListener('click',()=>switchTab(t.dataset.tab));
+  });
+  const hash=(location.hash||'').replace('#','');
+  if(['apply','appeal'].includes(hash)) switchTab(hash);
+  const dateEl=document.getElementById('applyDate');
+  if(dateEl) dateEl.value=new Date().toLocaleDateString('zh-CN');
+  updateGrpVisibility();
+});
+
+// ====== Overlay Helpers ======
+function openOverlay(id){ document.getElementById(id).classList.add('open'); }
+function closeOverlay(id){ document.getElementById(id).classList.remove('open'); }
+
+// ====== Apply Form ======
+function openApplyForm(){ openOverlay('applyFormOverlay'); }
+function closeApplyForm(){ closeOverlay('applyFormOverlay'); }
+function submitApplyForm(){
+  const cbs=['applyCb1','applyCb2','applyCb3','applyCb4'];
+  const allChecked=cbs.every(id=>document.getElementById(id).classList.contains('checked'));
+  if(!allChecked){ showToast('请勾选全部承诺条款'); return; }
+  showToast('申请已提交');
+  setTimeout(closeApplyForm,600);
+}
+
+// ====== Apply Detail ======
+function openApplyDetail(){ openOverlay('applyDetailOverlay'); }
+function closeApplyDetail(){ closeOverlay('applyDetailOverlay'); }
+
+// ====== Appeal Data ======
+const appealData=[
+  {id:'AP-2026-04-22',cat:'知新馆辅学义工',type:'时长记录异议',content:'2026-04-15 整理六级真题资料，04-25 被驳回，时长 3.0h 未计入档案。希望复核并修正学科组类目。',audit:[{role:'初审·知新馆英语组',date:'审核中',result:'待处理',pass:null,remark:''}]},
+  {id:'AP-2026-04-18',cat:'56度中南辅学义工',type:'服务积分异议',content:'服务积分应为 +25 分，但系统仅记录 +10 分，与实际辅导时长不符。',audit:[{role:'初审·56度中南组',date:'2026-04-19',result:'升级复核',pass:null,remark:'积分计算规则待确认。'}]},
+  {id:'AP-2026-03-15',cat:'知新馆辅学义工',type:'星级评定异议',content:'四星评议时 2025年8-9月有 12h 漏录，导致评定不通过。',audit:[{role:'初审·知新馆指导老师',date:'2026-03-16',result:'通过',pass:true,remark:'经核实确有漏录。'},{role:'终审·学工部',date:'2026-03-17',result:'采纳',pass:true,remark:'时长已更新，星级已通过。'}]},
+  {id:'AP-2025-12-10',cat:'知新馆辅学义工',type:'时长记录异议',content:'周三晚自习辅导 2.0h 系统签到缺失，导致时长未记录。',audit:[{role:'初审·知新馆英语组',date:'2025-12-11',result:'通过',pass:true,remark:'补录 2.0h、+30 积分。'}]},
+  {id:'AP-2025-10-08',cat:'知新馆辅学义工',type:'学员评价异议',content:'匿名评价不实评分，影响整体评价指标。',audit:[{role:'初审·知新馆指导老师',date:'2025-10-10',result:'驳回',pass:false,remark:'评价经复核内容真实，建议改进教学方式。'}]}
+];
+
+function openNewAppealForm(){ openOverlay('newAppealOverlay'); }
+function closeNewAppealForm(){ closeOverlay('newAppealOverlay'); }
+
+function openAppealDetail(idx){
+  const d=appealData[idx]; if(!d) return;
+  const isRejected=d.audit.some(a=>a.pass===false);
+  const body=document.getElementById('appealDetailBody');
+  let auditHtml=d.audit.map(a=>`
+    <div class="ar-item">
+      <div class="ar-dot${a.pass===true?'':a.pass===false?' fail':' pending'}"></div>
+      <div class="ar-info"><h6>${a.role}</h6><p>${a.date} · ${a.result}${a.remark?' · '+a.remark:''}</p></div>
+    </div>`).join('');
+  body.innerHTML=`
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h4>基本信息</h4></div>
+      <div class="m-kv"><label>姓名/学号</label><span>王诗韵 / 2023XX0042</span></div>
+      <div class="m-kv"><label>辅学义工类别</label><span>${d.cat}</span></div>
+    </div>
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic" style="background:var(--danger-bg);color:var(--danger);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h4>反馈内容</h4></div>
+      <div class="m-kv"><label>反馈编号</label><span>${d.id}</span></div>
+      <div class="m-kv"><label>反馈分类</label><span>${d.type}</span></div>
+      ${isRejected?`
+      <div class="fld col" style="margin-top:8px;">
+        <label style="display:flex;align-items:center;justify-content:space-between;">
+          <span>反馈内容</span>
+          
+        </label>
+        <textarea id="editAppealContentM" style="min-height:80px;">${d.content}</textarea>
+      </div>`
+      :`<div class="m-kv"><label>反馈内容</label><span>${d.content}</span></div>`}
+    </div>
+    <div class="m-section">
+      <div class="m-sec-head"><div class="ic" style="background:var(--success-bg);color:var(--success);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h4>审核记录</h4></div>
+      <div class="audit-record">${auditHtml}</div>
+    </div>`;
+  const foot=document.getElementById('appealDetailFoot');
+  if(isRejected){
+    foot.innerHTML=`
+      <button class="btn-block secondary" onclick="showToast('已保存草稿');closeAppealDetail()">保存草稿</button>
+      <button class="btn-block" onclick="showToast('已重新提交审核');setTimeout(closeAppealDetail,600)">提交审核</button>`;
+  } else {
+    foot.innerHTML=`<button class="btn-block" onclick="closeAppealDetail()">关闭</button>`;
+  }
+  openOverlay('appealDetailOverlay');
+}
+function closeAppealDetail(){ closeOverlay('appealDetailOverlay'); }
+
+// ====== Selection Helpers ======
+function updateGrpVisibility(){
+  const activeRadio=document.querySelector('.ao-cat-radio.active');
+  const isZhixin=activeRadio && activeRadio.textContent.trim().includes('知新馆');
+  const sec=document.getElementById('m-grp-section');
+  if(sec){
+    if(isZhixin){
+      sec.style.display='';
+    } else {
+      sec.style.display='none';
+    }
+  }
+}
+function selectCatCard(card){
+  document.querySelectorAll('.ao-cat-card').forEach(c=>{
+    c.classList.remove('active');
+    const rd=c.querySelector('.ao-cat-title .rd');
+    if(rd){ rd.style.borderColor='#bbb'; rd.innerHTML=''; }
+  });
+  card.classList.add('active');
+  const rd=card.querySelector('.ao-cat-title .rd');
+  if(rd){
+    rd.style.borderColor='var(--primary)';
+    rd.innerHTML='<span style="position:absolute;left:2px;top:2px;width:6px;height:6px;border-radius:50%;background:var(--primary);"></span>';
+  }
+  const firstSub=card.querySelector('.ao-cat-radio');
+  if(firstSub && !card.querySelector('.ao-cat-radio.active')){
+    firstSub.classList.add('active');
+  }
+  updateGrpVisibility();
+}
+
+function selectSubRadio(label){
+  const parent=label.closest('.ao-cat-card');
+  if(parent){
+    parent.querySelectorAll('.ao-cat-radio').forEach(r=>r.classList.remove('active'));
+    label.classList.add('active');
+    if(!parent.classList.contains('active')) selectCatCard(parent);
+  }
+  updateGrpVisibility();
+}
+
+function selectGrpRadio(label){
+  document.querySelectorAll('.ao-grp-radio').forEach(r=>r.classList.remove('active'));
+  label.classList.add('active');
+}
+
+// ====== 英语水平多项 ======
+function mAddEng(){
+  const list=document.getElementById('m-eng-list');
+  if(!list) return;
+  const row=document.createElement('div');
+  row.className='m-eng-row';
+  row.innerHTML='<select><option>CET-4</option><option>CET-6</option><option>雅思 IELTS</option><option>托福 TOEFL</option><option>GRE</option><option>专四 TEM-4</option><option>专八 TEM-8</option><option>其他</option></select><input class="eg" placeholder="分数" /><button type="button" class="eng-del" onclick="mRemoveEng(this)">×</button>';
+  list.appendChild(row);
+}
+function mRemoveEng(btn){
+  const list=document.getElementById('m-eng-list');
+  if(list && list.querySelectorAll('.m-eng-row').length<=1){ showToast('至少保留一项英语水平'); return; }
+  btn.closest('.m-eng-row').remove();
+}
+function mToggleCourse(cb){
+  const card=cb.closest('.m-course-card');
+  if(card) card.classList.toggle('on', cb.checked);
+}
+
+// ====== Init ======
+// ====== Tab 鼠标拖拽滚动 ======
+(function(){
+  const tabs=document.getElementById('vaTabs');
+  if(!tabs) return;
+  let isDown=false, startX, scrollLeft;
+  tabs.addEventListener('mousedown',e=>{
+    isDown=true; tabs.style.cursor='grabbing';
+    startX=e.pageX-tabs.offsetLeft; scrollLeft=tabs.scrollLeft;
+    e.preventDefault();
+  });
+  tabs.addEventListener('mouseleave',()=>{ isDown=false; tabs.style.cursor='grab'; });
+  tabs.addEventListener('mouseup',()=>{ isDown=false; tabs.style.cursor='grab'; });
+  tabs.addEventListener('mousemove',e=>{
+    if(!isDown) return;
+    const x=e.pageX-tabs.offsetLeft;
+    tabs.scrollLeft=scrollLeft-(x-startX);
+  });
+  tabs.style.cursor='grab';
+})();
+
+// ====== Photo Preview ======
+function openPhotoPreview(src){
+  const overlay=document.getElementById('photoPreview');
+  const img=document.getElementById('photoPreviewImg');
+  img.src=src;
+  overlay.style.display='flex';
+  requestAnimationFrame(()=>{
+    overlay.style.opacity='1';
+    img.style.transform='scale(1)';
+  });
+}
+function closePhotoPreview(){
+  const overlay=document.getElementById('photoPreview');
+  const img=document.getElementById('photoPreviewImg');
+  overlay.style.opacity='0';
+  img.style.transform='scale(.8)';
+  setTimeout(()=>{ overlay.style.display='none'; },250);
+}
+
+renderStatusBar(false);
+</script>
+</body>
+</html>

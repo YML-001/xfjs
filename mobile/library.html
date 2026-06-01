@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>宝藏资料库 · 学风建设</title>
+<style>
+:root{
+  --primary:#3087CC;--primary-light:#E3F1F9;--primary-dark:#006DAD;--primary-50:#F4FAFE;
+  --text-1:#3C444F;--text-2:#696F7D;--text-3:#9096A2;--text-4:#ABB0BA;
+  --border:#E5E8EE;--border-light:#EFF1F5;--bg:#F4F6FA;
+  --success:#1BB975;--success-bg:#E8FCF4;--success-border:#A7F3D0;
+  --warning:#F29100;--warning-bg:#FFF5E5;--warning-border:#FFE0B3;
+  --danger:#DF2027;--danger-bg:#FCE8EA;--danger-border:#F6BCBE;
+  --shadow-sm:0 1px 3px rgba(15,32,55,.05);--shadow-md:0 6px 20px rgba(15,32,55,.06);--shadow-lg:0 12px 32px rgba(15,32,55,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:"OPPOSans","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;color:var(--text-1);background:#E8ECF2;-webkit-font-smoothing:antialiased;font-size:14px;}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+svg{display:block;flex-shrink:0;}
+::-webkit-scrollbar{display:none;}
+
+/* ===== Phone Shell ===== */
+.phone-shell{width:390px;height:844px;background:#1F2733;border-radius:48px;padding:10px;box-shadow:0 40px 80px rgba(31,39,51,.32),0 8px 24px rgba(31,39,51,.16);position:relative;}
+.phone-shell::before{content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);width:120px;height:32px;background:#1F2733;border-radius:0 0 22px 22px;z-index:5;}
+.phone-shell::after{content:"";position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:130px;height:5px;background:#fff;border-radius:3px;z-index:5;}
+.screen{width:100%;height:100%;background:var(--bg);border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column;}
+
+/* ===== Status Bar ===== */
+.status-bar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 28px 0 32px;font-size:14px;font-weight:600;background:transparent;color:var(--text-1);flex-shrink:0;}
+.status-bar.dark{color:#fff;}
+.status-bar .right{display:flex;gap:6px;align-items:center;}
+
+/* ===== App layout ===== */
+.app{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.pages{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:80px;}
+@keyframes slideIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.page{animation:slideIn .25s ease;}
+
+/* ===== Header ===== */
+.lib-header{
+  background:linear-gradient(135deg,#7C5BC1,#B59CE5);color:#fff;
+  padding:12px 16px 56px;position:relative;overflow:hidden;flex-shrink:0;
+}
+.lib-header::before{content:"";position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);right:-60px;top:-80px;}
+.lib-header::after{content:"";position:absolute;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(255,213,143,.18),transparent 60%);left:-40px;bottom:-60px;}
+.lib-header .h-row{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;}
+.lib-header h1{font-size:19px;font-weight:700;}
+.lib-header .h-actions{display:flex;gap:8px;}
+.lib-header .h-btn{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.25);color:#fff;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.lib-header .h-btn:active{background:rgba(255,255,255,.35);transform:scale(.94);}
+.lib-header .h-search{position:relative;z-index:1;margin-top:12px;height:38px;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;padding:0 12px;gap:8px;}
+.lib-header .h-search input{flex:1;border:none;outline:none;background:transparent;font-size:13px;color:#fff;font-family:inherit;}
+.lib-header .h-search input::placeholder{color:rgba(255,255,255,.6);}
+
+/* ===== KPI strip ===== */
+.kpi-strip{
+  display:flex;gap:10px;margin:-36px 12px 0;position:relative;z-index:2;
+}
+.kpi-item{
+  flex:1;background:#fff;border-radius:14px;padding:12px 10px;text-align:center;
+  box-shadow:var(--shadow-md);
+}
+.kpi-item .k-num{font-size:18px;font-weight:700;color:var(--text-1);}
+.kpi-item .k-num small{font-size:10px;font-weight:400;color:var(--text-3);}
+.kpi-item .k-label{font-size:10px;color:var(--text-3);margin-top:3px;}
+
+/* ===== Pill tabs ===== */
+.lib-tabs-wrap{position:relative;flex-shrink:0;margin-top:14px;}
+.lib-tabs-wrap::after{
+  content:"";position:absolute;top:0;right:0;bottom:0;width:28px;
+  background:linear-gradient(to right,transparent,#fff);
+  pointer-events:none;z-index:1;
+}
+.lib-tabs{
+  display:flex;background:#fff;border-bottom:1px solid var(--border-light);
+  overflow-x:auto;scrollbar-width:none;flex-shrink:0;cursor:grab;user-select:none;
+}
+.lib-tabs::-webkit-scrollbar{display:none;}
+.lib-tab{
+  flex-shrink:0;padding:0 14px;height:42px;display:flex;align-items:center;gap:5px;
+  font-size:13px;font-weight:500;color:var(--text-3);border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap;
+}
+.lib-tab.active{color:var(--primary);border-bottom-color:var(--primary);}
+.lib-tab .tc{font-size:10px;background:#F1F4F8;color:var(--text-3);padding:1px 6px;border-radius:10px;font-weight:600;}
+.lib-tab.active .tc{background:var(--primary-light);color:var(--primary);}
+
+/* ===== Filter bar (chips) ===== */
+.filter-bar{
+  background:#fff;border-bottom:1px solid var(--border-light);
+  padding:8px 12px;display:flex;align-items:center;gap:8px;
+  overflow-x:auto;scrollbar-width:none;flex-shrink:0;
+}
+.filter-bar::-webkit-scrollbar{display:none;}
+.f-chip{
+  flex-shrink:0;height:28px;padding:0 12px;border-radius:14px;
+  background:#F1F4F8;border:1px solid var(--border-light);font-size:11px;color:var(--text-2);
+  display:inline-flex;align-items:center;gap:4px;white-space:nowrap;transition:all .15s;
+}
+.f-chip.active{background:var(--primary-light);border-color:#BFDDF6;color:var(--primary);}
+.f-chip svg{width:10px;height:10px;}
+.filter-btn{
+  flex-shrink:0;width:28px;height:28px;border-radius:8px;background:#F1F4F8;border:1px solid var(--border-light);
+  display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all .15s;
+}
+.filter-btn.has-filter{background:var(--primary-light);border-color:#BFDDF6;color:var(--primary);}
+
+/* ===== Tab content ===== */
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* ===== Resource cards ===== */
+.res-list{padding:10px 12px;display:flex;flex-direction:column;gap:10px;}
+.res-card{
+  background:#fff;border-radius:14px;padding:14px;box-shadow:var(--shadow-sm);
+  display:flex;gap:12px;align-items:flex-start;transition:all .15s;cursor:pointer;
+}
+.res-card:active{transform:scale(.98);box-shadow:var(--shadow-md);}
+.ft-ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;flex-shrink:0;}
+.ft-pdf{background:linear-gradient(135deg,#DF2027,#FF6B6B);}
+.ft-ppt{background:linear-gradient(135deg,#F29100,#FFAA33);}
+.ft-doc{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.ft-xls{background:linear-gradient(135deg,#1BB975,#34D399);}
+.res-card .rc-body{flex:1;min-width:0;}
+.res-card .rc-title{font-size:13px;font-weight:600;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.res-card .rc-tags{margin-top:5px;display:flex;gap:4px;flex-wrap:wrap;}
+.res-card .rc-meta{margin-top:7px;display:flex;align-items:center;justify-content:space-between;}
+.res-card .rc-stats{display:flex;gap:8px;font-size:10px;color:var(--text-3);}
+.res-card .rc-stats span{display:inline-flex;align-items:center;gap:2px;}
+.res-card .rc-time{font-size:10px;color:var(--text-4);}
+.rank-badge{
+  width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:#fff;flex-shrink:0;align-self:center;
+  background:linear-gradient(135deg,#DF2027,#FF6B6B);
+}
+.rank-badge.mid{background:linear-gradient(135deg,#F29100,#FFAA33);}
+.rank-badge.low{background:#D9DDE3;color:var(--text-2);}
+
+/* ===== Tags ===== */
+.tag-xs{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;}
+.t-blue{background:var(--primary-light);color:var(--primary);}
+.t-green{background:var(--success-bg);color:var(--success);}
+.t-orange{background:var(--warning-bg);color:var(--warning);}
+.t-grey{background:#F1F4F8;color:var(--text-3);}
+.t-purple{background:#F0EBFA;color:#7C5BC1;}
+.t-red{background:var(--danger-bg);color:var(--danger);}
+
+/* ===== Empty ===== */
+.empty-card{padding:36px 16px;text-align:center;background:#fff;border-radius:14px;margin:10px 12px;box-shadow:var(--shadow-sm);}
+.empty-card svg{margin:0 auto 10px;color:var(--text-4);}
+.empty-card p{font-size:13px;color:var(--text-3);}
+
+/* ===== Bottom Tab Bar ===== */
+.tabbar{position:absolute;bottom:0;left:0;right:0;height:74px;background:rgba(255,255,255,.94);border-top:1px solid var(--border-light);display:flex;align-items:flex-start;justify-content:space-around;padding:8px 0 18px;backdrop-filter:blur(20px);z-index:10;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text-3);font-size:10px;padding:4px 0;transition:all .15s;text-decoration:none;}
+.tab.active{color:var(--primary);}
+.tab svg{width:22px;height:22px;}
+
+/* ===== Bottom Sheet ===== */
+.sheet-mask{position:absolute;inset:0;background:rgba(15,32,55,.40);z-index:30;display:none;border-radius:38px;}
+.sheet-mask.show{display:block;}
+.bottom-sheet{
+  position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:24px 24px 0 0;
+  z-index:31;transform:translateY(100%);transition:transform .28s cubic-bezier(.22,.68,0,1.2);
+  display:flex;flex-direction:column;max-height:88%;
+}
+.bottom-sheet.show{transform:translateY(0);}
+.bs-handle{width:36px;height:4px;border-radius:2px;background:#D9DDE3;margin:10px auto 0;}
+.bs-head{padding:14px 16px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.bs-head h3{font-size:16px;font-weight:600;}
+.bs-close{width:28px;height:28px;border-radius:7px;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--text-2);}
+.bs-body{padding:16px;overflow-y:auto;flex:1;}
+.bs-foot{padding:12px 16px;border-top:1px solid var(--border-light);display:flex;gap:10px;flex-shrink:0;}
+
+/* ===== Mobile Form (inside bottom sheet) ===== */
+.m-form-group{background:var(--bg);border-radius:14px;padding:4px 14px;margin-bottom:12px;}
+.m-form-row{padding:13px 0;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border-light);}
+.m-form-row:last-child{border-bottom:none;}
+.m-form-row label{font-size:13px;color:var(--text-1);min-width:76px;flex-shrink:0;font-weight:500;}
+.m-form-row label .req{color:var(--danger);}
+.m-form-row input,.m-form-row select,.m-form-row textarea{flex:1;border:none;outline:none;font-size:13px;color:var(--text-1);text-align:right;background:transparent;font-family:inherit;}
+.m-form-row input::placeholder,.m-form-row textarea::placeholder{color:var(--text-4);}
+.m-form-row select{appearance:none;-webkit-appearance:none;background:transparent;text-align-last:right;}
+.m-form-row textarea{text-align:left;resize:none;min-height:64px;padding:4px 0;}
+.m-form-label{font-size:11px;color:var(--text-3);padding:8px 0 4px;font-weight:500;}
+
+/* Upload zone */
+.upload-zone-m{
+  border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;
+  margin-bottom:12px;background:var(--bg);
+}
+.upload-zone-m:active{border-color:var(--primary);background:var(--primary-50);}
+.upload-zone-m svg{margin:0 auto 6px;color:var(--text-3);}
+.upload-zone-m p{font-size:12px;color:var(--text-2);}
+.upload-zone-m small{font-size:10px;color:var(--text-3);margin-top:3px;display:block;}
+
+/* ===== Filter sheet ===== */
+.fs-row{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.fs-label{font-size:12px;color:var(--text-2);font-weight:500;margin-bottom:4px;}
+.fs-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.fs-chip{padding:6px 14px;border-radius:20px;background:var(--bg);border:1px solid var(--border);font-size:12px;color:var(--text-2);transition:all .15s;}
+.fs-chip.active{background:var(--primary-light);border-color:#BFDDF6;color:var(--primary);font-weight:500;}
+
+/* ===== Detail sheet ===== */
+.detail-hero{background:linear-gradient(135deg,#F4FAFE,#E3F1F9);border-radius:14px;padding:14px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start;}
+.detail-hero h3{font-size:15px;font-weight:600;line-height:1.45;}
+.detail-hero .d-meta{font-size:11px;color:var(--text-3);margin-top:4px;}
+.detail-hero .d-tags{margin-top:7px;display:flex;gap:4px;flex-wrap:wrap;}
+.preview-mock-m{background:linear-gradient(135deg,#F8FAFC,#EEF2F7);border-radius:12px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--text-4);margin-bottom:14px;border:1px dashed var(--border);}
+.preview-mock-m p{font-size:12px;}
+.info-list{display:flex;flex-direction:column;}
+.info-row{display:flex;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border-light);gap:8px;}
+.info-row:last-child{border-bottom:none;}
+.info-row .ik{font-size:11px;color:var(--text-3);min-width:64px;flex-shrink:0;padding-top:1px;}
+.info-row .iv{font-size:13px;color:var(--text-1);flex:1;line-height:1.6;word-break:break-word;}
+
+/* Related file row */
+.rf-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-light);}
+.rf-row:last-child{border-bottom:none;}
+.rf-ic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;flex-shrink:0;}
+.rf-row .rf-body{flex:1;min-width:0;}
+.rf-row .rf-name{font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rf-row .rf-meta{font-size:10px;color:var(--text-3);margin-top:2px;}
+.rf-dl{height:28px;padding:0 12px;border-radius:7px;background:var(--primary-light);color:var(--primary);font-size:11px;font-weight:500;border:1px solid #BFDDF6;display:inline-flex;align-items:center;gap:3px;flex-shrink:0;}
+.rf-dl:active{background:var(--primary);color:#fff;}
+
+/* ===== Buttons ===== */
+.btn-block{width:100%;height:46px;border-radius:14px;background:var(--primary);color:#fff;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;border:none;cursor:pointer;font-family:inherit;}
+.btn-block:active{transform:scale(.98);background:var(--primary-dark);}
+.btn-block.purple{background:#7C5BC1;}
+.btn-block.purple:active{background:#6347A8;}
+.btn-outline{flex:1;height:44px;border-radius:12px;border:1px solid var(--border);background:#fff;color:var(--text-2);font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:5px;font-family:inherit;}
+.btn-outline:active{background:var(--bg);}
+.btn-primary-s{flex:1;height:44px;border-radius:12px;background:var(--primary);color:#fff;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:5px;font-family:inherit;}
+.btn-primary-s:active{background:var(--primary-dark);}
+
+/* Share */
+.share-link-m{background:var(--bg);border-radius:10px;padding:12px;font-size:12px;color:var(--text-2);word-break:break-all;border:1px solid var(--border);margin-bottom:14px;}
+.share-link-m p{line-height:1.6;}
+
+/* ===== FAB ===== */
+.fab-row{
+  position:absolute;right:14px;bottom:148px;display:flex;flex-direction:column;gap:8px;z-index:9;
+}
+.fab{
+  width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18);transition:all .15s;
+}
+.fab:active{transform:scale(.92);}
+.fab-upload{background:var(--primary);}
+.fab-demand{background:#7C5BC1;}
+
+/* ===== 需求征集 ===== */
+.collect-banner-m{display:flex;align-items:flex-start;gap:8px;background:linear-gradient(135deg,#F0EBFA,#F7F3FE);border:1px solid #D4C8F5;border-radius:12px;padding:11px 13px;margin-bottom:12px;font-size:11px;color:#5C3FA3;line-height:1.6;}
+.collect-banner-m svg{flex-shrink:0;margin-top:1px;}
+.collect-card{background:#fff;border:1px solid var(--border-light);border-radius:12px;padding:13px;box-shadow:var(--shadow-sm);}
+.collect-card .cc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.collect-card .cc-t{font-size:13.5px;font-weight:600;color:var(--text-1);line-height:1.45;}
+.collect-card .cc-tg{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.collect-card .cc-rm{font-size:11.5px;color:var(--text-2);line-height:1.6;margin-top:9px;background:#FAFBFD;border:1px solid var(--border-light);border-radius:8px;padding:8px 10px;}
+.collect-card .cc-mt{font-size:10.5px;color:var(--text-3);margin-top:9px;display:flex;flex-wrap:wrap;gap:4px 12px;}
+.collect-card .cc-mt b{color:var(--text-2);}
+.collect-card .cc-ft{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;padding-top:10px;border-top:1px dashed var(--border-light);}
+.collect-card .cc-rp{font-size:10.5px;color:var(--text-3);}
+.collect-card .cc-rp b{color:var(--success);}
+.collect-card .cc-btn{height:30px;padding:0 13px;border-radius:8px;font-size:11.5px;font-weight:500;background:var(--primary);color:#fff;border:none;display:inline-flex;align-items:center;gap:4px;font-family:inherit;}
+.collect-card .cc-btn:active{transform:scale(.96);}
+.collect-card.done .cc-btn{background:#E5E8EE;color:var(--text-3);}
+
+/* ===== Toast ===== */
+.toast{position:absolute;left:50%;top:56px;transform:translate(-50%,-20px);background:#1F2733;color:#fff;padding:9px 18px;border-radius:10px;font-size:12px;opacity:0;pointer-events:none;transition:all .25s;z-index:200;box-shadow:var(--shadow-lg);white-space:nowrap;}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+</style>
+</head>
+<body>
+<div class="phone-shell">
+  <div class="screen">
+    <div class="status-bar dark" id="statusBar"></div>
+    <div class="app">
+      <div class="pages" id="mainPages">
+        <div class="page">
+
+          <!-- Header -->
+          <div class="lib-header">
+            <div class="h-row">
+              <h1>宝藏资料库</h1>
+              <div class="h-actions">
+                <button class="h-btn" title="消息" onclick="showToast('暂无新消息')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="h-search">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="搜索资料、关键词…" />
+            </div>
+          </div>
+
+          <!-- KPI -->
+          <div class="kpi-strip">
+            <div class="kpi-item">
+              <div class="k-num">486 <small>份</small></div>
+              <div class="k-label">已发布资料</div>
+            </div>
+            <div class="kpi-item">
+              <div class="k-num">12.4k <small>次</small></div>
+              <div class="k-label">本月下载</div>
+            </div>
+            <div class="kpi-item">
+              <div class="k-num">3 <small>份</small></div>
+              <div class="k-label">我已上传</div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="lib-tabs-wrap">
+            <div class="lib-tabs" id="libTabs">
+              <button class="lib-tab active" data-tab="all">所有资料 <span class="tc" id="tc-all">486</span></button>
+              <button class="lib-tab" data-tab="hot">热门资料 <span class="tc" id="tc-hot">48</span></button>
+              <button class="lib-tab" data-tab="collect">需求征集 <span class="tc" id="tc-collect">0</span></button>
+              <button class="lib-tab" data-tab="mine">我上传的 <span class="tc" id="tc-mine">3</span></button>
+              <button class="lib-tab" data-tab="demand">我提的需求 <span class="tc" id="tc-demand">2</span></button>
+            </div>
+          </div>
+          <!-- Filter bar -->
+          <div class="filter-bar" id="filterBar">
+            <button class="filter-btn" id="filterBtnMain" onclick="openFilterSheet()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            </button>
+            <span id="activeFilterChips"></span>
+          </div>
+
+          <!-- Tab: 所有资料 -->
+          <div class="tab-pane active" id="tab-all">
+            <div class="res-list" id="all-list"></div>
+          </div>
+          <!-- Tab: 热门资料 -->
+          <div class="tab-pane" id="tab-hot">
+            <div class="res-list" id="hot-list"></div>
+          </div>
+          <!-- Tab: 需求征集 -->
+          <div class="tab-pane" id="tab-collect">
+            <div class="collect-banner-m">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C5BC1" stroke-width="1.8"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+              <div>全校同学发起的资料征集，若你有符合的资料，点「上传资料」即可定向贡献。</div>
+            </div>
+            <div class="res-list" id="collect-list"></div>
+          </div>
+          <!-- Tab: 我上传的 -->
+          <div class="tab-pane" id="tab-mine">
+            <div class="res-list" id="mine-list"></div>
+          </div>
+          <!-- Tab: 我提的需求 -->
+          <div class="tab-pane" id="tab-demand">
+            <div class="res-list" id="demand-list"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FAB buttons -->
+      <div class="fab-row">
+        <button class="fab fab-demand" title="提需求" onclick="openSheet('demandSheet')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
+        <button class="fab fab-upload" title="上传资料" onclick="openSheet('uploadSheet')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </button>
+      </div>
+
+      <nav class="tabbar" id="tabbarEl"></nav>
+    </div><!-- /app -->
+
+    <!-- ============ 上传资料 Sheet ============ -->
+    <div class="sheet-mask" id="uploadMask" onclick="closeSheet('uploadSheet')"></div>
+    <div class="bottom-sheet" id="uploadSheet" style="max-height:92%;">
+      <div class="bs-handle"></div>
+      <div class="bs-head">
+        <h3>上传资料</h3>
+        <button class="bs-close" onclick="closeSheet('uploadSheet')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="bs-body">
+        <div id="up-collect-banner" style="display:none;background:#F0EBFA;border:1px solid #D4C8F5;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#5C3FA3;line-height:1.6;gap:6px;align-items:flex-start;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+          <span>正在为征集需求定向上传：<strong id="up-collect-name"></strong></span>
+        </div>
+        <div style="background:var(--primary-50);border:1px solid #BFDDF6;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:var(--primary-dark);line-height:1.6;display:flex;gap:6px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          提交后<strong>直接发布</strong>至资料库，无需审核，请确保内容合规。
+        </div>
+        <div class="m-form-group">
+          <div class="m-form-row"><label>资料标题 <span class="req">*</span></label><input id="up-title" placeholder="请输入标题" /></div>
+          <div class="m-form-row"><label>所属分类 <span class="req">*</span></label>
+            <select id="up-major"><option value="">请选择</option><option>课程科目类</option><option>学涯规划类</option></select>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="m-form-row"><label>资料小类 <span class="req">*</span></label>
+            <select id="up-minor"><option value="">请选择</option><option>课件 PPT</option><option>笔记讲义</option><option>往年真题</option><option>电子书</option><option>双十佳教案</option><option>学霸笔记</option><option>学涯发展篇</option><option>资源获取篇</option><option>优学指导篇</option><option>学习方法篇</option><option>学科竞赛篇</option><option>项目比赛篇</option><option>自我管理篇</option></select>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="m-form-row"><label>所属课程</label><input id="up-course" placeholder="例：高等数学A" /></div>
+          <div class="m-form-row"><label>征集需求</label>
+            <select id="up-demand"><option value="">不关联</option></select>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="m-form-group">
+          <div class="m-form-row"><label>来源说明</label><input id="up-source" placeholder="例：知新馆数学组整理" /></div>
+          <div class="m-form-row"><label>版本信息</label><input id="up-version" placeholder="例：v2026.04" /></div>
+          <div class="m-form-row"><label>关键词标签</label><input id="up-tags" placeholder="逗号分隔" /></div>
+        </div>
+        <div class="m-form-group">
+          <div class="m-form-row" style="align-items:flex-start;"><label style="padding-top:4px;">文件介绍</label><textarea id="up-intro" placeholder="资料内容、适用对象、与课程的关系等"></textarea></div>
+          <div class="m-form-row" style="align-items:flex-start;"><label style="padding-top:4px;">备注</label><textarea id="up-remark" placeholder="版权说明、使用限制等（选填）"></textarea></div>
+        </div>
+        <div class="upload-zone-m" onclick="showToast('请选择文件')">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p>点击选择文件 <span style="color:var(--primary);">上传</span></p>
+          <small>单文件不超过 50MB · PDF / Word / PPT / 图片</small>
+        </div>
+      </div>
+      <div class="bs-foot">
+        <button class="btn-outline" onclick="closeSheet('uploadSheet')">取消</button>
+        <button class="btn-primary-s" onclick="submitUpload()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          立即发布
+        </button>
+      </div>
+    </div>
+
+    <!-- ============ 提需求 Sheet ============ -->
+    <div class="sheet-mask" id="demandMask" onclick="closeSheet('demandSheet')"></div>
+    <div class="bottom-sheet" id="demandSheet" style="max-height:88%;">
+      <div class="bs-handle"></div>
+      <div class="bs-head">
+        <h3>提交资料需求</h3>
+        <button class="bs-close" onclick="closeSheet('demandSheet')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="bs-body">
+        <div style="background:#F0EBFA;border:1px solid #D4C8F5;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:#5C3FA3;line-height:1.6;">
+          告诉我们你需要什么资料，知新馆义工团队将优先整理上传！
+        </div>
+        <div class="m-form-group">
+          <div class="m-form-row"><label>资料名称 <span class="req">*</span></label><input id="dm-title" placeholder="例：高数B 期末真题" /></div>
+          <div class="m-form-row"><label>所属分类 <span class="req">*</span></label>
+            <select id="dm-major"><option value="">请选择</option><option>课程科目类</option><option>学涯规划类</option></select>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="m-form-row"><label>资料小类</label>
+            <select id="dm-minor"><option value="">请选择</option><option>课件 PPT</option><option>笔记讲义</option><option>往年真题</option><option>电子书</option><option>学习方法篇</option><option>学科竞赛篇</option><option>其他</option></select>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="m-form-row"><label>所属课程</label><input id="dm-course" placeholder="例：高等数学B" /></div>
+          <div class="m-form-row"><label>联系邮箱</label><input id="dm-contact" type="email" placeholder="方便义工联系跟进" /></div>
+        </div>
+        <div class="m-form-group">
+          <div class="m-form-row" style="align-items:flex-start;"><label style="padding-top:4px;display:flex;align-items:center;justify-content:space-between;flex:none;width:70px;">备注说明</label><div style="flex:1;"><div style="display:flex;justify-content:flex-end;margin-bottom:4px;"></div><textarea id="dm-remark" placeholder="内容范围、年份、版本要求等…"></textarea></div></div>
+        </div>
+      </div>
+      <div class="bs-foot">
+        <button class="btn-outline" onclick="closeSheet('demandSheet')">取消</button>
+        <button class="btn-primary-s" style="background:#7C5BC1;" onclick="submitDemand()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          提交需求
+        </button>
+      </div>
+    </div>
+
+    <!-- ============ 筛选 Sheet ============ -->
+    <div class="sheet-mask" id="filterMask" onclick="closeSheet('filterSheet')"></div>
+    <div class="bottom-sheet" id="filterSheet" style="max-height:78%;">
+      <div class="bs-handle"></div>
+      <div class="bs-head">
+        <h3>筛选条件</h3>
+        <button class="bs-close" onclick="closeSheet('filterSheet')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="bs-body" id="filterSheetBody"></div>
+      <div class="bs-foot">
+        <button class="btn-outline" onclick="resetCurrentFilter()">重置</button>
+        <button class="btn-primary-s" onclick="applyCurrentFilter()">应用筛选</button>
+      </div>
+    </div>
+
+    <!-- ============ 资料详情 Sheet ============ -->
+    <div class="sheet-mask" id="resDetailMask" onclick="closeSheet('resDetailSheet')"></div>
+    <div class="bottom-sheet" id="resDetailSheet" style="max-height:92%;">
+      <div class="bs-handle"></div>
+      <div class="bs-head">
+        <h3 id="resDetailTitle">资料详情</h3>
+        <button class="bs-close" onclick="closeSheet('resDetailSheet')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="bs-body" id="resDetailBody"></div>
+      <div class="bs-foot" id="resDetailFoot"></div>
+    </div>
+
+    <!-- ============ 我上传的 预览 Sheet ============ -->
+    <div class="sheet-mask" id="minePreviewMask" onclick="closeSheet('minePreviewSheet')"></div>
+    <div class="bottom-sheet" id="minePreviewSheet" style="max-height:92%;">
+      <div class="bs-handle"></div>
+      <div class="bs-head">
+        <h3>资料预览</h3>
+        <button class="bs-close" onclick="closeSheet('minePreviewSheet')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="bs-body" id="minePreviewBody"></div>
+      <div class="bs-foot" id="minePreviewFoot"></div>
+    </div>
+
+    <!-- ============ 需求详情 Sheet ============ -->
+    <div class="sheet-mask" id="dmDetailMask" onclick="closeSheet('dmDetailSheet')"></div>
+    <div class="bottom-sheet" id="dmDetailSheet" style="max-height:92%;">
+      <div class="bs-handle"></div>
+      <div class="bs-head">
+        <h3 id="dmDetailTitle">需求详情</h3>
+        <button class="bs-close" onclick="closeSheet('dmDetailSheet')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="bs-body" id="dmDetailBody"></div>
+      <div class="bs-foot">
+        <button class="btn-outline" onclick="closeSheet('dmDetailSheet')">关闭</button>
+      </div>
+    </div>
+
+    <!-- ============ 分享 Sheet ============ -->
+    <div class="sheet-mask" id="shareMask" onclick="closeSheet('shareSheet')"></div>
+    <div class="bottom-sheet" id="shareSheet">
+      <div class="bs-handle"></div>
+      <div class="bs-head">
+        <h3>分享资料</h3>
+        <button class="bs-close" onclick="closeSheet('shareSheet')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="bs-body">
+        <p style="font-size:13px;color:var(--text-2);margin-bottom:12px;">复制下方链接，发给同学即可直接访问该资料。</p>
+        <div class="share-link-m"><p id="shareLinkText">https://xf.example.edu/lib/resource/1</p></div>
+        <button class="btn-block" onclick="copyShareLink()">复制链接</button>
+        <p style="font-size:10px;color:var(--text-4);text-align:center;margin-top:10px;">链接有效期 7 天 · 仅限校内网络访问</p>
+      </div>
+    </div>
+
+    <!-- ============ 资料反馈 Sheet ============ -->
+    <div class="sheet-mask" id="feedbackMask" onclick="closeSheet('feedbackSheet')"></div>
+    <div class="bottom-sheet" id="feedbackSheet" style="max-height:88%;">
+      <div class="bs-handle"></div>
+      <div class="bs-head">
+        <h3>资料反馈</h3>
+        <button class="bs-close" onclick="closeSheet('feedbackSheet')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="bs-body">
+        <div style="background:#FFF5E5;border:1px solid #FFE0B3;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:#A05A00;line-height:1.6;">
+          反馈资料：<strong id="fb-res-name"></strong><br>下载不了、文件损坏、内容有误等问题都可反馈，管理员会尽快核实处理。
+        </div>
+        <div class="m-form-group">
+          <div class="m-form-row"><label>问题类型 <span class="req">*</span></label>
+            <select id="fb-type"><option>无法下载</option><option>文件损坏</option><option>内容错误</option><option>与描述不符</option><option>涉嫌侵权</option><option>其他问题</option></select>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="m-form-row" style="align-items:flex-start;"><label style="padding-top:4px;">问题描述 <span class="req">*</span></label><textarea id="fb-desc" placeholder="请描述遇到的具体问题"></textarea></div>
+        </div>
+      </div>
+      <div class="bs-foot">
+        <button class="btn-outline" onclick="closeSheet('feedbackSheet')">取消</button>
+        <button class="btn-primary-s" onclick="submitFeedback()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          提交反馈
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /screen -->
+</div><!-- /phone-shell -->
+
+<script>
+// ===== Bottom Tab =====
+const MOBILE_TABS=[
+  {id:'home',name:'首页',href:'home.html',icon:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'},
+  {id:'courses',name:'选课',href:'courses.html',icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'},
+  {id:'qa',name:'问答',href:'qa.html',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+  {id:'library',name:'资料库',href:'library.html',icon:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'},
+  {id:'profile',name:'我的',href:'profile.html',icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'}
+];
+function renderTabbar(activeId){
+  const tb=document.getElementById('tabbarEl');if(!tb)return;
+  tb.innerHTML=MOBILE_TABS.map(t=>`<a class="tab ${t.id===activeId?'active':''}" href="${t.href}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg>${t.name}</a>`).join('');
+}
+function renderStatusBar(dark=false){
+  const sb=document.getElementById('statusBar');if(!sb)return;
+  sb.classList.toggle('dark',dark);
+  sb.innerHTML=`<span>9:41</span><span class="right"><svg width="16" height="10" viewBox="0 0 17 11" fill="currentColor"><rect y="6" width="3" height="5" rx=".5"/><rect x="4" y="4" width="3" height="7" rx=".5"/><rect x="8" y="2" width="3" height="9" rx=".5"/><rect x="12" width="3" height="11" rx=".5"/></svg><svg width="14" height="10" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 9.5C5.6 9.5 3.4 8.5 1.7 7L8 1l6.3 6c-1.7 1.5-3.9 2.5-6.3 2.5z" fill="currentColor"/></svg><svg width="22" height="10" viewBox="0 0 24 11" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="1" y="1" width="20" height="9" rx="2" stroke-opacity=".5"/><rect x="22" y="4" width="1.5" height="3" rx=".5" fill="currentColor" stroke="none"/><rect x="2.5" y="2.5" width="14" height="6" rx="1" fill="currentColor"/></svg></span>`;
+}
+
+// ===== Toast =====
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.querySelector('.screen').appendChild(t);}
+  t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+// ===== Sheet =====
+function refreshUploadDemandOptions(){
+  const sel=document.getElementById('up-demand');if(!sel)return;
+  const others=COLLECT_DATA.filter(d=>d.status==='open').map(d=>({id:d.id,title:d.title}));
+  const mine=DEMAND_DATA.filter(d=>d.status==='pending'||d.status==='notified').map(d=>({id:d.id,title:d.title}));
+  const merged=[...others,...mine];
+  sel.innerHTML='<option value="">不关联</option>'+merged.map(d=>`<option value="${d.id}">${d.id} · ${d.title}</option>`).join('');
+}
+function openSheet(id){
+  if(id==='uploadSheet'){
+    refreshUploadDemandOptions();
+    window._collectTarget=null;
+    const b=document.getElementById('up-collect-banner');if(b)b.style.display='none';
+  }
+  const sheet=document.getElementById(id);
+  const mask=document.getElementById(id.replace('Sheet','Mask'));
+  if(mask)mask.classList.add('show');
+  if(sheet){setTimeout(()=>sheet.classList.add('show'),10);}
+}
+function closeSheet(id){
+  const sheet=document.getElementById(id);
+  const mask=document.getElementById(id.replace('Sheet','Mask'));
+  if(sheet)sheet.classList.remove('show');
+  if(mask)setTimeout(()=>mask.classList.remove('show'),280);
+}
+
+// ===== DATA =====
+const LIB_DATA=[
+  {id:1,title:'高等数学A 期末真题汇编（2020-2025）',major:'课程科目类',minor:'往年真题',course:'高等数学A',uploader:'陈思远',ft:'pdf',size:'5.2MB',downloads:1890,likes:324,uploadTime:'2026-05-11',timeLabel:'2天前',status:'published',intro:'汇编 2020-2025 年高等数学A 期末真题，含解析与考点提示。',source:'知新馆数学组陈思远整理',version:'v2026.04',keywords:['高数','期末','真题'],remarks:'真题来源教务系统，仅供学习交流。'},
+  {id:2,title:'大学英语六级写作高分模版精讲',major:'课程科目类',minor:'课件 PPT',course:'大学英语六级',uploader:'王诗韵',ft:'ppt',size:'12.8MB',downloads:980,likes:210,uploadTime:'2026-05-12',timeLabel:'1天前',status:'published',intro:'六级写作结构与常用句式模版，附真题范文解析。',source:'知新馆英语组',version:'v2026.03',keywords:['六级','写作'],remarks:''},
+  {id:3,title:'程序设计 · Python 实战代码集',major:'课程科目类',minor:'笔记讲义',course:'程序设计',uploader:'刘子轩',ft:'pdf',size:'8.6MB',downloads:2100,likes:412,uploadTime:'2026-05-11',timeLabel:'2天前',status:'published',intro:'课堂示例与课后习题参考代码合集。',source:'计算机学院辅学组',version:'v2025.12',keywords:['Python','代码'],remarks:'部分代码依赖 Python 3.10+。'},
+  {id:4,title:'线性代数 · 历年期末考点统计',major:'课程科目类',minor:'笔记讲义',course:'线性代数',uploader:'林楠',ft:'xls',size:'1.4MB',downloads:640,likes:156,uploadTime:'2026-05-10',timeLabel:'3天前',status:'published',intro:'历年考点频次与分值分布统计表。',source:'个人整理',version:'v1.0',keywords:['线代','考点'],remarks:''},
+  {id:5,title:'双十佳教案 · 微积分入门篇',major:'课程科目类',minor:'双十佳教案',course:'微积分',uploader:'教务处',ft:'pdf',size:'10.6MB',downloads:3500,likes:502,uploadTime:'2026-05-08',timeLabel:'5天前',status:'published',intro:'学校优秀教案汇编节选。',source:'教务处',version:'2026春',keywords:['微积分','教案'],remarks:'官方发布，禁止二改销售。'},
+  {id:6,title:'大一新生入学规划锦囊',major:'学涯规划类',minor:'学涯发展篇',course:'—',uploader:'知新馆编辑组',ft:'doc',size:'2.8MB',downloads:4800,likes:892,uploadTime:'2026-05-06',timeLabel:'7天前',status:'published',intro:'大一全年学涯规划指南。',source:'知新馆',version:'v3.0',keywords:['大一','规划'],remarks:''},
+  {id:7,title:'数学建模竞赛入门指南',major:'学涯规划类',minor:'学科竞赛篇',course:'—',uploader:'陈思远',ft:'ppt',size:'15.4MB',downloads:720,likes:198,uploadTime:'2026-05-09',timeLabel:'4天前',status:'published',intro:'数学建模竞赛全流程介绍与备赛建议。',source:'陈思远',version:'v2026.01',keywords:['竞赛','建模'],remarks:''},
+  {id:8,title:'大学物理 · 电磁学复习笔记',major:'课程科目类',minor:'笔记讲义',course:'大学物理',uploader:'王诗韵',ft:'doc',size:'3.4MB',downloads:890,likes:234,uploadTime:'2026-05-13',timeLabel:'今天',status:'published',intro:'电场、磁场、电磁感应章节梳理与公式汇总。',source:'王诗韵',version:'v1.0',keywords:['物理','电磁'],remarks:''},
+];
+const MINE_DATA=[
+  {id:2,title:'大学英语六级写作高分模版精讲',major:'课程科目类',minor:'课件 PPT',ft:'ppt',uploadTime:'2026-05-12',downloads:980,likes:210,status:'published'},
+  {id:8,title:'大学物理 · 电磁学复习笔记',major:'课程科目类',minor:'笔记讲义',ft:'doc',uploadTime:'2026-05-13',downloads:890,likes:234,status:'published'},
+  {id:99,title:'高等数学B 期末备考资料包',major:'课程科目类',minor:'往年真题',ft:'pdf',uploadTime:'2026-04-28',downloads:320,likes:78,status:'down'},
+];
+let DEMAND_DATA=[
+  {id:'D001',title:'概率论 往年真题 2022-2025',major:'课程科目类',minor:'往年真题',course:'概率论与数理统计',contact:'s23001@csu.edu.cn',remark:'希望包含解析，2022届以后的优先',submitTime:'2026-05-09',status:'notified',
+   relatedFiles:[{name:'概率论期末真题2024.pdf',ft:'pdf',uploader:'赵洪亮',uploadDate:'2026-04-20',size:'3.1 MB',downloads:86},{name:'概率论期末真题2023.pdf',ft:'pdf',uploader:'赵洪亮',uploadDate:'2026-04-21',size:'2.8 MB',downloads:72}]},
+  {id:'D002',title:'挑战杯项目答辩 PPT 模版',major:'学涯规划类',minor:'项目比赛篇',course:'—',contact:'—',remark:'需要简洁风格，工科类优先',submitTime:'2026-05-01',status:'fulfilled',
+   relatedFiles:[{name:'挑战杯答辩模版-简洁版.pptx',ft:'ppt',uploader:'刘思远',uploadDate:'2026-04-18',size:'5.2 MB',downloads:234}]},
+];
+let demandSeed=3;
+
+// 需求征集广场（全校同学发起的需求）
+let COLLECT_DATA=[
+  {id:'C001',title:'数据结构与算法 历年期末真题（含解析）',major:'课程科目类',minor:'往年真题',course:'数据结构',requester:'李响',college:'计算机学院',remark:'希望能有 2023 年以后的真题，最好附带详细解析，复习用。',submitTime:'2026-05-13',status:'open',respCount:1},
+  {id:'C002',title:'大学物理实验报告范例模版',major:'课程科目类',minor:'笔记讲义',course:'大学物理实验',requester:'周敏',college:'物理与电子学院',remark:'实验报告格式总是被扣分，想参考几份高分范例。',submitTime:'2026-05-12',status:'open',respCount:0},
+  {id:'C003',title:'考研数学一 强化阶段笔记',major:'学涯规划类',minor:'学习方法篇',course:'考研数学',requester:'黄昊',college:'数学与统计学院',remark:'求学长学姐的强化阶段手写笔记或思维导图。',submitTime:'2026-05-11',status:'open',respCount:2},
+  {id:'C004',title:'ACM 程序设计竞赛 入门专题资料',major:'学涯规划类',minor:'学科竞赛篇',course:'程序设计',requester:'吴芳',college:'软件学院',remark:'零基础想打 ACM，求入门专题、模板和训练题单。',submitTime:'2026-05-10',status:'open',respCount:1},
+  {id:'C005',title:'大学英语四级 高频词汇与听力技巧',major:'课程科目类',minor:'课件 PPT',course:'大学英语四级',requester:'郑凯',college:'外国语学院',remark:'下个月就要考四级了，急需高频词汇表和听力技巧。',submitTime:'2026-05-09',status:'fulfilled',respCount:4},
+  {id:'C006',title:'机械制图 AutoCAD 实操教程',major:'课程科目类',minor:'课件 PPT',course:'机械制图',requester:'孙立',college:'机电工程学院',remark:'CAD 软件不太会用，想要图文或视频实操教程。',submitTime:'2026-05-08',status:'open',respCount:0},
+];
+
+// Filter state
+let currentTab='all';
+const filterState={
+  all:{major:'',minor:'',keyword:''},
+  hot:{major:'',minor:'',keyword:''},
+  collect:{major:'',minor:'',status:''},
+  mine:{major:'',minor:'',status:''},
+  demand:{status:'',major:'',keyword:''},
+};
+let tempFilter={};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function ftIC(ft,size){const s=size||40;const c={pdf:'ft-pdf',ppt:'ft-ppt',doc:'ft-doc',xls:'ft-xls'}[ft]||'ft-pdf';return`<div class="ft-ic ${c}" style="width:${s}px;height:${s}px;">${ft.toUpperCase()}</div>`;}
+function statusTagXs(st){return st==='published'?'<span class="tag-xs t-green">已发布</span>':'<span class="tag-xs t-grey">已下架</span>';}
+function demandTagXs(st){const m={pending:{c:'t-orange',l:'待处理'},notified:{c:'t-blue',l:'已发起征集'},fulfilled:{c:'t-green',l:'已满足'},blocked:{c:'t-red',l:'已屏蔽'}};const d=m[st]||{c:'t-grey',l:st};return`<span class="tag-xs ${d.c}">${d.l}</span>`;}
+
+// ===== Render All =====
+function renderAll(){
+  const f=filterState.all;
+  let rows=[...LIB_DATA].sort((a,b)=>b.uploadTime.localeCompare(a.uploadTime));
+  if(f.major)rows=rows.filter(r=>r.major===f.major);
+  if(f.minor)rows=rows.filter(r=>r.minor===f.minor);
+  if(f.keyword)rows=rows.filter(r=>r.title.includes(f.keyword)||r.keywords.some(k=>k.includes(f.keyword)));
+  const el=document.getElementById('all-list');
+  el.innerHTML=rows.length?rows.map(r=>`
+    <div class="res-card" onclick="openResDetail(${r.id})">
+      ${ftIC(r.ft)}
+      <div class="rc-body">
+        <div class="rc-title">${esc(r.title)}</div>
+        <div class="rc-tags">
+          <span class="tag-xs t-blue">${esc(r.major)}</span>
+          <span class="tag-xs t-purple">${esc(r.minor)}</span>
+        </div>
+        <div class="rc-meta">
+          <div class="rc-stats">
+            <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>${r.downloads.toLocaleString()}</span>
+            <span><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z"/></svg>${r.likes}</span>
+          </div>
+          <span class="rc-time">${esc(r.timeLabel)}</span>
+        </div>
+      </div>
+    </div>`).join(''):`<div class="empty-card"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><p>暂无匹配资料</p></div>`;
+}
+
+// ===== Render Hot =====
+function renderHot(){
+  const f=filterState.hot;
+  let rows=[...LIB_DATA].sort((a,b)=>b.downloads-a.downloads);
+  if(f.major)rows=rows.filter(r=>r.major===f.major);
+  if(f.minor)rows=rows.filter(r=>r.minor===f.minor);
+  if(f.keyword)rows=rows.filter(r=>r.title.includes(f.keyword)||r.keywords.some(k=>k.includes(f.keyword)));
+  const el=document.getElementById('hot-list');
+  el.innerHTML=rows.length?rows.map((r,i)=>{
+    const rankCls=i===0?'':'i===1?\'mid\':\'low\'';
+    const rc=i<1?'':'rank-badge '+(i<3?'mid':'low');
+    const rankBg=i===0?'background:linear-gradient(135deg,#DF2027,#FF6B6B)':i<3?'background:linear-gradient(135deg,#F29100,#FFAA33)':'background:#D9DDE3;color:var(--text-2)';
+    return`<div class="res-card" onclick="openResDetail(${r.id})">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;">
+        <div style="width:22px;height:22px;border-radius:50%;${rankBg};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;">${i+1}</div>
+        ${ftIC(r.ft)}
+      </div>
+      <div class="rc-body">
+        <div class="rc-title">${esc(r.title)}</div>
+        <div class="rc-tags">
+          <span class="tag-xs t-blue">${esc(r.minor)}</span>
+          <span class="tag-xs t-grey">${esc(r.course)}</span>
+        </div>
+        <div class="rc-meta">
+          <div class="rc-stats">
+            <span style="color:var(--primary);font-weight:600;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>${r.downloads.toLocaleString()}</span>
+            <span>${r.likes} 赞</span>
+          </div>
+          <span class="rc-time">${esc(r.uploader)}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join(''):`<div class="empty-card"><p>暂无资料</p></div>`;
+}
+
+// ===== Render Mine =====
+function renderMine(){
+  const f=filterState.mine;
+  let rows=[...MINE_DATA];
+  if(f.major)rows=rows.filter(r=>r.major===f.major);
+  if(f.minor)rows=rows.filter(r=>r.minor===f.minor);
+  if(f.status)rows=rows.filter(r=>r.status===f.status);
+  const el=document.getElementById('mine-list');
+  el.innerHTML=rows.length?rows.map(r=>`
+    <div class="res-card" onclick="openMinePreview(${r.id})">
+      ${ftIC(r.ft)}
+      <div class="rc-body">
+        <div class="rc-title">${esc(r.title)}</div>
+        <div class="rc-tags">
+          <span class="tag-xs t-blue">${esc(r.major)}</span>
+          ${statusTagXs(r.status)}
+        </div>
+        <div class="rc-meta">
+          <div class="rc-stats">
+            <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>${r.downloads.toLocaleString()}</span>
+            <span>${r.likes} 赞</span>
+          </div>
+          <span class="rc-time">${esc(r.uploadTime)}</span>
+        </div>
+      </div>
+    </div>`).join(''):`<div class="empty-card"><p>暂无上传记录</p></div>`;
+}
+
+// ===== Render Demand =====
+function renderDemand(){
+  const f=filterState.demand;
+  let rows=[...DEMAND_DATA];
+  if(f.status)rows=rows.filter(r=>r.status===f.status);
+  if(f.major)rows=rows.filter(r=>r.major===f.major);
+  if(f.keyword)rows=rows.filter(r=>r.title.includes(f.keyword));
+  const el=document.getElementById('demand-list');
+  el.innerHTML=rows.length?rows.map(r=>`
+    <div class="res-card" onclick="openDemandDetail('${r.id}')">
+      <div style="width:40px;height:40px;border-radius:10px;background:#F0EBFA;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C5BC1" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="rc-body">
+        <div class="rc-title">${esc(r.title)}</div>
+        <div class="rc-tags">
+          <span class="tag-xs t-blue">${esc(r.major)}</span>
+          ${r.minor?`<span class="tag-xs t-purple">${esc(r.minor)}</span>`:''}
+          ${demandTagXs(r.status)}
+        </div>
+        <div class="rc-meta">
+          <span style="font-size:10px;color:var(--text-3);">${esc(r.course)} · ${esc(r.submitTime)}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-4)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+    </div>`).join(''):`<div class="empty-card"><p>暂无需求记录</p></div>`;
+  document.getElementById('tc-demand').textContent=DEMAND_DATA.length;
+}
+
+// ===== Render Collect（需求征集广场）=====
+function collectTagXs(st){return st==='fulfilled'?'<span class="tag-xs t-green">已满足</span>':'<span class="tag-xs t-orange">征集中</span>';}
+function renderCollect(){
+  const f=filterState.collect;
+  let rows=[...COLLECT_DATA].sort((a,b)=>b.submitTime.localeCompare(a.submitTime));
+  if(f.major)rows=rows.filter(r=>r.major===f.major);
+  if(f.minor)rows=rows.filter(r=>r.minor===f.minor);
+  if(f.status)rows=rows.filter(r=>r.status===f.status);
+  document.getElementById('tc-collect').textContent=COLLECT_DATA.filter(r=>r.status==='open').length;
+  const el=document.getElementById('collect-list');
+  el.innerHTML=rows.length?rows.map(r=>{
+    const done=r.status==='fulfilled';
+    const btn=done
+      ?`<button class="cc-btn" disabled>已满足</button>`
+      :`<button class="cc-btn" onclick="openUploadForCollect('${r.id}')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>上传资料</button>`;
+    return`<div class="collect-card ${done?'done':''}">
+      <div class="cc-top">
+        <div class="cc-t">${esc(r.title)}</div>
+        ${collectTagXs(r.status)}
+      </div>
+      <div class="cc-tg">
+        <span class="tag-xs t-blue">${esc(r.major)}</span>
+        <span class="tag-xs t-purple">${esc(r.minor||'—')}</span>
+        ${r.course&&r.course!=='—'?`<span class="tag-xs t-grey">${esc(r.course)}</span>`:''}
+      </div>
+      <div class="cc-rm">${esc(r.remark)}</div>
+      <div class="cc-mt"><span>发起人：<b>${esc(r.requester)}</b></span><span>${esc(r.college)}</span><span>${esc(r.submitTime)}</span></div>
+      <div class="cc-ft">
+        <span class="cc-rp">已收到 <b>${r.respCount}</b> 份贡献</span>
+        ${btn}
+      </div>
+    </div>`;
+  }).join(''):`<div class="empty-card"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><p>暂无匹配的征集需求</p></div>`;
+}
+
+// ===== 针对某条征集需求上传资料 =====
+function openUploadForCollect(id){
+  const c=COLLECT_DATA.find(x=>x.id===id);if(!c)return;
+  window._collectTarget=id;
+  openSheet('uploadSheet');
+  const banner=document.getElementById('up-collect-banner');
+  if(banner){banner.style.display='flex';document.getElementById('up-collect-name').textContent=c.title;}
+  const sel=document.getElementById('up-demand');if(sel)sel.value=id;
+  const t=document.getElementById('up-title');if(t&&!t.value)t.value=c.title;
+  const mj=document.getElementById('up-major');if(mj)mj.value=c.major;
+  const mn=document.getElementById('up-minor');if(mn)mn.value=c.minor||'';
+  const cs=document.getElementById('up-course');if(cs&&!cs.value)cs.value=(c.course&&c.course!=='—')?c.course:'';
+}
+
+// ===== Resource Detail =====
+function openResDetail(id){
+  const item=LIB_DATA.find(x=>x.id===id);if(!item)return;
+  const kw=(item.keywords||[]).map(k=>`<span class="tag-xs t-blue">${esc(k)}</span>`).join('');
+  document.getElementById('resDetailTitle').textContent='资料详情';
+  document.getElementById('resDetailBody').innerHTML=`
+    <div class="detail-hero">
+      <div class="ft-ic ft-${item.ft}" style="width:44px;height:44px;">${item.ft.toUpperCase()}</div>
+      <div style="flex:1;min-width:0;">
+        <h3>${esc(item.title)}</h3>
+        <div class="d-meta">${esc(item.uploader)} · ${esc(item.size)} · ${esc(item.timeLabel)}</div>
+        <div class="d-tags">
+          <span class="tag-xs t-blue">${esc(item.major)}</span>
+          <span class="tag-xs t-purple">${esc(item.minor)}</span>
+          ${statusTagXs(item.status)}
+        </div>
+      </div>
+    </div>
+    <div class="preview-mock-m">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <p>在线预览区域（${item.ft.toUpperCase()} · ${item.size}）</p>
+    </div>
+    <div class="info-list">
+      <div class="info-row"><span class="ik">所属课程</span><span class="iv">${esc(item.course||'—')}</span></div>
+      <div class="info-row"><span class="ik">来源说明</span><span class="iv">${esc(item.source||'—')}</span></div>
+      <div class="info-row"><span class="ik">版本信息</span><span class="iv">${esc(item.version||'—')}</span></div>
+      <div class="info-row"><span class="ik">关键词</span><span class="iv" style="display:flex;gap:4px;flex-wrap:wrap;">${kw||'—'}</span></div>
+      <div class="info-row"><span class="ik">文件介绍</span><span class="iv">${esc(item.intro||'—')}</span></div>
+      <div class="info-row"><span class="ik">备注</span><span class="iv">${esc(item.remarks||'—')}</span></div>
+    </div>`;
+  document.getElementById('resDetailFoot').innerHTML=`
+    <button class="btn-outline" onclick="showToast('已点赞')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z"/></svg>点赞
+    </button>
+    <button class="btn-outline" onclick="closeSheet('resDetailSheet');openFeedback(${id})">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>反馈
+    </button>
+    <button class="btn-outline" onclick="closeSheet('resDetailSheet');openShareSheet(${id})">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>分享
+    </button>
+    <button class="btn-primary-s" onclick="closeSheet('resDetailSheet');showToast('开始下载')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>下载
+    </button>`;
+  openSheet('resDetailSheet');
+}
+
+// ===== Mine Preview (no like/download) =====
+function openMinePreview(id){
+  const item=LIB_DATA.find(x=>x.id===id)||MINE_DATA.find(x=>x.id===id);
+  const full=LIB_DATA.find(x=>x.id===id)||item;
+  const kw=(full.keywords||[]).map(k=>`<span class="tag-xs t-blue">${esc(k)}</span>`).join('');
+  document.getElementById('minePreviewBody').innerHTML=`
+    <div class="detail-hero">
+      <div class="ft-ic ft-${full.ft||item.ft}" style="width:44px;height:44px;">${(full.ft||item.ft).toUpperCase()}</div>
+      <div style="flex:1;min-width:0;">
+        <h3>${esc(full.title||item.title)}</h3>
+        <div class="d-meta">${esc(full.size||'—')} · 上传于 ${esc(item.uploadTime)}</div>
+        <div class="d-tags">
+          <span class="tag-xs t-blue">${esc(full.major||item.major)}</span>
+          <span class="tag-xs t-purple">${esc(full.minor||item.minor)}</span>
+          ${statusTagXs(item.status)}
+        </div>
+      </div>
+    </div>
+    <div class="preview-mock-m">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <p>在线预览（${(full.ft||item.ft).toUpperCase()} · ${full.size||'—'}）</p>
+    </div>
+    <div class="info-list">
+      <div class="info-row"><span class="ik">所属课程</span><span class="iv">${esc(full.course||'—')}</span></div>
+      <div class="info-row"><span class="ik">来源说明</span><span class="iv">${esc(full.source||'—')}</span></div>
+      <div class="info-row"><span class="ik">版本信息</span><span class="iv">${esc(full.version||'—')}</span></div>
+      <div class="info-row"><span class="ik">关键词</span><span class="iv" style="display:flex;gap:4px;flex-wrap:wrap;">${kw||'—'}</span></div>
+      <div class="info-row"><span class="ik">文件介绍</span><span class="iv">${esc(full.intro||'—')}</span></div>
+      <div class="info-row"><span class="ik">备注</span><span class="iv">${esc(full.remarks||'—')}</span></div>
+      <div class="info-row"><span class="ik">下载 / 赞</span><span class="iv">${(item.downloads||0).toLocaleString()} 次 · ${item.likes||0} 赞</span></div>
+    </div>`;
+  document.getElementById('minePreviewFoot').innerHTML=`
+    <button class="btn-outline" onclick="closeSheet('minePreviewSheet')">关闭</button>
+    <button class="btn-primary-s" onclick="closeSheet('minePreviewSheet');openShareSheet(${id})">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>分享
+    </button>`;
+  openSheet('minePreviewSheet');
+}
+
+// ===== Demand Detail =====
+function openDemandDetail(id){
+  const d=DEMAND_DATA.find(x=>x.id===id);if(!d)return;
+  document.getElementById('dmDetailTitle').textContent='需求详情';
+  const rf=d.relatedFiles||[];
+  const rfHTML=rf.length===0
+    ?`<div style="padding:16px;text-align:center;color:var(--text-4);font-size:12px;background:var(--bg);border-radius:10px;">暂无相关资料，管理员正在跟进中</div>`
+    :rf.map(f=>`<div class="rf-row">
+        <div class="rf-ic ft-${f.ft}">${f.ft.toUpperCase()}</div>
+        <div class="rf-body">
+          <div class="rf-name">${esc(f.name)}</div>
+          <div class="rf-meta">${esc(f.uploader)} · ${esc(f.size)} · ↓${f.downloads}</div>
+        </div>
+        <button class="rf-dl" onclick="showToast('开始下载')">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>下载
+        </button>
+      </div>`).join('');
+  document.getElementById('dmDetailBody').innerHTML=`
+    <div style="background:#F0EBFA;border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:15px;font-weight:600;color:#3C444F;margin-bottom:8px;">${esc(d.title)}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span class="tag-xs t-blue">${esc(d.major)}</span>
+        ${d.minor?`<span class="tag-xs t-purple">${esc(d.minor)}</span>`:''}
+        ${demandTagXs(d.status)}
+      </div>
+    </div>
+    <div class="info-list">
+      <div class="info-row"><span class="ik">编号</span><span class="iv" style="color:var(--text-3);">${esc(d.id)}</span></div>
+      <div class="info-row"><span class="ik">所属课程</span><span class="iv">${esc(d.course)}</span></div>
+      <div class="info-row"><span class="ik">联系方式</span><span class="iv">${esc(d.contact||'—')}</span></div>
+      <div class="info-row"><span class="ik">提交时间</span><span class="iv">${esc(d.submitTime)}</span></div>
+      <div class="info-row"><span class="ik">备注说明</span><span class="iv">${esc(d.remark)}</span></div>
+    </div>
+    <div style="margin-top:16px;">
+      <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:10px;display:flex;align-items:center;gap:5px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        平台相关资料（${rf.length} 份可下载）
+      </div>
+      ${rfHTML}
+    </div>`;
+  openSheet('dmDetailSheet');
+}
+
+// ===== Share Sheet =====
+function openShareSheet(id){
+  const link=`https://xf.example.edu/lib/resource/${id}`;
+  document.getElementById('shareLinkText').textContent=link;
+  openSheet('shareSheet');
+}
+function copyShareLink(){
+  const txt=document.getElementById('shareLinkText').textContent;
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>showToast('链接已复制'));}
+  else showToast('链接已复制');
+  closeSheet('shareSheet');
+}
+
+// ===== 资料反馈 =====
+let _fbResId=null;
+function openFeedback(id){
+  const item=LIB_DATA.find(x=>x.id===id)||MINE_DATA.find(x=>x.id===id);
+  _fbResId=id;
+  document.getElementById('fb-res-name').textContent=item?item.title:('资料 #'+id);
+  document.getElementById('fb-type').value='无法下载';
+  document.getElementById('fb-desc').value='';
+  openSheet('feedbackSheet');
+}
+function submitFeedback(){
+  const desc=document.getElementById('fb-desc').value.trim();
+  if(!desc){showToast('请填写问题描述');return;}
+  closeSheet('feedbackSheet');
+  showToast('反馈已提交，管理员会尽快处理');
+}
+
+// ===== Filter Sheet =====
+function openFilterSheet(){
+  const tab=currentTab;
+  const f=filterState[tab];
+  let body='';
+  if(tab==='all'||tab==='hot'){
+    body=`
+      <div class="fs-row">
+        <div class="fs-label">所属分类</div>
+        <div class="fs-chips">
+          <button class="fs-chip ${!f.major?'active':''}" onclick="setTF('major','')">全部</button>
+          <button class="fs-chip ${f.major==='课程科目类'?'active':''}" onclick="setTF('major','课程科目类')">课程科目类</button>
+          <button class="fs-chip ${f.major==='学涯规划类'?'active':''}" onclick="setTF('major','学涯规划类')">学涯规划类</button>
+        </div>
+      </div>
+      <div class="fs-row">
+        <div class="fs-label">资料小类</div>
+        <div class="fs-chips">
+          <button class="fs-chip ${!f.minor?'active':''}" onclick="setTF('minor','')">全部</button>
+          ${['课件 PPT','笔记讲义','往年真题','电子书','双十佳教案','学习方法篇','学科竞赛篇'].map(m=>`<button class="fs-chip ${f.minor===m?'active':''}" onclick="setTF('minor','${m}')">${m}</button>`).join('')}
+        </div>
+      </div>`;
+  } else if(tab==='mine'){
+    body=`
+      <div class="fs-row">
+        <div class="fs-label">所属分类</div>
+        <div class="fs-chips">
+          <button class="fs-chip ${!f.major?'active':''}" onclick="setTF('major','')">全部</button>
+          <button class="fs-chip ${f.major==='课程科目类'?'active':''}" onclick="setTF('major','课程科目类')">课程科目类</button>
+          <button class="fs-chip ${f.major==='学涯规划类'?'active':''}" onclick="setTF('major','学涯规划类')">学涯规划类</button>
+        </div>
+      </div>
+      <div class="fs-row">
+        <div class="fs-label">发布状态</div>
+        <div class="fs-chips">
+          <button class="fs-chip ${!f.status?'active':''}" onclick="setTF('status','')">全部</button>
+          <button class="fs-chip ${f.status==='published'?'active':''}" onclick="setTF('status','published')">已发布</button>
+          <button class="fs-chip ${f.status==='down'?'active':''}" onclick="setTF('status','down')">已下架</button>
+        </div>
+      </div>`;
+  } else if(tab==='collect'){
+    body=`
+      <div class="fs-row">
+        <div class="fs-label">征集状态</div>
+        <div class="fs-chips">
+          <button class="fs-chip ${!f.status?'active':''}" onclick="setTF('status','')">全部</button>
+          <button class="fs-chip ${f.status==='open'?'active':''}" onclick="setTF('status','open')">征集中</button>
+          <button class="fs-chip ${f.status==='fulfilled'?'active':''}" onclick="setTF('status','fulfilled')">已满足</button>
+        </div>
+      </div>
+      <div class="fs-row">
+        <div class="fs-label">所属分类</div>
+        <div class="fs-chips">
+          <button class="fs-chip ${!f.major?'active':''}" onclick="setTF('major','')">全部</button>
+          <button class="fs-chip ${f.major==='课程科目类'?'active':''}" onclick="setTF('major','课程科目类')">课程科目类</button>
+          <button class="fs-chip ${f.major==='学涯规划类'?'active':''}" onclick="setTF('major','学涯规划类')">学涯规划类</button>
+        </div>
+      </div>`;
+  } else if(tab==='demand'){
+    body=`
+      <div class="fs-row">
+        <div class="fs-label">处理状态</div>
+        <div class="fs-chips">
+          <button class="fs-chip ${!f.status?'active':''}" onclick="setTF('status','')">全部</button>
+          <button class="fs-chip ${f.status==='pending'?'active':''}" onclick="setTF('status','pending')">待处理</button>
+          <button class="fs-chip ${f.status==='notified'?'active':''}" onclick="setTF('status','notified')">已发起征集</button>
+          <button class="fs-chip ${f.status==='fulfilled'?'active':''}" onclick="setTF('status','fulfilled')">已满足</button>
+          <button class="fs-chip ${f.status==='blocked'?'active':''}" onclick="setTF('status','blocked')">已屏蔽</button>
+        </div>
+      </div>
+      <div class="fs-row">
+        <div class="fs-label">所属分类</div>
+        <div class="fs-chips">
+          <button class="fs-chip ${!f.major?'active':''}" onclick="setTF('major','')">全部</button>
+          <button class="fs-chip ${f.major==='课程科目类'?'active':''}" onclick="setTF('major','课程科目类')">课程科目类</button>
+          <button class="fs-chip ${f.major==='学涯规划类'?'active':''}" onclick="setTF('major','学涯规划类')">学涯规划类</button>
+        </div>
+      </div>`;
+  }
+  document.getElementById('filterSheetBody').innerHTML=body;
+  // copy current to temp
+  tempFilter={...filterState[tab]};
+  openSheet('filterSheet');
+}
+function setTF(key,val){
+  tempFilter[key]=val;
+  filterState[currentTab][key]=val;
+  // re-render chips
+  document.querySelectorAll('.fs-chip').forEach(c=>{
+    const onclick=c.getAttribute('onclick')||'';
+    const m=onclick.match(/setTF\('(\w+)','(.*)'\)/);
+    if(m){
+      const k=m[1],v=m[2];
+      c.classList.toggle('active',filterState[currentTab][k]===v);
+    }
+  });
+}
+function applyCurrentFilter(){
+  closeSheet('filterSheet');
+  renderCurrentTab();
+  updateFilterChips();
+  showToast('已应用筛选');
+}
+function resetCurrentFilter(){
+  const tab=currentTab;
+  Object.keys(filterState[tab]).forEach(k=>filterState[tab][k]='');
+  tempFilter={...filterState[tab]};
+  closeSheet('filterSheet');
+  renderCurrentTab();
+  updateFilterChips();
+  showToast('已重置');
+}
+function updateFilterChips(){
+  const f=filterState[currentTab];
+  const chips=Object.entries(f).filter(([k,v])=>v).map(([k,v])=>`<span class="f-chip active">${esc(v)}</span>`).join('');
+  const btn=document.getElementById('filterBtnMain');
+  btn.classList.toggle('has-filter',Object.values(f).some(v=>v));
+  document.getElementById('activeFilterChips').innerHTML=chips;
+}
+
+// ===== Submit Upload =====
+function submitUpload(){
+  const title=document.getElementById('up-title').value.trim();
+  const major=document.getElementById('up-major').value;
+  const minor=document.getElementById('up-minor').value;
+  if(!title){showToast('请填写资料标题');return;}
+  if(!major){showToast('请选择所属分类');return;}
+  if(!minor){showToast('请选择资料小类');return;}
+  const demandId=document.getElementById('up-demand').value;
+  const c=COLLECT_DATA.find(x=>x.id===demandId);
+  if(c){c.respCount=(c.respCount||0)+1;renderCollect();}
+  closeSheet('uploadSheet');
+  showToast(c?'已为征集需求贡献资料！':'资料已发布！');
+  window._collectTarget=null;
+  const banner=document.getElementById('up-collect-banner');if(banner)banner.style.display='none';
+  ['up-title','up-course','up-source','up-version','up-tags','up-intro','up-remark'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['up-major','up-minor','up-demand'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+
+// ===== Submit Demand =====
+function submitDemand(){
+  const title=document.getElementById('dm-title').value.trim();
+  const major=document.getElementById('dm-major').value;
+  if(!title){showToast('请填写资料名称');return;}
+  if(!major){showToast('请选择所属分类');return;}
+  const minor=document.getElementById('dm-minor').value;
+  const course=document.getElementById('dm-course').value.trim();
+  const contact=document.getElementById('dm-contact').value.trim();
+  const remark=document.getElementById('dm-remark').value.trim();
+  const today=new Date().toISOString().slice(0,10);
+  DEMAND_DATA.unshift({id:'D00'+demandSeed++,title,major,minor,course:course||'—',contact:contact||'—',remark:remark||'—',submitTime:today,status:'pending',relatedFiles:[]});
+  closeSheet('demandSheet');
+  showToast('需求已提交！');
+  ['dm-title','dm-course','dm-contact','dm-remark'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['dm-major','dm-minor'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  switchTab('demand');
+}
+
+// ===== Tab switch =====
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.lib-tab').forEach(b=>b.classList.toggle('active',b.getAttribute('data-tab')===tab));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
+  renderCurrentTab();
+  updateFilterChips();
+}
+function renderCurrentTab(){
+  if(currentTab==='all')renderAll();
+  else if(currentTab==='hot')renderHot();
+  else if(currentTab==='collect')renderCollect();
+  else if(currentTab==='mine')renderMine();
+  else if(currentTab==='demand')renderDemand();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('libTabs').addEventListener('click',e=>{
+    const btn=e.target.closest('.lib-tab');
+    if(!btn)return;
+    switchTab(btn.getAttribute('data-tab'));
+  });
+  renderAll();renderHot();renderMine();renderDemand();renderCollect();
+  updateFilterChips();
+});
+</script>
+<script>
+  renderStatusBar(true);
+  renderTabbar('library');
+
+  // 鼠标拖拽横向滚动（桌面端）
+  (function(){
+    const el = document.getElementById('libTabs');
+    if(!el) return;
+    let isDown = false, startX = 0, scrollLeft = 0;
+    el.addEventListener('mousedown', e => {
+      isDown = true;
+      el.style.cursor = 'grabbing';
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+      e.preventDefault();
+    });
+    document.addEventListener('mouseup', () => {
+      isDown = false;
+      el.style.cursor = '';
+    });
+    document.addEventListener('mousemove', e => {
+      if(!isDown) return;
+      const x = e.pageX - el.offsetLeft;
+      el.scrollLeft = scrollLeft - (x - startX);
+    });
+    // 鼠标滚轮横向滚动
+    el.addEventListener('wheel', e => {
+      if(e.deltaY !== 0){
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+      }
+    }, { passive: false });
+  })();
+</script>
+</body>
+</html>
