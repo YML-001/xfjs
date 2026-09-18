@@ -441,7 +441,7 @@ tbody tr:last-child td{border-bottom:none;}
 .form-item{display:flex;flex-direction:column;}
 .form-item label{font-size:12px;color:var(--text-2);margin-bottom:6px;}
 .form-item label .req{color:var(--danger);}
-.form-item .input,.form-item textarea,.form-item .select{width:100%;}
+.form-item .input,.form-item textarea,.form-item .select{width:100%;min-width:0;}
 .form-item textarea{
   padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;
   font-family:inherit;outline:none;transition:all .15s;resize:vertical;
@@ -625,14 +625,20 @@ table.roster td.cell.today-cell{background:#F4FAFE;}
 
 /* 记录表 / 通用 */
 .table-wrap{overflow-x:auto;}
-.table-wrap table{min-width:1320px;}
+.table-wrap table{min-width:1620px;}
 .table-wrap thead th,.table-wrap tbody td{white-space:nowrap;}
+.table-wrap td.remark-cell{max-width:240px;white-space:normal!important;line-height:1.45;color:var(--text-2);font-size:12px;}
 .empty-row td{padding:52px 16px!important;text-align:center;color:var(--text-4);font-size:13px;}
 .op-links{display:flex;align-items:center;gap:12px;}
 .op-links a{font-weight:500;font-size:13px;color:var(--primary);}
 .op-links a:hover{text-decoration:underline;}
 .hrs{font-weight:600;color:var(--primary-dark);}
 .hrs.zero{color:var(--text-4);font-weight:400;}
+.hrs.ot{color:#C47B00;}
+.input[readonly]{background:#F5F7FA;color:var(--text-2);box-shadow:none;cursor:default;}
+.ot-input{width:78px;min-width:78px;height:30px;padding:0 8px;text-align:right;font-weight:600;color:#C47B00;}
+.ot-input:focus{color:var(--text-1);}
+.sum-eq{font-size:11px;color:var(--text-4);white-space:nowrap;}
 
 /* 弹窗表单 */
 .form-err{display:none;margin-top:4px;padding:9px 12px;border-radius:8px;font-size:12px;background:var(--danger-bg);border:1px solid var(--danger-border);color:var(--danger);}
@@ -826,7 +832,6 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
           <button class="btn btn-primary btn-sm" onclick="renderRecordTable()">查询</button>
         </div>
       </div>
-
       <div class="table-wrap">
         <table>
           <thead>
@@ -842,6 +847,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
               <th>下班打卡</th>
               <th>打卡时长(小时)</th>
               <th>状态</th>
+              <th>调整备注</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -858,25 +864,38 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     <div class="tab-content" data-tab="summary" style="display:none;">
       <div class="filterbar">
         <div class="field">
+          <label>统计周期</label>
+          <select class="select" id="fSumGrain" style="width:110px;" onchange="onSumGrainChange()">
+            <option value="week">按周</option>
+            <option value="month">按月</option>
+          </select>
+        </div>
+        <div class="week-switch">
+          <button type="button" onclick="moveSumPeriod(-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="wk"><strong id="sumPeriodTitle">本周</strong><span id="sumPeriodRange">—</span></div>
+          <button type="button" onclick="moveSumPeriod(1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="sumBackBtn" onclick="gotoSumThisPeriod()">回到本周</button>
+        <div class="field">
           <label>部门</label>
-          <select class="select" id="fSumDept" style="width:180px;" onchange="renderSummary()">
+          <select class="select" id="fSumDept" style="width:160px;" onchange="renderSummary()">
             <option value="">全部部门</option>
           </select>
         </div>
         <div class="field">
           <label>关键字</label>
-          <input type="text" class="input" id="fSumKw" placeholder="姓名、学号" style="width:180px;" oninput="renderSummary()" />
+          <input type="text" class="input" id="fSumKw" placeholder="姓名、学号、电话" style="width:168px;" oninput="renderSummary()" />
         </div>
         <div class="spacer"></div>
         <div style="display:flex;gap:8px;flex-shrink:0;">
           <button class="btn btn-ghost btn-sm" onclick="resetSumFilter()">重置</button>
           <button class="btn btn-primary btn-sm" onclick="exportSummary()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            导出
+            导出汇总
           </button>
         </div>
       </div>
-      <div class="info-note">按<b>当前显示周</b>（截至今天）聚合每位成员的打卡情况；累计时长按上 / 下班打卡时间自动计算，且<b>仅计班次时间段内、提前到岗不计入</b>；管理员可对单人本周累计时长进行手动调整（调整后显示「已调整」标记，可一键恢复自动计算）。默认按累计打卡时长降序排列。</div>
+      <div class="info-note" id="sumNote">按周或按月聚合每位成员的打卡时长；可筛选后导出 Excel。</div>
 
       <div class="table-wrap">
         <table>
@@ -884,13 +903,16 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
             <tr>
               <th>姓名</th>
               <th>学号</th>
+              <th>电话</th>
               <th>部门</th>
               <th>应打卡次数</th>
               <th>已打卡次数</th>
               <th>迟到</th>
               <th>早退</th>
               <th>缺卡</th>
+              <th>加班时长(小时)</th>
               <th>累计打卡时长(小时)</th>
+              <th>调整备注</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -932,7 +954,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     </div>
     <div class="modal-body">
       <div class="ro-grid" id="adjInfo"></div>
-      <div class="info-note">打卡时长<b>仅计班次时间段内</b>（提前到岗不计入、晚于班次结束的时间也不计入），为「min(下班,班次结束) − max(上班,班次开始)」的<b>参考值</b>，会随上/下班时间自动重算；如遇异常（漏打卡、补录等），管理员可手动调整状态与时长。</div>
+      <div class="info-note">打卡时长<b>仅计班次时间段内</b>（提前到岗、晚于班次结束均不计入），为「min(下班,班次结束) − max(上班,班次开始)」的<b>参考值</b>，会随上/下班时间自动重算。加班时长请在「时长汇总」由管理员<b>手工录入</b>，并自动计入累计时长。如遇异常（漏打卡、补录等），管理员可手动调整状态与时长。</div>
       <div class="form-row">
         <div class="form-item">
           <label>上班打卡时间</label>
@@ -964,8 +986,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       </div>
       <div class="form-row" style="grid-template-columns:1fr;margin-bottom:0;">
         <div class="form-item">
-          <label>调整备注</label>
-          <textarea id="adjRemark" rows="2" placeholder="如：忘打下班卡，经核实值班至 22:30，管理员补录"></textarea>
+          <label>调整备注 <span class="req">*</span></label>
+          <textarea id="adjRemark" rows="2" placeholder="必填，如：忘打下班卡，经核实值班至 22:30，管理员补录"></textarea>
         </div>
       </div>
       <div class="form-err" id="adjErr"></div>
@@ -1133,24 +1155,32 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 
 <!-- ===== 调整累计打卡时长 ===== -->
 <div class="modal-mask" id="sumModal">
-  <div class="modal" style="width:520px;">
+  <div class="modal" style="width:640px;">
     <div class="modal-head">
-      <h3>调整累计打卡时长</h3>
+      <h3>录入加班时长</h3>
       <button onclick="closeModal('sumModal')" style="color:var(--text-3);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div class="modal-body">
       <div class="ro-grid" id="sumInfo"></div>
-      <div class="info-note">此处为管理员对该成员<b>本周累计打卡时长</b>的手动修正，将覆盖系统自动计算值；调整后该行显示「已调整」标记，可随时「恢复自动计算」。</div>
-      <div class="form-row" style="grid-template-columns:1fr;margin-bottom:14px;">
+      <div class="info-note" id="sumModalNote">加班时长由管理员<b>手工录入</b>，不按打卡时间自动计算。保存后累计打卡时长 = 正常打卡时长 + 加班时长。</div>
+      <div class="form-row" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px;">
         <div class="form-item">
-          <label>本周累计打卡时长（小时）<span class="req">*</span></label>
-          <input class="input" id="sumHours" type="number" min="0" max="168" step="0.1" />
+          <label id="sumDutyLabel">正常打卡时长（小时）</label>
+          <input class="input" id="sumDutyHours" type="number" readonly tabindex="-1" />
+        </div>
+        <div class="form-item">
+          <label>加班时长（小时）<span class="req">*</span></label>
+          <input class="input" id="sumOtHours" type="number" min="0" max="200" step="0.1" oninput="recalcSumTotal()" />
+        </div>
+        <div class="form-item">
+          <label id="sumHoursLabel">累计打卡时长（小时）</label>
+          <input class="input" id="sumHours" type="number" readonly tabindex="-1" />
         </div>
       </div>
       <div class="form-row" style="grid-template-columns:1fr;margin-bottom:0;">
         <div class="form-item">
-          <label>调整备注</label>
-          <textarea id="sumRemark" rows="2" placeholder="如：核实值班期间参与线下辅导，累计时长补记"></textarea>
+          <label>调整备注 <span class="req">*</span></label>
+          <textarea id="sumRemark" rows="2" placeholder="必填，如：当晚活动延时，补记加班 2 小时"></textarea>
         </div>
       </div>
       <div class="form-err" id="sumErr"></div>
@@ -1359,22 +1389,22 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   // ====== 人员信息（姓名 -> 学号/部门）；未在库中的姓名标记为「待完善」 ======
   const NAME2INFO = {
-    '任祺':{sid:'2023110640',dept:'知新馆英语组'}, '周昊宇':{sid:'2023110641',dept:'知新馆英语组'},
-    '王悦':{sid:'2023110642',dept:'知新馆文综组'}, '丁文婧':{sid:'2023110643',dept:'知新馆英语组'},
-    '孙镱洋':{sid:'2023110644',dept:'知新馆数学组'}, '胡靓文':{sid:'2023110645',dept:'知新馆综合服务组'},
-    '吴文杰':{sid:'2023110646',dept:'知新馆综合服务组'}, '王宇':{sid:'2023110647',dept:'知新馆理综组'},
-    '张文玉':{sid:'2023110648',dept:'知新馆理综组'}, '孙浩淇':{sid:'2023110649',dept:'知新馆综合服务组'},
-    '杨振利':{sid:'2023110650',dept:'院级辅学组'}, '杨孟媛':{sid:'2023110651',dept:'知新馆英语组'},
-    '王慧':{sid:'2023110652',dept:'知新馆文综组'}, '胡智文':{sid:'2023110653',dept:'知新馆理综组'},
-    '武政宇':{sid:'2023110654',dept:'知新馆数学组'}, '宋子挺':{sid:'2023110655',dept:'知新馆理综组'},
-    '刘馨奕':{sid:'2023110656',dept:'知新馆文综组'}, '张一鸣':{sid:'2023110657',dept:'56度中南组'},
-    '蒋希函':{sid:'2023110658',dept:'知新馆英语组'},
-    '李思远':{sid:'2023110701',dept:'知新馆英语组'},
-    '陈可':{sid:'2023110702',dept:'知新馆数学组'},
-    '赵婉清':{sid:'2023110703',dept:'知新馆文综组'},
-    '黄子涵':{sid:'2023110704',dept:'知新馆综合服务组'}
+    '任祺':{sid:'2023110640',dept:'知新馆英语组',phone:'13607331882'}, '周昊宇':{sid:'2023110641',dept:'知新馆英语组',phone:'13607331883'},
+    '王悦':{sid:'2023110642',dept:'知新馆文综组',phone:'13607331884'}, '丁文婧':{sid:'2023110643',dept:'知新馆英语组',phone:'13607331885'},
+    '孙镱洋':{sid:'2023110644',dept:'知新馆数学组',phone:'13607331886'}, '胡靓文':{sid:'2023110645',dept:'知新馆综合服务组',phone:'13607331887'},
+    '吴文杰':{sid:'2023110646',dept:'知新馆综合服务组',phone:'13607331888'}, '王宇':{sid:'2023110647',dept:'知新馆理综组',phone:'13607331889'},
+    '张文玉':{sid:'2023110648',dept:'知新馆理综组',phone:'13607331890'}, '孙浩淇':{sid:'2023110649',dept:'知新馆综合服务组',phone:'13607331891'},
+    '杨振利':{sid:'2023110650',dept:'院级辅学组',phone:'13607331892'}, '杨孟媛':{sid:'2023110651',dept:'知新馆英语组',phone:'13607331893'},
+    '王慧':{sid:'2023110652',dept:'知新馆文综组',phone:'13607331894'}, '胡智文':{sid:'2023110653',dept:'知新馆理综组',phone:'13607331895'},
+    '武政宇':{sid:'2023110654',dept:'知新馆数学组',phone:'13607331896'}, '宋子挺':{sid:'2023110655',dept:'知新馆理综组',phone:'13607331897'},
+    '刘馨奕':{sid:'2023110656',dept:'知新馆文综组',phone:'13607331898'}, '张一鸣':{sid:'2023110657',dept:'56度中南组',phone:'13607331899'},
+    '蒋希函':{sid:'2023110658',dept:'知新馆英语组',phone:'13607331900'},
+    '李思远':{sid:'2023110701',dept:'知新馆英语组',phone:'13607331901'},
+    '陈可':{sid:'2023110702',dept:'知新馆数学组',phone:'13607331902'},
+    '赵婉清':{sid:'2023110703',dept:'知新馆文综组',phone:'13607331903'},
+    '黄子涵':{sid:'2023110704',dept:'知新馆综合服务组',phone:'13607331904'}
   };
-  function info(name){ return NAME2INFO[name] || {sid:'', dept:'待完善'}; }
+  function info(name){ return NAME2INFO[name] || {sid:'', dept:'待完善', phone:''}; }
 
   // ====== 周排班表（星期1-7 × 班次 -> 姓名[]），对应导入的《知新馆排班表》 ======
   let SCHEDULE = {
@@ -1392,6 +1422,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   function pad(n){ return String(n).padStart(2,'0'); }
   function fmtD(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
   function toMin(t){ if(!t) return null; const [h,m]=t.split(':').map(Number); return h*60+m; }
+  function sliceHours(mins){ return Math.round(Math.max(0, mins)/6)/10; }
+  function dutyHours(inM, outM, startM, endM){
+    if(inM==null || outM==null || startM==null || endM==null) return 0;
+    return sliceHours(Math.min(outM, endM) - Math.max(inM, startM));
+  }
+  function otText(v){
+    const n = Number(v)||0;
+    return n>0 ? `<span class="hrs ot">${n.toFixed(1)}</span>` : '<span class="hrs zero">0.0</span>';
+  }
+  function round1(n){ return Math.round((Number(n)||0)*10)/10; }
   function toHHMM(min){ min=(min+1440)%1440; return pad(Math.floor(min/60))+':'+pad(min%60); }
   function mondayOf(d){ const x=new Date(d); const wd=(x.getDay()+6)%7; x.setDate(x.getDate()-wd); x.setHours(0,0,0,0); return x; }
   function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
@@ -1413,8 +1453,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   // 生成/读取单条打卡记录（含管理员覆盖）
   function recordFor(ds, shift, name){
     const key = recKey(ds, shift.id, name);
-    if(OVERRIDES[key]) return Object.assign({key, name, ds, shift}, OVERRIDES[key]);
     const startM = toMin(shift.start), endM = toMin(shift.end);
+    if(OVERRIDES[key]){
+      const o = Object.assign({key, name, ds, shift}, OVERRIDES[key]);
+      if(o.hours==null) o.hours = dutyHours(toMin(o.clockIn), toMin(o.clockOut), startM, endM);
+      return o;
+    }
     const future = ds > TODAY || (ds === TODAY && NOW_MIN < startM);
     if(future) return {key, name, ds, shift, status:'未开始', clockIn:'', clockOut:'', hours:0};
     const h = hash(key), h2 = hash(name+ds+shift.id), h3 = hash(shift.id+name+ds);
@@ -1430,10 +1474,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     let outM;
     if(h >= 0.20 && h < 0.27){ status='早退'; outM = endM - (SETTINGS.earlyLeave + 3 + Math.round(h3*40)); }
     else outM = endM - Math.round(h3*6);
-    // 打卡时长只计班次时间段范围内：提前到岗/超时下班均不计入
-    const effective = Math.max(0, Math.min(outM, endM) - Math.max(inM, startM));
-    const hours = Math.round(effective/6)/10;
-    return {key, name, ds, shift, status, clockIn:toHHMM(inM), clockOut:toHHMM(outM), hours};
+    return {key, name, ds, shift, status, clockIn:toHHMM(inM), clockOut:toHHMM(outM), hours:dutyHours(inM, outM, startM, endM)};
   }
 
   // ====== 顶部统计（本周 / 今日） ======
@@ -1453,6 +1494,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
     const todayWd = ((TODAY_D.getDay()+6)%7)+1;
     SHIFTS.forEach(sh=>{ if(((SCHEDULE[todayWd]||{})[sh.id]||[]).length) todayShifts++; });
+    const weekStart = days[0].ds;
+    names.forEach(nm=>{
+      const ov = SUM_OVERRIDE[nm+'|week|'+weekStart];
+      if(ov) hours += Number(ov.overtime)||0;
+    });
     return {assign, hours:Math.round(hours*10)/10, coverage:names.size, dueToday, doneToday, todayShifts};
   }
   function renderStats(){
@@ -1517,6 +1563,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     const map = {'正常':'tag-success','迟到':'tag-warning','早退':'tag-warning','缺卡':'tag-danger','在岗':'','请假':'tag-grey','未开始':'tag-grey'};
     return `<span class="tag ${map[s]||''}">${s}</span>`;
   }
+  function esc(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function remarkCell(text){
+    const t = (text||'').trim();
+    if(!t) return '<td class="remark-cell"><span style="color:var(--text-4);">—</span></td>';
+    return `<td class="remark-cell" title="${esc(t)}">${esc(t)}</td>`;
+  }
   function filteredRecords(){
     const date = document.getElementById('fRecDate').value;
     const sid = document.getElementById('fRecShift').value;
@@ -1533,7 +1585,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   function renderRecordTable(){
     const list = filteredRecords();
     const tbody = document.getElementById('recordBody');
-    if(!list.length){ tbody.innerHTML = '<tr class="empty-row"><td colspan="12">该周暂无符合条件的打卡记录</td></tr>'; }
+    if(!list.length){ tbody.innerHTML = '<tr class="empty-row"><td colspan="13">该周暂无符合条件的打卡记录</td></tr>'; }
     else{
       tbody.innerHTML = list.map(r => {
         const nf = info(r.name);
@@ -1551,6 +1603,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           <td>${r.clockOut||(r.status==='在岗'?'<span style="color:var(--primary);">在岗中</span>':'—')}</td>
           <td>${hrs}</td>
           <td>${statusTag(r.status)}</td>
+          ${remarkCell(r.remark)}
           <td><div class="op-links"><a href="javascript:void(0)" onclick="openAdjust('${r.ds}','${r.shift.id}','${r.name}')">调整</a></div></td>
         </tr>`;
       }).join('');
@@ -1604,13 +1657,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     const outV = document.getElementById('adjOut').value;
     const status = document.getElementById('adjStatus').value;
     const hours = parseFloat(document.getElementById('adjHours').value) || 0;
+    const remark = document.getElementById('adjRemark').value.trim();
     const err = document.getElementById('adjErr');
     if(inV && outV && toMin(outV) <= toMin(inV)){ err.textContent='下班打卡时间需晚于上班打卡时间'; err.classList.add('show'); return; }
     if(hours < 0 || hours > 24){ err.textContent='打卡时长需在 0-24 小时之间'; err.classList.add('show'); return; }
+    if(!remark){ err.textContent='请填写调整备注'; err.classList.add('show'); return; }
     const sh = shiftById(_adj.sid);
     OVERRIDES[recKey(_adj.ds, _adj.sid, _adj.name)] = {
       clockIn:inV, clockOut:outV, status, hours,
-      remark: document.getElementById('adjRemark').value.trim(), shift:sh, name:_adj.name, ds:_adj.ds
+      remark, shift:sh, name:_adj.name, ds:_adj.ds
     };
     closeModal('adjustModal');
     renderAll();
@@ -1763,7 +1818,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     name = (name||'').trim();
     if(!name) return;
     if(_slot.draft.includes(name)){ showToast(name+' 已在该班次中'); return; }
-    if(!NAME2INFO[name]) NAME2INFO[name] = {sid:'', dept:'待完善'};
+    if(!NAME2INFO[name]) NAME2INFO[name] = {sid:'', dept:'待完善', phone:''};
     _slot.draft.push(name);
     document.getElementById('slotKw').value = '';
     document.getElementById('slotManual').value = '';
@@ -1900,17 +1955,59 @@ document.addEventListener('DOMContentLoaded',()=>{
     showToast('已保存打卡设置：'+name+' · 围栏 '+radius+' 米');
   }
 
-  // ====== 时长汇总（按人聚合当前显示周） ======
-  const SUM_OVERRIDE = {};                 // key: 姓名|本周周一日期 -> {hours, remark}
-  function sumKey(name){ return name+'|'+weekDays()[0].ds; }
+  // ====== 时长汇总（按周 / 按月 独立筛选） ======
+  const SUM_OVERRIDE = {};                 // key: 姓名|grain|区间起 -> {overtime, remark}
+  let sumGrain = 'week';                   // week | month
+  let sumOffset = 0;                       // 0=本周/本月
+  function sumHoursMax(){ return sumGrain==='month' ? 744 : 168; }
+  function sumPeriodDays(){
+    if(sumGrain==='week'){
+      const mon = addDays(mondayOf(TODAY_D), sumOffset*7);
+      return [...Array(7)].map((_,i)=>{ const d=addDays(mon,i); return {d, ds:fmtD(d), wd:(i+1)}; });
+    }
+    const base = new Date(TODAY_D.getFullYear(), TODAY_D.getMonth()+sumOffset, 1);
+    const last = new Date(base.getFullYear(), base.getMonth()+1, 0).getDate();
+    return [...Array(last)].map((_,i)=>{
+      const d = new Date(base.getFullYear(), base.getMonth(), i+1);
+      return {d, ds:fmtD(d), wd:((d.getDay()+6)%7)+1};
+    });
+  }
+  function sumPeriodMeta(){
+    const days = sumPeriodDays();
+    const a = days[0].d, b = days[days.length-1].d;
+    const range = (a.getMonth()+1)+'月'+a.getDate()+'日 - '+(b.getMonth()+1)+'月'+b.getDate()+'日';
+    let title;
+    if(sumGrain==='week'){
+      title = sumOffset===0 ? '本周' : (sumOffset<0 ? '前'+(-sumOffset)+'周' : '后'+sumOffset+'周');
+    }else if(sumOffset===0){ title = '本月'; }
+    else if(sumOffset===-1){ title = '上月'; }
+    else if(sumOffset===1){ title = '下月'; }
+    else { title = a.getFullYear()+'年'+(a.getMonth()+1)+'月'; }
+    return {days, title, range, start:days[0].ds, end:days[days.length-1].ds, grain:sumGrain==='week'?'周':'月'};
+  }
+  function updateSumPeriodNav(){
+    const m = sumPeriodMeta();
+    document.getElementById('sumPeriodTitle').textContent = m.title;
+    document.getElementById('sumPeriodRange').textContent = m.range + '（'+m.start+' 至 '+m.end+'）';
+    document.getElementById('sumBackBtn').textContent = sumGrain==='week' ? '回到本周' : '回到本月';
+    document.getElementById('sumNote').innerHTML = '按<b>'+(sumGrain==='week'?'周':'月')+'</b>聚合每位成员的打卡情况（截至今天）；正常打卡时长仅计<b>班次时间段内</b>。加班时长由管理员<b>手工录入</b>，录入后累计打卡时长 = 正常打卡 + 加班。可用部门 / 关键字再筛选，支持<b>导出当前结果</b>。';
+  }
+  function onSumGrainChange(){
+    sumGrain = document.getElementById('fSumGrain').value;
+    sumOffset = 0;
+    renderSummary();
+  }
+  function moveSumPeriod(step){ sumOffset += step; renderSummary(); }
+  function gotoSumThisPeriod(){ sumOffset = 0; renderSummary(); }
+  function sumKey(name){ const m=sumPeriodMeta(); return name+'|'+sumGrain+'|'+m.start; }
   function summaryData(){
     const map={};
-    weekDays().forEach(day=>{
+    sumPeriodDays().forEach(day=>{
       if(day.ds > TODAY) return;
       SHIFTS.forEach(sh=>{
         ((SCHEDULE[day.wd]||{})[sh.id]||[]).forEach(nm=>{
           const r=recordFor(day.ds, sh, nm);
-          if(r.status==='未开始') return;   // 未到打卡时间的班次不计入
+          if(r.status==='未开始') return;
           if(!map[nm]) map[nm]={name:nm, due:0, done:0, late:0, early:0, miss:0, hours:0};
           const o=map[nm];
           o.due++;
@@ -1926,10 +2023,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
     const arr=Object.keys(map).map(nm=>{
       const o=map[nm];
-      o.autoHours=Math.round(o.hours*10)/10;
+      o.autoHours=round1(o.hours);
       const ov=SUM_OVERRIDE[sumKey(nm)];
-      if(ov){ o.hours=ov.hours; o.adjusted=true; o.remark=ov.remark||''; }
-      else{ o.hours=o.autoHours; o.adjusted=false; o.remark=''; }
+      o.overtime=ov?round1(ov.overtime):0;
+      o.remark=(ov&&ov.remark)||'';
+      o.adjusted=o.overtime>0;
+      o.hours=round1(o.autoHours+o.overtime);
       return o;
     });
     arr.sort((a,b)=> b.hours-a.hours || a.name.localeCompare(b.name,'zh'));
@@ -1942,57 +2041,111 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('fSumDept').innerHTML='<option value="">全部部门</option>'+[...set].sort((a,b)=>a.localeCompare(b,'zh')).map(d=>`<option value="${d}">${d}</option>`).join('');
     document.getElementById('fSumDept').value=cur;
   }
-  function renderSummary(){
+  function filteredSummary(){
     const dept=document.getElementById('fSumDept').value;
     const kw=document.getElementById('fSumKw').value.trim().toLowerCase();
-    let arr=summaryData().filter(o=>{
+    return summaryData().filter(o=>{
       const nf=info(o.name);
       if(dept && nf.dept!==dept) return false;
-      if(kw){ const nfk=(o.name+(nf.sid||'')).toLowerCase(); if(!nfk.includes(kw)) return false; }
+      if(kw){ const nfk=(o.name+(nf.sid||'')+(nf.phone||'')).toLowerCase(); if(!nfk.includes(kw)) return false; }
       return true;
     });
+  }
+  function renderSummary(){
+    updateSumPeriodNav();
+    const m = sumPeriodMeta();
+    const arr=filteredSummary();
     const tbody=document.getElementById('summaryBody');
     if(!arr.length){
-      tbody.innerHTML='<tr class="empty-row"><td colspan="10">该周暂无符合条件的打卡汇总数据</td></tr>';
+      tbody.innerHTML='<tr class="empty-row"><td colspan="13">该'+(sumGrain==='week'?'周':'月')+'暂无符合条件的打卡汇总数据</td></tr>';
     }else{
-      const maxH=arr.reduce((m,o)=>Math.max(m,o.hours),0);
+      const maxH=arr.reduce((x,o)=>Math.max(x,o.hours),0);
       tbody.innerHTML=arr.map(o=>{
         const nf=info(o.name);
         const pct=maxH? Math.round(o.hours/maxH*100):0;
-        const adjBadge=o.adjusted?`<span class="tag tag-warning" style="margin-left:6px;" title="自动计算原值：${o.autoHours.toFixed(1)} 小时${o.remark?('　备注：'+o.remark):''}">已调整</span>`:'';
+        const adjBadge=o.adjusted?`<span class="tag tag-warning" style="margin-left:6px;" title="正常 ${o.autoHours.toFixed(1)} + 加班 ${o.overtime.toFixed(1)}">已加加班</span>`:'';
         const hrsCls=o.hours>0?'hrs':'hrs zero';
         return `<tr>
           <td style="font-weight:500;">${o.name}</td>
           <td>${nf.sid||'—'}</td>
+          <td>${nf.phone||'—'}</td>
           <td>${nf.dept}</td>
           <td>${o.due}</td>
           <td>${o.done}</td>
           <td>${o.late?`<span style="color:var(--warning);font-weight:600;">${o.late}</span>`:'0'}</td>
           <td>${o.early?`<span style="color:var(--warning);font-weight:600;">${o.early}</span>`:'0'}</td>
           <td>${o.miss?`<span style="color:var(--danger);font-weight:600;">${o.miss}</span>`:'0'}</td>
-          <td><div style="display:flex;align-items:center;gap:8px;"><div class="sum-track"><div class="sum-fill" style="width:${pct}%;"></div></div><span class="${hrsCls}">${o.hours.toFixed(1)}</span>${adjBadge}</div></td>
-          <td><div class="op-links"><a href="javascript:void(0)" onclick="openSumAdjust('${o.name}')">调整时长</a>${o.adjusted?`<a href="javascript:void(0)" style="color:var(--text-3);" onclick="resetSum('${o.name}')">恢复自动</a>`:''}</div></td>
+          <td><input class="input ot-input" type="number" min="0" max="200" step="0.1" value="${o.overtime.toFixed(1)}" title="手工录入加班时长" onchange="saveSumOt('${o.name}', this.value)" /></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div class="sum-track"><div class="sum-fill" style="width:${pct}%;"></div></div><span class="${hrsCls}">${o.hours.toFixed(1)}</span>${adjBadge}</div><div class="sum-eq">正常 ${o.autoHours.toFixed(1)} + 加班 ${o.overtime.toFixed(1)}</div></td>
+          ${remarkCell(o.remark)}
+          <td><div class="op-links"><a href="javascript:void(0)" onclick="openSumAdjust('${o.name}')">录入加班</a>${o.adjusted?`<a href="javascript:void(0)" style="color:var(--text-3);" onclick="resetSum('${o.name}')">清除加班</a>`:''}</div></td>
         </tr>`;
       }).join('');
     }
-    document.getElementById('summaryCount').textContent='共 '+arr.length+' 人（当前周）';
+    document.getElementById('summaryCount').textContent='共 '+arr.length+' 人（按'+m.grain+' · '+m.start+' 至 '+m.end+'）';
   }
-  function resetSumFilter(){ document.getElementById('fSumDept').value=''; document.getElementById('fSumKw').value=''; renderSummary(); }
-  function exportSummary(){ showToast('已导出本周 '+summaryData().length+' 人打卡时长汇总为 Excel'); }
+  function resetSumFilter(){
+    document.getElementById('fSumGrain').value='week';
+    sumGrain='week'; sumOffset=0;
+    document.getElementById('fSumDept').value='';
+    document.getElementById('fSumKw').value='';
+    renderSummary();
+  }
+  function csvCell(v){
+    const s = String(v==null?'':v);
+    return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+  }
+  function exportSummary(){
+    const arr=filteredSummary();
+    if(!arr.length){ showToast('当前筛选条件下暂无可导出的数据'); return; }
+    const m=sumPeriodMeta();
+    const header=['统计周期','区间起','区间止','姓名','学号','电话','部门','应打卡次数','已打卡次数','迟到','早退','缺卡','加班时长(小时)','正常打卡时长(小时)','累计打卡时长(小时)','是否录入加班','调整备注'];
+    const lines=[header].concat(arr.map(o=>{
+      const nf=info(o.name);
+      return [sumGrain==='week'?'按周':'按月', m.start, m.end, o.name, nf.sid||'', nf.phone||'', nf.dept, o.due, o.done, o.late, o.early, o.miss, (o.overtime||0).toFixed(1), o.autoHours.toFixed(1), o.hours.toFixed(1), o.adjusted?'是':'否', o.remark||''];
+    }));
+    const csv='\uFEFF'+lines.map(row=>row.map(csvCell).join(',')).join('\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='时长汇总_'+ (sumGrain==='week'?'按周':'按月') +'_'+m.start+'至'+m.end+'.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),800);
+    showToast('已导出 '+arr.length+' 人'+m.title+'打卡时长汇总');
+  }
 
-  // ====== 调整累计时长（管理员） ======
+  // ====== 录入加班时长（管理员手工，累计 = 正常 + 加班） ======
   let _sum=null;
+  function applySumOt(name, overtime, remark){
+    const ot=round1(overtime);
+    if(ot<=0){ delete SUM_OVERRIDE[sumKey(name)]; return 0; }
+    SUM_OVERRIDE[sumKey(name)]={overtime:ot, remark:remark||'管理员录入加班时长'};
+    return ot;
+  }
+  function recalcSumTotal(){
+    const duty=parseFloat(document.getElementById('sumDutyHours').value)||0;
+    const ot=Math.max(0, parseFloat(document.getElementById('sumOtHours').value)||0);
+    document.getElementById('sumHours').value=round1(duty+ot).toFixed(1);
+  }
   function openSumAdjust(name){
     const o=summaryData().find(x=>x.name===name);
-    if(!o){ showToast('未找到 '+name+' 的本周汇总数据'); return; }
-    _sum={name};
+    if(!o){ showToast('未找到 '+name+' 的本区间汇总数据'); return; }
+    _sum={name, autoHours:o.autoHours};
     const nf=info(name);
+    const m=sumPeriodMeta();
+    document.getElementById('sumModalNote').innerHTML='加班时长由管理员<b>手工录入</b>，不按打卡时间自动计算。保存后<b>'+m.title+'累计打卡时长 = 正常打卡 + 加班</b>。';
+    document.getElementById('sumDutyLabel').textContent='正常打卡时长（小时）';
+    document.getElementById('sumHoursLabel').textContent=m.title+'累计打卡时长（小时）';
+    document.getElementById('sumOtHours').max=sumHoursMax();
     document.getElementById('sumInfo').innerHTML=[
       ['姓名', name+(nf.sid?('（'+nf.sid+'）'):'')],
       ['部门', nf.dept],
-      ['本周区间', weekDays()[0].ds+' 至 '+weekDays()[6].ds],
-      ['自动计算时长', o.autoHours.toFixed(1)+' 小时（应打卡 '+o.due+' · 已打卡 '+o.done+'）']
+      ['统计周期', '按'+m.grain+' · '+m.title],
+      ['统计区间', m.start+' 至 '+m.end],
+      ['正常打卡时长', o.autoHours.toFixed(1)+' 小时（应打卡 '+o.due+' · 已打卡 '+o.done+'）']
     ].map(([k,v])=>`<div><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+    document.getElementById('sumDutyHours').value=o.autoHours.toFixed(1);
+    document.getElementById('sumOtHours').value=o.overtime.toFixed(1);
     document.getElementById('sumHours').value=o.hours.toFixed(1);
     const ov=SUM_OVERRIDE[sumKey(name)];
     document.getElementById('sumRemark').value=(ov&&ov.remark)||'';
@@ -2000,18 +2153,39 @@ document.addEventListener('DOMContentLoaded',()=>{
     openModal('sumModal');
   }
   function saveSum(){
-    const hours=parseFloat(document.getElementById('sumHours').value);
+    const ot=parseFloat(document.getElementById('sumOtHours').value);
     const err=document.getElementById('sumErr');
-    if(isNaN(hours)||hours<0||hours>168){ err.textContent='本周累计时长需在 0-168 小时之间'; err.classList.add('show'); return; }
-    SUM_OVERRIDE[sumKey(_sum.name)]={hours:Math.round(hours*10)/10, remark:document.getElementById('sumRemark').value.trim()};
+    const remark=document.getElementById('sumRemark').value.trim();
+    const maxH=sumHoursMax();
+    if(isNaN(ot)||ot<0||ot>maxH){ err.textContent='加班时长需在 0-'+maxH+' 小时之间'; err.classList.add('show'); return; }
+    if(!remark){ err.textContent='请填写调整备注'; err.classList.add('show'); return; }
+    const saved=applySumOt(_sum.name, ot, remark);
     closeModal('sumModal');
+    renderStats();
     renderSummary();
-    showToast('已调整 '+_sum.name+' 本周累计打卡时长为 '+hours.toFixed(1)+' 小时');
+    const total=round1((_sum.autoHours||0)+saved);
+    showToast(saved?('已录入 '+_sum.name+' 加班 '+saved.toFixed(1)+' 小时，累计 '+total.toFixed(1)+' 小时'):('已清除 '+_sum.name+' 的加班时长'));
+  }
+  function saveSumOt(name, value){
+    const ot=parseFloat(value);
+    if(isNaN(ot)||ot<0||ot>sumHoursMax()){ showToast('加班时长需在 0-'+sumHoursMax()+' 小时之间'); renderSummary(); return; }
+    const o=summaryData().find(x=>x.name===name);
+    const prev=(SUM_OVERRIDE[sumKey(name)]||{}).remark||'';
+    const saved=applySumOt(name, ot, prev||'管理员录入加班时长');
+    renderStats();
+    renderSummary();
+    if(saved){
+      const total=round1((o?o.autoHours:0)+saved);
+      showToast('已录入 '+name+' 加班 '+saved.toFixed(1)+' 小时，累计 '+total.toFixed(1)+' 小时');
+    }else{
+      showToast('已清除 '+name+' 的加班时长');
+    }
   }
   function resetSum(name){
     delete SUM_OVERRIDE[sumKey(name)];
+    renderStats();
     renderSummary();
-    showToast('已恢复 '+name+' 的自动计算时长');
+    showToast('已清除 '+name+' 的加班时长');
   }
 
   function exportRecords(){ showToast('已导出本周 ' + filteredRecords().length + ' 条打卡记录为 Excel'); }
