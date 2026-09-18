@@ -570,7 +570,8 @@ tbody tr:last-child td{border-bottom:none;}
 .lookup-row .input{flex:1;min-width:0;}
 .lookup-hint{font-size:11px;color:var(--text-3);margin-top:8px;line-height:1.6;}
 .lookup-hint b{color:var(--primary);}
-.job-tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:4px;font-size:12px;font-weight:500;background:#F4F0FF;color:#7C5BC1;border:1px solid #D4C8F5;}
+.job-tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:4px;font-size:12px;font-weight:500;background:#F1F5F9;color:var(--text-2);border:1px solid var(--border-light);}
+.job-tag.lead{background:var(--primary-light);color:var(--primary-dark);border-color:#BFDDF6;}
 </style>
 </head>
 <body>
@@ -581,7 +582,7 @@ tbody tr:last-child td{border-bottom:none;}
     <div class="page-head">
       <div>
         <h1>打卡人员库</h1>
-        <p>维护参与考勤打卡的总人员库；可按学号 / 姓名检索学工系统学生一键带出，查不到也支持手动录入</p>
+        <p>维护参与考勤打卡的总人员库；职务仅「部长 / 干事」；可按学号 / 姓名检索学工系统学生一键带出，查不到也支持手动录入</p>
       </div>
       <div class="page-actions">
         <button class="btn btn-ghost" onclick="exportStaff()">
@@ -952,7 +953,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const CURRENT_USER = '王老师';
 
   // 职务数据字典
-  const JOB_DICT = ['负责人', '组长', '副组长', '干事', '志愿者', '其他'];
+  const JOB_DICT = ['部长', '干事'];
   // 部门 / 组别
   const DEPTS = ['知新馆英语组', '知新馆数学组', '知新馆理综组', '知新馆文综组', '知新馆综合服务组', '院级辅学组', '56度中南组'];
 
@@ -1004,20 +1005,20 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   // ====== 打卡人员库（初始样例） ======
   let LIST = [
-    mk('知新馆英语组','2023110045','组长'),
-    mk('知新馆英语组','2023110643','组员并入志愿者'),
-    mk('知新馆英语组','2023110651','志愿者'),
-    mk('知新馆数学组','2022110023','组长'),
-    mk('知新馆数学组','2023110644','志愿者'),
-    mk('知新馆数学组','2024110078','志愿者'),
-    mk('知新馆理综组','2023110066','副组长'),
-    mk('知新馆理综组','2023110212','志愿者'),
-    mk('知新馆理综组','2023110647','志愿者'),
-    mk('知新馆文综组','2023110642','组长'),
-    mk('知新馆文综组','2023110656','志愿者'),
-    mk('知新馆综合服务组','2023110001','负责人'),
+    mk('知新馆英语组','2023110045','部长'),
+    mk('知新馆英语组','2023110643','干事'),
+    mk('知新馆英语组','2023110651','干事'),
+    mk('知新馆数学组','2022110023','部长'),
+    mk('知新馆数学组','2023110644','干事'),
+    mk('知新馆数学组','2024110078','干事'),
+    mk('知新馆理综组','2023110066','部长'),
+    mk('知新馆理综组','2023110212','干事'),
+    mk('知新馆理综组','2023110647','干事'),
+    mk('知新馆文综组','2023110642','部长'),
+    mk('知新馆文综组','2023110656','干事'),
+    mk('知新馆综合服务组','2023110001','部长'),
     mk('知新馆综合服务组','2023110646','干事'),
-    mk('院级辅学组','2023110318','志愿者'),
+    mk('院级辅学组','2023110318','干事'),
     mk('56度中南组','2023110657','干事')
   ].filter(Boolean);
 
@@ -1025,7 +1026,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     const s = STUDENT_DB[sid];
     if(!s) return null;
     return {id:'S' + sid, dept, sid, name:s.name, gender:s.gender, college:s.college,
-            grade:s.grade, major:s.major, phone:s.phone, title:(title==='组员并入志愿者'?'志愿者':title)};
+            grade:s.grade, major:s.major, phone:s.phone, title:title};
   }
 
   let _editId = null, _delId = null, _seq = 0;
@@ -1033,7 +1034,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   function markAutofilled(on){ LOOKUP_FIELDS.forEach(id => document.getElementById(id).classList.toggle('autofilled', on)); }
 
   // ====== 渲染 ======
-  function jobTag(t){ return '<span class="job-tag">' + t + '</span>'; }
+  function jobTag(t){ return '<span class="job-tag'+(t==='部长'?' lead':'')+'">' + t + '</span>'; }
   function filtered(){
     const dept = document.getElementById('fDept').value;
     const title = document.getElementById('fTitle').value;
@@ -1127,7 +1128,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('fmMajor').value = d ? (d.major || '') : '';
     document.getElementById('fmPhone').value = d ? (d.phone || '') : '';
     document.getElementById('fmDept').value = d ? d.dept : DEPTS[0];
-    document.getElementById('fmTitle').value = d ? d.title : '志愿者';
+    document.getElementById('fmTitle').value = d ? d.title : '干事';
     document.getElementById('formErr').classList.remove('show');
     markAutofilled(false);
     openModal('formModal');

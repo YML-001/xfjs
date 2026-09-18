@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>打卡设置 · 学风建设系统</title>
+<title>考勤打卡 · 学风建设系统</title>
 <!-- Leaflet（开源地图库，BSD-2）+ OpenStreetMap 瓦片：用于打卡地点选点与电子围栏展示 -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -584,6 +584,35 @@ table.roster td.cell.today-cell{background:#F4FAFE;}
 .name-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .12s;}
 .name-chip:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm);}
 .name-chip .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.name-chip .chip-x{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:14px;margin-left:1px;border-radius:50%;
+  font-size:11px;line-height:1;opacity:.45;color:inherit;
+}
+.name-chip .chip-x:hover{opacity:1;background:rgba(0,0,0,.08);}
+.cell-edit{
+  display:inline-flex;align-items:center;gap:3px;
+  margin-top:7px;font-size:11px;color:var(--primary);font-weight:500;
+  padding:0;opacity:.72;
+}
+.cell-edit:hover{opacity:1;text-decoration:underline;}
+.slot-picked{display:flex;flex-wrap:wrap;gap:6px;min-height:40px;padding:10px 12px;border:1px dashed var(--border);border-radius:10px;background:#FAFBFD;margin-bottom:14px;}
+.slot-picked .name-chip{cursor:default;}
+.slot-results{max-height:220px;overflow:auto;border:1px solid var(--border-light);border-radius:10px;margin-top:8px;}
+.slot-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border-light);cursor:pointer;}
+.slot-item:last-child{border-bottom:none;}
+.slot-item:hover{background:var(--primary-50);}
+.slot-item .ava{
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(135deg,#9CBFDA,#3087CC);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;
+}
+.slot-item .meta{flex:1;min-width:0;}
+.slot-item .meta strong{font-size:13px;font-weight:500;}
+.slot-item .meta p{font-size:11px;color:var(--text-3);margin-top:2px;}
+.slot-item .add{font-size:12px;color:var(--primary);font-weight:500;flex-shrink:0;}
+.slot-manual{display:flex;align-items:center;gap:8px;margin-top:12px;}
+.slot-manual .input{flex:1;min-width:0;}
 .nc-plan{background:#F1F5F9;color:var(--text-2);border-color:var(--border-light);}
 .nc-ok{background:var(--success-bg);color:#0F766E;border-color:var(--success-border);}
 .nc-late{background:var(--warning-bg);color:#9A6500;border-color:var(--warning-border);}
@@ -662,7 +691,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     <div class="page-head">
       <div>
         <h1>考勤打卡</h1>
-        <p>按周排班（多班次 / 每班次不同人员），支持导入 Excel 排班表；成员在移动端上班 / 下班打卡，系统按上下班时间计算打卡时长（小时，参考值，管理员可调整）</p>
+        <p>按周排班（多班次 / 每班次不同人员），支持导入 Excel 排班表，导入后仍可在表内增删成员；成员在移动端上班 / 下班打卡，系统按上下班时间计算打卡时长（小时，参考值，管理员可调整）</p>
       </div>
       <div class="page-actions">
         <button class="btn btn-ghost" onclick="openSettings()">
@@ -695,6 +724,15 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
         <div class="delta neutral" id="statWeekSub">7 个班次 · 覆盖 0 人</div>
       </div>
       <div class="stat-card">
+        <div class="blob blob-4"></div>
+        <div class="ic" style="background:#F4F0FF;color:#7C5BC1;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="label">本周累计打卡时长</div>
+        <div class="num" id="statHours">0<small>小时</small></div>
+        <div class="delta neutral" id="statHoursSub">按上下班打卡计算</div>
+      </div>
+      <div class="stat-card">
         <div class="blob blob-2"></div>
         <div class="ic" style="background:var(--warning-bg);color:var(--warning);">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
@@ -711,15 +749,6 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
         <div class="label">今日已打卡</div>
         <div class="num" id="statDone">0<small>人次</small></div>
         <div class="delta up" id="statRate">出勤率 0%</div>
-      </div>
-      <div class="stat-card">
-        <div class="blob blob-4"></div>
-        <div class="ic" style="background:#F4F0FF;color:#7C5BC1;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        </div>
-        <div class="label">本周累计打卡时长</div>
-        <div class="num" id="statHours">0<small>小时</small></div>
-        <div class="delta neutral" id="statHoursSub">按上下班打卡计算</div>
       </div>
     </div>
 
@@ -758,7 +787,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
           <span><i class="d-ok"></i>正常（已下班）</span>
           <span><i class="d-late"></i>迟到</span>
           <span><i class="d-miss"></i>缺卡</span>
-          <span style="margin-left:auto;color:var(--text-4);">点击姓名可查看/调整该人当班打卡</span>
+          <span style="margin-left:auto;color:var(--text-4);">点击姓名可查看/调整该人当班打卡；点击「调整成员」或姓名旁 × 可增删该班次人员</span>
         </div>
       </div>
     </div>
@@ -989,6 +1018,36 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       <button class="btn btn-ghost" onclick="closeModal('importModal')">取消</button>
       <button class="btn btn-secondary" id="parseBtn" onclick="parseFile()">解析文件</button>
       <button class="btn btn-primary" id="confirmImportBtn" style="display:none;" onclick="confirmImport()">确认导入</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 调整排班成员 ===== -->
+<div class="modal-mask" id="slotModal">
+  <div class="modal" style="width:560px;">
+    <div class="modal-head">
+      <h3>调整排班成员</h3>
+      <button onclick="closeModal('slotModal')" style="color:var(--text-3);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="ro-grid" id="slotInfo"></div>
+      <div class="info-note">导入排班表后仍可按单元格调整值班人员：从<b>打卡人员库</b>检索加入，或手动输入姓名（未入库将标记为待完善）。保存后顶部人次与打卡记录会同步更新。</div>
+      <label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px;">当前班次成员</label>
+      <div class="slot-picked" id="slotPicked"></div>
+      <div class="form-item" style="margin-bottom:0;">
+        <label>从人员库添加</label>
+        <input class="input" id="slotKw" style="width:100%;min-width:0;" placeholder="输入姓名 / 学号检索人员库" oninput="renderSlotSearch()" />
+      </div>
+      <div class="slot-results" id="slotResults"></div>
+      <div class="slot-manual">
+        <input class="input" id="slotManual" placeholder="人员库没有？直接输入姓名添加" onkeydown="if(event.key==='Enter'){event.preventDefault();addSlotManual();}" />
+        <button class="btn btn-ghost btn-sm" onclick="addSlotManual()">添加</button>
+      </div>
+      <div class="form-err" id="slotErr"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('slotModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveSlot()">保存成员</button>
     </div>
   </div>
 </div>
@@ -1309,12 +1368,16 @@ document.addEventListener('DOMContentLoaded',()=>{
     '王慧':{sid:'2023110652',dept:'知新馆文综组'}, '胡智文':{sid:'2023110653',dept:'知新馆理综组'},
     '武政宇':{sid:'2023110654',dept:'知新馆数学组'}, '宋子挺':{sid:'2023110655',dept:'知新馆理综组'},
     '刘馨奕':{sid:'2023110656',dept:'知新馆文综组'}, '张一鸣':{sid:'2023110657',dept:'56度中南组'},
-    '蒋希函':{sid:'2023110658',dept:'知新馆英语组'}
+    '蒋希函':{sid:'2023110658',dept:'知新馆英语组'},
+    '李思远':{sid:'2023110701',dept:'知新馆英语组'},
+    '陈可':{sid:'2023110702',dept:'知新馆数学组'},
+    '赵婉清':{sid:'2023110703',dept:'知新馆文综组'},
+    '黄子涵':{sid:'2023110704',dept:'知新馆综合服务组'}
   };
   function info(name){ return NAME2INFO[name] || {sid:'', dept:'待完善'}; }
 
   // ====== 周排班表（星期1-7 × 班次 -> 姓名[]），对应导入的《知新馆排班表》 ======
-  const SCHEDULE = {
+  let SCHEDULE = {
     1:{s1:['任祺','周昊宇'], s2:['王悦','丁文婧'], s3:['王悦','丁文婧'], s4:['孙镱洋','胡靓文'], s5:['吴文杰','孙镱洋'], s6:['王宇','张文玉'], s7:['孙浩淇','杨振利']},
     2:{s1:['周昊宇','杨孟媛'], s2:['孙浩淇','王慧'], s3:['杨孟媛','吴蓓蓓'], s4:['胡靓','王冠雅'], s5:['孙镱洋','吴文杰'], s6:['胡智文','王宇'], s7:['杨振利','武政宇']},
     3:{s1:['宋子挺','孙镱洋'], s2:['张文玉','武政宇'], s3:['赵冰妍','孙镱洋'], s4:['兰天祥','张文玉'], s5:['张文玉','宋子挺'], s6:['王悦','刘馨奕'], s7:['兰天祥','杨振利']},
@@ -1427,9 +1490,9 @@ document.addEventListener('DOMContentLoaded',()=>{
           const r = recordFor(day.ds, sh, nm);
           const cls = STATUS_CLASS[r.status] || 'nc-plan';
           const dot = DOT_CLASS[r.status] || 'd-plan';
-          return `<span class="name-chip ${cls}" onclick="openAdjust('${day.ds}','${sh.id}','${nm}')"><i class="dot ${dot}"></i>${nm}</span>`;
+          return `<span class="name-chip ${cls}" onclick="openAdjust('${day.ds}','${sh.id}','${nm}')"><i class="dot ${dot}"></i>${nm}<button type="button" class="chip-x" title="移出该班次" onclick="event.stopPropagation();removeSlotMember('${day.ds}','${sh.id}','${nm}')">×</button></span>`;
         }).join('');
-        return `<td class="cell ${isToday?'today-cell':''}"><div class="chip-wrap">${chips||'<span style="color:var(--text-4);font-size:11px;">—</span>'}</div></td>`;
+        return `<td class="cell ${isToday?'today-cell':''}"><div class="chip-wrap">${chips||'<span style="color:var(--text-4);font-size:11px;">未排班</span>'}</div><button type="button" class="cell-edit" onclick="openSlotEdit('${day.ds}','${sh.id}')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>调整成员</button></td>`;
       }).join('');
       return `<tr class="${isToday?'is-today':''}"><td class="daycol">星期${WEEK_CN[day.d.getDay()]}<div class="dt">${pad(day.d.getMonth()+1)}.${pad(day.d.getDate())}</div></td>${cells}</tr>`;
     }).join('');
@@ -1629,7 +1692,120 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('parseBtn').style.display='none';
     document.getElementById('confirmImportBtn').style.display='';
   }
-  function confirmImport(){ closeModal('importModal'); renderAll(); showToast('排班表导入成功：已识别 ' + SHIFTS.length + ' 个班次、7 天排班'); }
+  function confirmImport(){ closeModal('importModal'); renderAll(); showToast('排班表导入成功：已识别 ' + SHIFTS.length + ' 个班次、7 天排班，可在表格中继续调整成员'); }
+
+  // ====== 排班表内调整成员（导入后仍可增删） ======
+  function wdFromDs(ds){
+    const d = new Date(ds + 'T00:00:00');
+    return ((d.getDay()+6)%7)+1;
+  }
+  function ensureSlot(wd, sid){
+    if(!SCHEDULE[wd]) SCHEDULE[wd] = {};
+    if(!Array.isArray(SCHEDULE[wd][sid])) SCHEDULE[wd][sid] = [];
+    return SCHEDULE[wd][sid];
+  }
+  function allStaff(){
+    const map = {};
+    Object.keys(NAME2INFO).forEach(nm => {
+      const nf = NAME2INFO[nm];
+      map[nm] = {name:nm, sid:nf.sid||'', dept:nf.dept||'待完善'};
+    });
+    for(let wd=1; wd<=7; wd++){
+      SHIFTS.forEach(sh => ((SCHEDULE[wd]||{})[sh.id]||[]).forEach(nm => {
+        if(!map[nm]){ const nf=info(nm); map[nm]={name:nm, sid:nf.sid, dept:nf.dept}; }
+      }));
+    }
+    return Object.values(map).sort((a,b)=>a.name.localeCompare(b.name,'zh'));
+  }
+  function removeSlotMember(ds, sid, name){
+    const wd = wdFromDs(ds);
+    ensureSlot(wd, sid);
+    SCHEDULE[wd][sid] = SCHEDULE[wd][sid].filter(n => n !== name);
+    renderAll();
+    showToast('已将 '+name+' 从该班次移除');
+  }
+  let _slot = null;
+  function openSlotEdit(ds, sid){
+    const sh = shiftById(sid);
+    if(!sh) return;
+    const wd = wdFromDs(ds);
+    _slot = {ds, sid, wd, draft: ensureSlot(wd, sid).slice()};
+    const d = new Date(ds + 'T00:00:00');
+    document.getElementById('slotInfo').innerHTML = [
+      ['日期', ds + ' 星期' + WEEK_CN[d.getDay()]],
+      ['班次', sh.name + ' · ' + sh.start + '-' + sh.end],
+      ['打卡地点', SETTINGS.name]
+    ].map(([k,v])=>`<div><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+    document.getElementById('slotKw').value = '';
+    document.getElementById('slotManual').value = '';
+    document.getElementById('slotErr').classList.remove('show');
+    renderSlotDraft();
+    renderSlotSearch();
+    openModal('slotModal');
+  }
+  function renderSlotDraft(){
+    const box = document.getElementById('slotPicked');
+    if(!_slot.draft.length){
+      box.innerHTML = '<span style="color:var(--text-4);font-size:12px;">该班次暂无成员，请从下方人员库添加</span>';
+      return;
+    }
+    box.innerHTML = _slot.draft.map(nm => {
+      const nf = info(nm);
+      return `<span class="name-chip nc-working">${nm}${nf.sid?' · '+nf.sid:''}<button type="button" class="chip-x" onclick="dropSlotDraft('${nm}')">×</button></span>`;
+    }).join('');
+  }
+  function dropSlotDraft(name){
+    _slot.draft = _slot.draft.filter(n => n !== name);
+    renderSlotDraft();
+    renderSlotSearch();
+  }
+  function addSlotDraft(name){
+    name = (name||'').trim();
+    if(!name) return;
+    if(_slot.draft.includes(name)){ showToast(name+' 已在该班次中'); return; }
+    if(!NAME2INFO[name]) NAME2INFO[name] = {sid:'', dept:'待完善'};
+    _slot.draft.push(name);
+    document.getElementById('slotKw').value = '';
+    document.getElementById('slotManual').value = '';
+    document.getElementById('slotErr').classList.remove('show');
+    renderSlotDraft();
+    renderSlotSearch();
+  }
+  function renderSlotSearch(){
+    if(!_slot) return;
+    const kw = (document.getElementById('slotKw').value||'').trim().toLowerCase();
+    const list = allStaff().filter(p => {
+      if(_slot.draft.includes(p.name)) return false;
+      if(!kw) return true;
+      return (p.name + p.sid + p.dept).toLowerCase().includes(kw);
+    }).slice(0, kw ? 30 : 8);
+    const box = document.getElementById('slotResults');
+    if(!list.length){
+      box.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-4);font-size:12px;">未找到匹配人员，可在下方手动输入姓名添加</div>';
+      return;
+    }
+    box.innerHTML = list.map(p => `
+      <div class="slot-item" onclick="addSlotDraft('${p.name}')">
+        <div class="ava">${p.name.slice(0,1)}</div>
+        <div class="meta"><strong>${p.name}</strong><p>${p.dept}${p.sid?' · '+p.sid:''}</p></div>
+        <span class="add">加入</span>
+      </div>`).join('');
+  }
+  function addSlotManual(){
+    const name = document.getElementById('slotManual').value.trim();
+    const err = document.getElementById('slotErr');
+    if(!name){ err.textContent='请输入要添加的姓名'; err.classList.add('show'); return; }
+    err.classList.remove('show');
+    addSlotDraft(name);
+  }
+  function saveSlot(){
+    ensureSlot(_slot.wd, _slot.sid);
+    SCHEDULE[_slot.wd][_slot.sid] = _slot.draft.slice();
+    closeModal('slotModal');
+    renderAll();
+    const sh = shiftById(_slot.sid);
+    showToast('已更新 '+_slot.ds+'「'+sh.name+'」的排班成员（'+_slot.draft.length+' 人）');
+  }
 
   // ====== 班次配置 ======
   let _shiftDraft = [];
