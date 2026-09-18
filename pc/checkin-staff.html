@@ -572,6 +572,9 @@ tbody tr:last-child td{border-bottom:none;}
 .lookup-hint b{color:var(--primary);}
 .job-tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:4px;font-size:12px;font-weight:500;background:#F1F5F9;color:var(--text-2);border:1px solid var(--border-light);}
 .job-tag.lead{background:var(--primary-light);color:var(--primary-dark);border-color:#BFDDF6;}
+.info-note{background:var(--primary-50);border:1px solid #D6EAF9;border-radius:8px;padding:10px 12px;font-size:12px;color:var(--text-2);line-height:1.6;margin:0 0 14px;}
+.info-note b{color:var(--primary);}
+.page-head p b{color:var(--primary);font-weight:600;}
 </style>
 </head>
 <body>
@@ -582,7 +585,7 @@ tbody tr:last-child td{border-bottom:none;}
     <div class="page-head">
       <div>
         <h1>打卡人员库</h1>
-        <p>维护参与考勤打卡的总人员库；职务仅「部长 / 干事」；可按学号 / 姓名检索学工系统学生一键带出，查不到也支持手动录入</p>
+        <p>维护参与考勤打卡的总人员库；职务仅「部长 / 干事」；列表按<b>部门 → 部长 / 干事 → 姓名笔画</b>排序；可按学号 / 姓名检索学工系统学生一键带出，查不到也支持手动录入</p>
       </div>
       <div class="page-actions">
         <button class="btn btn-ghost" onclick="exportStaff()">
@@ -646,6 +649,7 @@ tbody tr:last-child td{border-bottom:none;}
         <button class="btn btn-primary btn-sm" onclick="renderTable()">查询</button>
       </div>
     </div>
+    <div class="info-note">名单按部门顺序排列，同一部门内先<b>部长</b>后<b>干事</b>，同职务再按<b>姓名笔画</b>排序。</div>
 
     <div class="table-wrap">
       <table>
@@ -1033,18 +1037,40 @@ document.addEventListener('DOMContentLoaded',()=>{
   const LOOKUP_FIELDS = ['fmName','fmGender','fmCollege','fmGrade','fmMajor','fmPhone'];
   function markAutofilled(on){ LOOKUP_FIELDS.forEach(id => document.getElementById(id).classList.toggle('autofilled', on)); }
 
+  // 人员排序：部门（字典顺序）→ 职务（部长→干事）→ 姓名笔画
+  const STROKE_COLL = new Intl.Collator('zh-CN-u-co-stroke');
+  const JOB_RANK = { '部长': 0, '干事': 1 };
+  function strokeCmp(a, b){
+    return STROKE_COLL.compare(String(a||''), String(b||''))
+      || String(a||'').localeCompare(String(b||''), 'zh-CN');
+  }
+  function deptRank(dept){
+    const i = DEPTS.indexOf(dept);
+    return i < 0 ? DEPTS.length : i;
+  }
+  function staffCmp(a, b){
+    const dr = deptRank(a.dept) - deptRank(b.dept);
+    if(dr) return dr;
+    if((a.dept||'') !== (b.dept||'')) return strokeCmp(a.dept, b.dept);
+    const ja = JOB_RANK[a.title], jb = JOB_RANK[b.title];
+    const jr = (ja==null?9:ja) - (jb==null?9:jb);
+    if(jr) return jr;
+    return strokeCmp(a.name, b.name);
+  }
+  function sortStaffList(arr){ return arr.sort(staffCmp); }
+
   // ====== 渲染 ======
   function jobTag(t){ return '<span class="job-tag'+(t==='部长'?' lead':'')+'">' + t + '</span>'; }
   function filtered(){
     const dept = document.getElementById('fDept').value;
     const title = document.getElementById('fTitle').value;
     const kw = document.getElementById('fKw').value.trim().toLowerCase();
-    return LIST.filter(d => {
+    return sortStaffList(LIST.filter(d => {
       if(dept && d.dept !== dept) return false;
       if(title && d.title !== title) return false;
       if(kw && !((d.name + d.sid + d.college + d.major + (d.phone||'')).toLowerCase().includes(kw))) return false;
       return true;
-    });
+    }));
   }
   function renderStats(){
     document.getElementById('statTotal').innerHTML = LIST.length + '<small>人</small>';
@@ -1161,9 +1187,10 @@ document.addEventListener('DOMContentLoaded',()=>{
       showToast('已保存修改');
     }else{
       _seq += 1;
-      LIST.unshift(Object.assign({id:'SN' + String(_seq).padStart(3,'0')}, rec));
+      LIST.push(Object.assign({id:'SN' + String(_seq).padStart(3,'0')}, rec));
       showToast('已新增打卡人员：' + name);
     }
+    sortStaffList(LIST);
     closeModal('formModal');
     renderAll();
   }

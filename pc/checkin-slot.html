@@ -636,8 +636,6 @@ table.roster td.cell.today-cell{background:#F4FAFE;}
 .hrs.zero{color:var(--text-4);font-weight:400;}
 .hrs.ot{color:#C47B00;}
 .input[readonly]{background:#F5F7FA;color:var(--text-2);box-shadow:none;cursor:default;}
-.ot-input{width:78px;min-width:78px;height:30px;padding:0 8px;text-align:right;font-weight:600;color:#C47B00;}
-.ot-input:focus{color:var(--text-1);}
 .sum-eq{font-size:11px;color:var(--text-4);white-space:nowrap;}
 
 /* 弹窗表单 */
@@ -1404,7 +1402,37 @@ document.addEventListener('DOMContentLoaded',()=>{
     '赵婉清':{sid:'2023110703',dept:'知新馆文综组',phone:'13607331903'},
     '黄子涵':{sid:'2023110704',dept:'知新馆综合服务组',phone:'13607331904'}
   };
-  function info(name){ return NAME2INFO[name] || {sid:'', dept:'待完善', phone:''}; }
+  function info(name){
+    const b = NAME2INFO[name];
+    if(!b) return {sid:'', dept:'待完善', phone:'', title:'干事'};
+    return {sid:b.sid||'', dept:b.dept||'待完善', phone:b.phone||'', title:b.title || STAFF_LEADERS[name] || '干事'};
+  }
+  const STAFF_DEPTS = ['知新馆英语组','知新馆数学组','知新馆理综组','知新馆文综组','知新馆综合服务组','院级辅学组','56度中南组'];
+  const STAFF_LEADERS = {'王悦':'部长'};
+  const STROKE_COLL = new Intl.Collator('zh-CN-u-co-stroke');
+  const JOB_RANK = {'部长':0,'干事':1};
+  function strokeCmp(a,b){
+    return STROKE_COLL.compare(String(a||''), String(b||'')) || String(a||'').localeCompare(String(b||''),'zh-CN');
+  }
+  function deptRank(dept){
+    const i = STAFF_DEPTS.indexOf(dept);
+    return i < 0 ? STAFF_DEPTS.length : i;
+  }
+  function staffCmp(a,b){
+    const dr = deptRank(a.dept) - deptRank(b.dept);
+    if(dr) return dr;
+    if((a.dept||'') !== (b.dept||'')) return strokeCmp(a.dept, b.dept);
+    const ja = JOB_RANK[a.title], jb = JOB_RANK[b.title];
+    const jr = (ja==null?9:ja) - (jb==null?9:jb);
+    if(jr) return jr;
+    return strokeCmp(a.name, b.name);
+  }
+  function sortNames(names){
+    return (names||[]).slice().sort((a,b)=>{
+      const ia=info(a), ib=info(b);
+      return staffCmp({name:a, dept:ia.dept, title:ia.title}, {name:b, dept:ib.dept, title:ib.title});
+    });
+  }
 
   // ====== 周排班表（星期1-7 × 班次 -> 姓名[]），对应导入的《知新馆排班表》 ======
   let SCHEDULE = {
@@ -1531,7 +1559,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('rosterBody').innerHTML = days.map(day => {
       const isToday = day.ds === TODAY;
       const cells = SHIFTS.map(sh => {
-        const list = (SCHEDULE[day.wd]||{})[sh.id] || [];
+        const list = sortNames((SCHEDULE[day.wd]||{})[sh.id] || []);
         const chips = list.map(nm => {
           const r = recordFor(day.ds, sh, nm);
           const cls = STATUS_CLASS[r.status] || 'nc-plan';
@@ -1738,7 +1766,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     for(let wd=1; wd<=7; wd++){
       html += '<tr><td class="daycol">星期'+['一','二','三','四','五','六','日'][wd-1]+'</td>' +
         SHIFTS.map(sh=>{
-          const list=(SCHEDULE[wd]||{})[sh.id]||[];
+          const list=sortNames((SCHEDULE[wd]||{})[sh.id]||[]);
           return '<td class="cell"><div class="chip-wrap">'+list.map(nm=>`<span class="name-chip ${NAME2INFO[nm]?'nc-plan':'nc-late'}">${nm}${NAME2INFO[nm]?'':' ⚠'}</span>`).join('')+'</div></td>';
         }).join('') + '</tr>';
     }
@@ -1762,15 +1790,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   function allStaff(){
     const map = {};
     Object.keys(NAME2INFO).forEach(nm => {
-      const nf = NAME2INFO[nm];
-      map[nm] = {name:nm, sid:nf.sid||'', dept:nf.dept||'待完善'};
+      const nf = info(nm);
+      map[nm] = {name:nm, sid:nf.sid||'', dept:nf.dept||'待完善', title:nf.title||'干事'};
     });
     for(let wd=1; wd<=7; wd++){
       SHIFTS.forEach(sh => ((SCHEDULE[wd]||{})[sh.id]||[]).forEach(nm => {
-        if(!map[nm]){ const nf=info(nm); map[nm]={name:nm, sid:nf.sid, dept:nf.dept}; }
+        if(!map[nm]){ const nf=info(nm); map[nm]={name:nm, sid:nf.sid, dept:nf.dept, title:nf.title||'干事'}; }
       }));
     }
-    return Object.values(map).sort((a,b)=>a.name.localeCompare(b.name,'zh'));
+    return Object.values(map).sort(staffCmp);
   }
   function removeSlotMember(ds, sid, name){
     const wd = wdFromDs(ds);
@@ -1804,7 +1832,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       box.innerHTML = '<span style="color:var(--text-4);font-size:12px;">该班次暂无成员，请从下方人员库添加</span>';
       return;
     }
-    box.innerHTML = _slot.draft.map(nm => {
+    box.innerHTML = sortNames(_slot.draft).map(nm => {
       const nf = info(nm);
       return `<span class="name-chip nc-working">${nm}${nf.sid?' · '+nf.sid:''}<button type="button" class="chip-x" onclick="dropSlotDraft('${nm}')">×</button></span>`;
     }).join('');
@@ -1842,7 +1870,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     box.innerHTML = list.map(p => `
       <div class="slot-item" onclick="addSlotDraft('${p.name}')">
         <div class="ava">${p.name.slice(0,1)}</div>
-        <div class="meta"><strong>${p.name}</strong><p>${p.dept}${p.sid?' · '+p.sid:''}</p></div>
+        <div class="meta"><strong>${p.name}</strong><p>${p.dept} · ${p.title||'干事'}${p.sid?' · '+p.sid:''}</p></div>
         <span class="add">加入</span>
       </div>`).join('');
   }
@@ -1855,7 +1883,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   function saveSlot(){
     ensureSlot(_slot.wd, _slot.sid);
-    SCHEDULE[_slot.wd][_slot.sid] = _slot.draft.slice();
+    SCHEDULE[_slot.wd][_slot.sid] = sortNames(_slot.draft);
     closeModal('slotModal');
     renderAll();
     const sh = shiftById(_slot.sid);
@@ -1990,7 +2018,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('sumPeriodTitle').textContent = m.title;
     document.getElementById('sumPeriodRange').textContent = m.range + '（'+m.start+' 至 '+m.end+'）';
     document.getElementById('sumBackBtn').textContent = sumGrain==='week' ? '回到本周' : '回到本月';
-    document.getElementById('sumNote').innerHTML = '按<b>'+(sumGrain==='week'?'周':'月')+'</b>聚合每位成员的打卡情况（截至今天）；正常打卡时长仅计<b>班次时间段内</b>。加班时长由管理员<b>手工录入</b>，录入后累计打卡时长 = 正常打卡 + 加班。可用部门 / 关键字再筛选，支持<b>导出当前结果</b>。';
+    document.getElementById('sumNote').innerHTML = '按<b>'+(sumGrain==='week'?'周':'月')+'</b>聚合每位成员的打卡情况（截至今天）；正常打卡时长仅计<b>班次时间段内</b>。加班时长请点右侧<b>录入加班</b>手工填写，列表内不可直接改；录入后累计打卡时长 = 正常打卡 + 加班。可用部门 / 关键字再筛选，支持<b>导出当前结果</b>。';
   }
   function onSumGrainChange(){
     sumGrain = document.getElementById('fSumGrain').value;
@@ -2075,7 +2103,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           <td>${o.late?`<span style="color:var(--warning);font-weight:600;">${o.late}</span>`:'0'}</td>
           <td>${o.early?`<span style="color:var(--warning);font-weight:600;">${o.early}</span>`:'0'}</td>
           <td>${o.miss?`<span style="color:var(--danger);font-weight:600;">${o.miss}</span>`:'0'}</td>
-          <td><input class="input ot-input" type="number" min="0" max="200" step="0.1" value="${o.overtime.toFixed(1)}" title="手工录入加班时长" onchange="saveSumOt('${o.name}', this.value)" /></td>
+          <td>${otText(o.overtime)}</td>
           <td><div style="display:flex;align-items:center;gap:8px;"><div class="sum-track"><div class="sum-fill" style="width:${pct}%;"></div></div><span class="${hrsCls}">${o.hours.toFixed(1)}</span>${adjBadge}</div><div class="sum-eq">正常 ${o.autoHours.toFixed(1)} + 加班 ${o.overtime.toFixed(1)}</div></td>
           ${remarkCell(o.remark)}
           <td><div class="op-links"><a href="javascript:void(0)" onclick="openSumAdjust('${o.name}')">录入加班</a>${o.adjusted?`<a href="javascript:void(0)" style="color:var(--text-3);" onclick="resetSum('${o.name}')">清除加班</a>`:''}</div></td>
@@ -2165,21 +2193,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     renderSummary();
     const total=round1((_sum.autoHours||0)+saved);
     showToast(saved?('已录入 '+_sum.name+' 加班 '+saved.toFixed(1)+' 小时，累计 '+total.toFixed(1)+' 小时'):('已清除 '+_sum.name+' 的加班时长'));
-  }
-  function saveSumOt(name, value){
-    const ot=parseFloat(value);
-    if(isNaN(ot)||ot<0||ot>sumHoursMax()){ showToast('加班时长需在 0-'+sumHoursMax()+' 小时之间'); renderSummary(); return; }
-    const o=summaryData().find(x=>x.name===name);
-    const prev=(SUM_OVERRIDE[sumKey(name)]||{}).remark||'';
-    const saved=applySumOt(name, ot, prev||'管理员录入加班时长');
-    renderStats();
-    renderSummary();
-    if(saved){
-      const total=round1((o?o.autoHours:0)+saved);
-      showToast('已录入 '+name+' 加班 '+saved.toFixed(1)+' 小时，累计 '+total.toFixed(1)+' 小时');
-    }else{
-      showToast('已清除 '+name+' 的加班时长');
-    }
   }
   function resetSum(name){
     delete SUM_OVERRIDE[sumKey(name)];
