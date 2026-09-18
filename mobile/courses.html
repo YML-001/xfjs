@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -942,6 +942,7 @@ function cancelEnrollM(id){
   if(!confirm('确认取消报名？'))return;
   const c=ENROLL_COURSES.find(x=>x.id===id);
   if(c){c.myEnroll=false;c.myEnrollTime='';c.signed=Math.max(0,c.signed-1);}
+  try{const k='xfjs_enrolled';let s=JSON.parse(localStorage.getItem(k)||'[]').filter(e=>e.id!=='C'+id);localStorage.setItem(k,JSON.stringify(s));}catch(e){}
   renderCourseList();
   showToast('已取消报名，名额已释放');
 }
@@ -964,7 +965,7 @@ function confirmMEnroll(){
   closeSheet('enrollNoticeSheet');
   if(_enrollId){
     const c=ENROLL_COURSES.find(x=>x.id===_enrollId);
-    if(c&&!c.myEnroll){c.myEnroll=true;c.myEnrollTime=new Date().toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'}).replace('/','-')+' '+new Date().toTimeString().slice(0,5);c.signed++;}
+    if(c&&!c.myEnroll){c.myEnroll=true;c.myEnrollTime=new Date().toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'}).replace('/','-')+' '+new Date().toTimeString().slice(0,5);c.signed++;try{const k='xfjs_enrolled';let s=JSON.parse(localStorage.getItem(k)||'[]');const eid='C'+c.id;if(!s.some(e=>e.id===eid)){s.unshift({id:eid,title:c.name,time:c.time,place:c.loc,teacher:c.teacher,status:'enrolled'});localStorage.setItem(k,JSON.stringify(s));}}catch(e){}}
     renderCourseList();
   }
   showToast('报名成功！请准时到场并扫码签到');
@@ -1764,5 +1765,58 @@ document.addEventListener('DOMContentLoaded',()=>{
     <button class="qr-close-btn" onclick="closeCourseQrOverlay()">关闭</button>
   </div>
 </div>
+
+
+
+<!-- ===== 拆分页导航（设计师预览版 · 自动注入）：页内业务逻辑不变，点击改为跳转对应拆分 HTML ===== -->
+<script>
+(function(){
+  var TAB_FILES = {"enroll":"courses.html","self":"courses-self.html","apply":"courses-apply.html"};     /* tabId -> file */
+  var MODAL_FILES = {"courseDetailPanel":"courses-course-detail-panel.html","selfReqDetailPanel":"courses-self-req-detail.html","applyDetailPanel":"courses-apply-detail.html","enrollNoticeSheet":"courses-enroll-notice.html","historySheet":"courses-history.html","newSelfReqSheet":"courses-new-self-req.html","editSelfReqSheet":"courses-edit-self-req.html","newApplySheet":"courses-new-apply.html","editApplySheet":"courses-edit-apply.html","appealSheet":"courses-appeal.html","scanOverlay":"courses-scan.html","courseQrOverlay":"courses-course-qr.html"}; /* 浮层元素id -> file */
+  var LANDING = "courses.html";
+  var TAB_ATTRS = ["data-tab","data-stab","data-ptab","data-lib-tab"];
+  var VIS = ["show","open","active","visible"];
+  function _clickTab(t){
+    if(!t) return;
+    var sel = TAB_ATTRS.map(function(a){return '['+a+'="'+t+'"]';}).join(',');
+    var b = document.querySelector(sel);
+    if(b){ b.click(); }
+  }
+  function _visClass(el){ return VIS.some(function(c){return el.classList.contains(c);}); }
+  function _activate(){ try{ switchMTab("enroll"); }catch(e){ if(window.console)console.warn('activate',e); } }
+  function _installModalNav(){
+    Object.keys(MODAL_FILES).forEach(function(id){
+      var el = document.getElementById(id); if(!el) return;
+      var was = _visClass(el);
+      var mo = new MutationObserver(function(){
+        var now = _visClass(el);
+        if(now && !was){ location.href = MODAL_FILES[id]; }
+        was = now;
+      });
+      mo.observe(el, {attributes:true, attributeFilter:["class","style"]});
+    });
+  }
+  function _installTabNav(){
+    if(!Object.keys(TAB_FILES).length) return;
+    document.addEventListener("click", function(e){
+      var node = e.target;
+      while(node && node.nodeType===1){
+        for(var i=0;i<TAB_ATTRS.length;i++){
+          if(node.hasAttribute(TAB_ATTRS[i])){
+            var v = node.getAttribute(TAB_ATTRS[i]);
+            if(TAB_FILES[v]){ e.preventDefault(); e.stopPropagation(); location.href = TAB_FILES[v]; return; }
+          }
+        }
+        node = node.parentNode;
+      }
+    }, true);
+    if(typeof switchMTab!=="undefined"){ window.switchMTab=function(t){ var f=TAB_FILES[t]; if(f){location.href=f;return;} }; }
+  }
+  window.addEventListener("load", function(){
+    setTimeout(function(){ _activate(); setTimeout(function(){ _installModalNav(); _installTabNav(); }, 150); }, 60);
+  });
+})();
+</script>
+
 </body>
 </html>

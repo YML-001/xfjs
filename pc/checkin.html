@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>考勤打卡 · 学风建设系统</title>
+<!-- Leaflet（开源地图库，BSD-2）+ OpenStreetMap 瓦片：用于打卡地点选点与电子围栏展示 -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{
+  --primary:#3087CC;
+  --primary-light:#E3F1F9;
+  --primary-dark:#006DAD;
+  --primary-50:#F4FAFE;
+  --text-1:#3C444F;
+  --text-2:#696F7D;
+  --text-3:#9096A2;
+  --text-4:#ABB0BA;
+  --border:#E5E8EE;
+  --border-light:#EFF1F5;
+  --bg:#F4F6FA;
+  --bg-card:#FFFFFF;
+  --success:#1BB975;
+  --success-bg:#E8FCF4;
+  --success-border:#A7F3D0;
+  --warning:#F29100;
+  --warning-bg:#FFF5E5;
+  --warning-border:#FFE0B3;
+  --danger:#DF2027;
+  --danger-bg:#FCE8EA;
+  --danger-border:#F6BCBE;
+  --shadow-sm:0 1px 3px rgba(15,32,55,.05);
+  --shadow-md:0 4px 14px rgba(15,32,55,.06);
+  --shadow-lg:0 12px 32px rgba(15,32,55,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:"OPPOSans","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;color:var(--text-1);background:var(--bg);-webkit-font-smoothing:antialiased;font-size:14px;}
+body{min-height:100vh;display:flex;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+svg{display:block;flex-shrink:0;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-thumb{background:#D9DDE3;border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:#C0C5CD;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ====== Sidebar ====== */
+.sidebar{
+  width:232px;flex-shrink:0;background:#fff;
+  border-right:1px solid var(--border-light);
+  height:100vh;position:sticky;top:0;display:flex;flex-direction:column;
+}
+.brand{
+  padding:20px 20px 16px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--border-light);
+}
+.brand-logo{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,#3087CC 0%,#006DAD 100%);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 16px rgba(48,135,204,.28);
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.1;}
+.brand-text strong{font-size:14px;font-weight:600;}
+.brand-text span{font-size:10px;color:var(--text-3);letter-spacing:.4px;margin-top:3px;}
+
+.nav-group{padding:16px 12px 8px;flex:1;overflow-y:auto;}
+.nav-group-title{
+  padding:8px 12px 6px;font-size:11px;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:.6px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:8px;color:var(--text-2);
+  font-size:13px;cursor:pointer;transition:all .15s;
+  margin-bottom:2px;
+}
+.nav-item:hover{background:var(--primary-50);color:var(--text-1);}
+.nav-item.active{background:var(--primary-light);color:var(--primary);font-weight:500;}
+.nav-item.active svg{color:var(--primary);}
+.nav-item .badge{
+  margin-left:auto;background:var(--danger);color:#fff;font-size:10px;
+  padding:1px 6px;border-radius:8px;font-weight:500;
+}
+.nav-item.active .badge{background:var(--primary);}
+
+.user-card{
+  margin:12px;padding:12px;border-radius:10px;
+  background:linear-gradient(135deg,#F4FAFE 0%,#E3F1F9 100%);
+  display:flex;align-items:center;gap:10px;
+}
+.user-card .ava{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,#3087CC,#006DAD);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:600;font-size:13px;
+}
+.user-card .info{flex:1;min-width:0;}
+.user-card .info h5{font-size:13px;font-weight:500;}
+.user-card .info p{font-size:11px;color:var(--text-3);margin-top:2px;}
+
+/* ====== Main ====== */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;}
+.topbar{
+  height:60px;background:#fff;border-bottom:1px solid var(--border-light);
+  padding:0 28px;display:flex;align-items:center;gap:18px;position:sticky;top:0;z-index:10;
+}
+.crumb{display:flex;align-items:center;gap:6px;color:var(--text-2);font-size:13px;}
+.crumb svg{color:var(--text-4);}
+.crumb a{color:var(--text-2);transition:color .15s;}
+.crumb a:hover{color:var(--primary);}
+.search{
+  margin-left:24px;width:320px;height:36px;border-radius:8px;
+  background:#F4F6FA;display:flex;align-items:center;padding:0 12px;gap:8px;
+  border:1px solid transparent;transition:all .15s;
+}
+.search:focus-within{background:#fff;border-color:var(--primary);}
+.search input{flex:1;border:none;outline:none;background:transparent;font-size:13px;color:var(--text-1);}
+.search input::placeholder{color:var(--text-4);}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.icon-btn{
+  width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);transition:all .15s;position:relative;
+}
+.icon-btn:hover{background:#F4F6FA;color:var(--text-1);}
+.icon-btn .red-dot{
+  position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;
+  background:var(--danger);border:2px solid #fff;
+}
+.topbar-user{
+  display:flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;
+  border-radius:999px;cursor:pointer;
+}
+.topbar-user:hover{background:#F4F6FA;}
+.topbar-user .ava{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,#3087CC,#006DAD);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;
+}
+.topbar-user span{font-size:13px;color:var(--text-1);}
+
+/* ====== Page Content ====== */
+.page{flex:1;padding:24px 28px;overflow-y:auto;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.page-head h1{font-size:22px;font-weight:600;}
+.page-head p{color:var(--text-3);font-size:13px;margin-top:6px;}
+.page-actions{display:flex;gap:8px;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  height:36px;padding:0 14px;border-radius:8px;font-size:13px;font-weight:500;
+  transition:all .15s;
+}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{background:var(--primary-dark);box-shadow:0 4px 12px rgba(48,135,204,.28);}
+.btn-secondary{background:#fff;color:var(--primary);border:1px solid var(--primary);}
+.btn-secondary:hover{background:var(--primary-light);}
+.btn-ghost{background:#fff;color:var(--text-2);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--primary);color:var(--primary);}
+.btn-sm{height:30px;padding:0 10px;font-size:12px;}
+
+/* ====== Stat Cards ====== */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+.stats-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:#fff;border-radius:14px;padding:20px 22px;
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.stat-card .blob{
+  position:absolute;width:140px;height:140px;border-radius:50%;
+  right:-40px;top:-40px;opacity:.35;
+}
+.stat-card .blob-1{background:radial-gradient(circle,#BFDDF6,transparent 65%);}
+.stat-card .blob-2{background:radial-gradient(circle,#FFE0B3,transparent 65%);}
+.stat-card .blob-3{background:radial-gradient(circle,#A7F3D0,transparent 65%);}
+.stat-card .blob-4{background:radial-gradient(circle,#F6BCBE,transparent 65%);}
+.stat-card .ic{
+  width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+}
+.stat-card .label{font-size:13px;color:var(--text-2);}
+.stat-card .num{
+  font-size:28px;font-weight:700;margin-top:4px;letter-spacing:-.5px;
+  display:flex;align-items:baseline;gap:6px;
+}
+.stat-card .num small{font-size:13px;color:var(--text-3);font-weight:400;}
+.stat-card .delta{
+  font-size:12px;margin-top:8px;display:flex;align-items:center;gap:4px;
+}
+.delta.up{color:var(--success);}
+.delta.down{color:var(--danger);}
+.delta.neutral{color:var(--text-3);}
+
+/* ====== Layout grids ====== */
+.row-2{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;margin-bottom:20px;}
+.row-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+
+.panel{
+  background:#fff;border-radius:14px;padding:22px 24px;
+  box-shadow:var(--shadow-sm);
+}
+.panel-head{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;
+}
+.panel-head h3{font-size:16px;font-weight:600;}
+.panel-head p{font-size:12px;color:var(--text-3);margin-top:2px;}
+.panel-tabs{display:flex;gap:4px;background:#F4F6FA;border-radius:8px;padding:3px;}
+.panel-tabs button{
+  height:28px;padding:0 12px;border-radius:6px;font-size:12px;color:var(--text-2);transition:all .15s;
+}
+.panel-tabs button.active{background:#fff;color:var(--primary);font-weight:500;box-shadow:var(--shadow-sm);}
+
+/* ====== Chart ====== */
+.chart-wrap{height:280px;position:relative;}
+
+/* ====== Approval list ====== */
+.approval-list{display:flex;flex-direction:column;gap:10px;}
+.approval-item{
+  padding:14px;border:1px solid var(--border-light);border-radius:10px;
+  display:flex;align-items:center;gap:12px;transition:all .15s;
+}
+.approval-item:hover{border-color:var(--primary);background:var(--primary-50);}
+.approval-item .ava{
+  width:40px;height:40px;border-radius:10px;
+  background:linear-gradient(135deg,#9CBFDA,#3087CC);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;
+  flex-shrink:0;
+}
+.approval-item .text{flex:1;min-width:0;}
+.approval-item .text h5{font-size:14px;font-weight:500;}
+.approval-item .text p{font-size:12px;color:var(--text-3);margin-top:3px;}
+.approval-item .actions{display:flex;gap:6px;}
+
+/* ====== Tag ====== */
+.tag{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:4px;font-size:12px;font-weight:500;
+  background:var(--primary-light);color:var(--primary);border:1px solid #BFDDF6;
+}
+.tag-success{background:var(--success-bg);color:var(--success);border-color:var(--success-border);}
+.tag-warning{background:var(--warning-bg);color:var(--warning);border-color:var(--warning-border);}
+.tag-danger{background:var(--danger-bg);color:var(--danger);border-color:var(--danger-border);}
+.tag-grey{background:#F1F2F3;color:var(--text-3);border-color:var(--border);}
+
+/* ====== Star ====== */
+.stars{display:inline-flex;gap:2px;}
+.stars svg{width:14px;height:14px;color:#FFC53D;}
+.stars.empty svg{color:#E5E8EE;}
+
+/* ====== Filter Bar ====== */
+.filterbar{
+  background:#fff;border-radius:14px;padding:16px 20px;margin-bottom:16px;
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+  box-shadow:var(--shadow-sm);
+}
+.filterbar .field{display:flex;align-items:center;gap:6px;}
+.filterbar label{font-size:13px;color:var(--text-2);}
+.input,.select{
+  height:34px;padding:0 12px;border:1px solid var(--border);border-radius:8px;
+  font-size:13px;color:var(--text-1);background:#fff;outline:none;min-width:140px;
+  transition:all .15s;font-family:inherit;
+}
+.input:focus,.select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(48,135,204,.12);}
+.filterbar .spacer{flex:1;}
+
+/* ====== Table ====== */
+.table-wrap{
+  background:#fff;border-radius:14px;overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{
+  background:#F8FAFC;color:var(--text-2);font-weight:500;
+  text-align:left;padding:14px 16px;font-size:12px;
+  border-bottom:1px solid var(--border-light);
+}
+tbody td{padding:14px 16px;border-bottom:1px solid var(--border-light);color:var(--text-1);}
+tbody tr:hover{background:#FAFBFD;}
+tbody tr:last-child td{border-bottom:none;}
+.checkbox{width:14px;height:14px;border:1.5px solid var(--border);border-radius:3px;cursor:pointer;display:inline-block;vertical-align:middle;position:relative;}
+.checkbox.checked{background:var(--primary);border-color:var(--primary);}
+.checkbox.checked::after{
+  content:"";position:absolute;left:3px;top:0;width:5px;height:9px;
+  border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg);
+}
+.row-action{display:inline-flex;gap:4px;align-items:center;}
+.row-action button{
+  width:28px;height:28px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;
+  color:var(--text-2);transition:all .15s;
+}
+.row-action button:hover{background:var(--primary-light);color:var(--primary);}
+.row-action button.danger:hover{background:var(--danger-bg);color:var(--danger);}
+
+.table-foot{
+  padding:14px 16px;display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--border-light);
+}
+.table-foot .count{color:var(--text-3);font-size:12px;}
+.pager{display:flex;align-items:center;gap:4px;}
+.pager button{
+  min-width:30px;height:30px;padding:0 8px;border-radius:6px;font-size:12px;color:var(--text-2);
+}
+.pager button:hover:not(:disabled){background:#F4F6FA;color:var(--text-1);}
+.pager button.active{background:var(--primary);color:#fff;}
+.pager button:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ====== Tab nav inside page ====== */
+.seg{
+  display:inline-flex;background:#F4F6FA;border-radius:10px;padding:4px;margin-bottom:18px;flex-wrap:wrap;gap:4px;
+}
+.seg button{
+  height:34px;padding:0 18px;border-radius:7px;font-size:13px;color:var(--text-2);font-weight:500;
+  transition:all .15s;
+}
+.seg button.active{background:#fff;color:var(--primary);box-shadow:var(--shadow-sm);}
+
+/* ====== Schedule cards ====== */
+.sch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.sch-card{
+  background:#fff;border-radius:12px;padding:16px;border:1px solid var(--border-light);
+  transition:all .2s;
+}
+.sch-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md);}
+.sch-card .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:10px;}
+.sch-card h5{font-size:14px;font-weight:600;}
+.sch-card .meta{font-size:12px;color:var(--text-3);margin-top:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.sch-card .meta span{display:inline-flex;align-items:center;gap:4px;}
+
+/* ====== Group cards ====== */
+.group-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.group-card{
+  background:#fff;border-radius:14px;padding:20px;
+  box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+  transition:all .2s;cursor:pointer;
+}
+.group-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.group-card::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:4px;
+}
+.group-card.math::before{background:linear-gradient(90deg,#3087CC,#9CBFDA);}
+.group-card.physics::before{background:linear-gradient(90deg,#7C5BC1,#B59CE5);}
+.group-card.chem::before{background:linear-gradient(90deg,#1BB975,#A7F3D0);}
+.group-card.eng::before{background:linear-gradient(90deg,#F29100,#FFD68F);}
+.group-card.mech::before{background:linear-gradient(90deg,#DF2027,#F6BCBE);}
+.group-card.cs::before{background:linear-gradient(90deg,#0EA5E9,#7DD3FC);}
+.group-card .group-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.group-card .gi{
+  width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+}
+.group-card .gname{font-size:15px;font-weight:600;}
+.group-card .gleader{font-size:12px;color:var(--text-3);margin-top:2px;}
+.group-card .gstats{
+  display:flex;justify-content:space-between;padding:12px 0;
+  border-top:1px dashed var(--border-light);border-bottom:1px dashed var(--border-light);margin-bottom:12px;
+}
+.group-card .gstats div{text-align:center;flex:1;}
+.group-card .gstats div strong{font-size:18px;display:block;}
+.group-card .gstats div span{font-size:11px;color:var(--text-3);}
+.group-card .gmembers{display:flex;align-items:center;}
+.group-card .gmembers .ava{
+  width:26px;height:26px;border-radius:50%;border:2px solid #fff;
+  background:linear-gradient(135deg,#9CBFDA,#3087CC);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;
+  margin-left:-6px;
+}
+.group-card .gmembers .ava:first-child{margin-left:0;}
+.group-card .gmembers .more{margin-left:8px;font-size:12px;color:var(--text-3);}
+
+/* ====== Star milestone ====== */
+.star-track{
+  background:#fff;border-radius:14px;padding:24px;margin-bottom:20px;
+  box-shadow:var(--shadow-sm);
+}
+.star-bar{position:relative;height:8px;background:#F1F2F3;border-radius:4px;margin:32px 0 24px;}
+.star-bar .fill{
+  position:absolute;left:0;top:0;height:100%;border-radius:4px;
+  background:linear-gradient(90deg,#3087CC,#1BB975);
+}
+.star-bar .marker{
+  position:absolute;top:-4px;width:16px;height:16px;border-radius:50%;background:#fff;
+  border:3px solid #E5E8EE;transform:translateX(-50%);
+}
+.star-bar .marker.done{border-color:var(--primary);}
+.star-bar .marker.current{border-color:var(--success);box-shadow:0 0 0 6px rgba(27,185,117,.18);}
+.star-bar .marker .lbl{
+  position:absolute;top:24px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--text-2);
+  white-space:nowrap;
+}
+.star-bar .marker .lbl strong{display:block;font-size:13px;color:var(--text-1);font-weight:600;}
+
+/* ====== Library cards ====== */
+.lib-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.lib-card{
+  background:#fff;border-radius:12px;padding:16px;border:1px solid var(--border-light);
+  transition:all .2s;cursor:pointer;
+}
+.lib-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.lib-card .ftype{
+  width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  margin-bottom:10px;font-size:11px;font-weight:600;color:#fff;
+}
+.ftype.pdf{background:linear-gradient(135deg,#DF2027,#FF6B6B);}
+.ftype.ppt{background:linear-gradient(135deg,#F29100,#FFAA33);}
+.ftype.doc{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.ftype.xls{background:linear-gradient(135deg,#1BB975,#34D399);}
+.lib-card h5{font-size:13px;font-weight:500;margin-bottom:8px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.lib-card .meta{font-size:11px;color:var(--text-3);display:flex;justify-content:space-between;}
+.lib-card .stats{
+  margin-top:10px;padding-top:10px;border-top:1px dashed var(--border-light);
+  display:flex;gap:12px;font-size:11px;color:var(--text-3);
+}
+.lib-card .stats span{display:inline-flex;align-items:center;gap:3px;}
+
+/* ====== Modal ====== */
+.modal-mask{
+  position:fixed;inset:0;background:rgba(15,32,55,.42);z-index:100;
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;
+  transition:opacity .2s;
+}
+.modal-mask.show{opacity:1;pointer-events:auto;}
+.modal{
+  background:#fff;border-radius:14px;width:680px;max-width:92vw;max-height:88vh;
+  overflow:hidden;display:flex;flex-direction:column;
+  transform:scale(.94);transition:transform .2s;
+}
+.modal-mask.show .modal{transform:scale(1);}
+.modal-head{
+  padding:18px 24px;border-bottom:1px solid var(--border-light);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-head h3{font-size:16px;font-weight:600;}
+.modal-body{padding:22px 24px;overflow-y:auto;flex:1;}
+.modal-foot{
+  padding:14px 24px;border-top:1px solid var(--border-light);
+  display:flex;justify-content:flex-end;gap:8px;
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;}
+.form-item{display:flex;flex-direction:column;}
+.form-item label{font-size:12px;color:var(--text-2);margin-bottom:6px;}
+.form-item label .req{color:var(--danger);}
+.form-item .input,.form-item textarea,.form-item .select{width:100%;}
+.form-item textarea{
+  padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;
+  font-family:inherit;outline:none;transition:all .15s;resize:vertical;
+}
+.form-item textarea:focus{border-color:var(--primary);}
+
+/* ====== Toast ====== */
+.toast{
+  position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);
+  background:#fff;border:1px solid var(--success-border);background:var(--success-bg);color:var(--success);
+  padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;
+  display:flex;align-items:center;gap:8px;z-index:200;
+  opacity:0;pointer-events:none;transition:all .25s;
+  box-shadow:var(--shadow-lg);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* Donut ring */
+.ring-row{display:flex;gap:18px;margin-top:16px;flex-wrap:wrap;}
+.ring-item{
+  flex:1;min-width:180px;background:#FAFBFD;border-radius:10px;padding:14px;
+  display:flex;align-items:center;gap:12px;
+}
+.ring-item .label{font-size:12px;color:var(--text-2);}
+.ring-item .val{font-size:18px;font-weight:600;margin-top:2px;}
+.ring-item .val small{font-size:11px;color:var(--text-3);font-weight:400;margin-left:4px;}
+
+/* Calendar */
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.cal-day{
+  aspect-ratio:1.1;background:#FAFBFD;border-radius:8px;padding:8px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  transition:all .15s;cursor:pointer;border:1px solid transparent;
+  position:relative;
+}
+.cal-day:hover{background:var(--primary-light);}
+.cal-day .d{font-size:13px;font-weight:500;}
+.cal-day .t{font-size:10px;color:var(--text-3);text-align:right;}
+.cal-day.has-event::after{
+  content:"";position:absolute;bottom:6px;right:6px;width:5px;height:5px;border-radius:50%;background:var(--primary);
+}
+.cal-day.today{background:var(--primary);color:#fff;}
+.cal-day.today .t{color:rgba(255,255,255,.8);}
+.cal-day.today.has-event::after{background:#fff;}
+.cal-day.muted{opacity:.35;}
+
+/* Approval timeline */
+.timeline{padding:8px 0;}
+.tl-item{display:flex;gap:14px;position:relative;padding-bottom:18px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-item::before{
+  content:"";position:absolute;left:11px;top:24px;bottom:0;width:2px;background:var(--border-light);
+}
+.tl-item:last-child::before{display:none;}
+.tl-item .dot{
+  width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;
+}
+.tl-item.done .dot{background:var(--success);border-color:var(--success);color:#fff;}
+.tl-item.current .dot{background:#fff;border-color:var(--primary);}
+.tl-item.current .dot::after{
+  content:"";width:8px;height:8px;border-radius:50%;background:var(--primary);
+  animation:pulse 1.5s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.6;transform:scale(1.4);}}
+.tl-item .tl-content{flex:1;}
+.tl-item .tl-content h6{font-size:13px;font-weight:500;}
+.tl-item .tl-content p{font-size:12px;color:var(--text-3);margin-top:3px;}
+
+/* Charts inside */
+.horiz-bar{margin-top:8px;}
+.hb-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.hb-row .name{width:84px;font-size:12px;color:var(--text-2);}
+.hb-row .track{flex:1;height:8px;background:#F1F2F3;border-radius:4px;overflow:hidden;position:relative;}
+.hb-row .track .fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#3087CC,#5BA8DE);transition:width .8s ease;}
+.hb-row .val{width:50px;text-align:right;font-size:12px;font-weight:600;color:var(--text-1);}
+
+/* Star levels grid */
+.star-levels{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:48px;}
+.sl{border-radius:10px;padding:14px;text-align:center;}
+.sl-1{background:#F4FAFE;border:1px solid #BFDDF6;}
+.sl-2{background:#FFF8E6;border:1px solid #FFE0B3;}
+.sl-3{background:#FFF5E5;border:1px solid #FFE0B3;}
+.sl-4{background:#E8FCF4;border:1px solid #A7F3D0;}
+.sl-5{background:linear-gradient(135deg,#FFE0B3,#FFD68F);border:1px solid #F29100;color:#fff;}
+.sl strong{font-size:20px;font-weight:700;display:block;margin-top:6px;}
+.sl span{font-size:11px;color:var(--text-3);}
+.sl-5 strong, .sl-5 span{color:#fff;}
+.sl-5 span{opacity:.85;}
+
+@media(max-width:1280px){
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .row-2{grid-template-columns:1fr;}
+  .lib-grid{grid-template-columns:repeat(3,1fr);}
+  .group-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:980px){
+  .lib-grid{grid-template-columns:repeat(2,1fr);}
+  .group-grid{grid-template-columns:1fr;}
+  .star-levels{grid-template-columns:repeat(5,1fr);}
+}
+
+</style>
+<style>
+/* ====== 考勤打卡（排班 + 打卡）页专用 ====== */
+.page .stats{margin-bottom:14px;gap:12px;}
+.page .stat-card{padding:12px 16px;}
+.page .stat-card .blob{width:96px;height:96px;right:-28px;top:-32px;}
+.page .stat-card .ic{width:32px;height:32px;border-radius:8px;margin-bottom:8px;}
+.page .stat-card .ic svg{width:16px;height:16px;}
+.page .stat-card .label{font-size:12px;}
+.page .stat-card .num{font-size:22px;margin-top:2px;}
+.page .stat-card .num small{font-size:12px;}
+.page .stat-card .delta{margin-top:4px;font-size:11px;}
+
+/* 排班工具条 */
+.sch-toolbar{background:#fff;border-radius:14px;padding:14px 18px;margin-bottom:16px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.week-switch{display:flex;align-items:center;gap:6px;}
+.week-switch button{width:32px;height:32px;border-radius:8px;background:#F4F6FA;color:var(--text-2);display:flex;align-items:center;justify-content:center;}
+.week-switch button:hover{background:var(--primary-light);color:var(--primary);}
+.week-switch .wk{min-width:220px;text-align:center;}
+.week-switch .wk strong{font-size:14px;font-weight:600;display:block;}
+.week-switch .wk span{font-size:11px;color:var(--text-3);}
+.sch-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2);}
+.sch-loc svg{color:var(--primary);}
+
+/* 排班表 */
+.sch-wrap{background:#fff;border-radius:14px;box-shadow:var(--shadow-sm);overflow:auto;}
+table.roster{width:100%;border-collapse:collapse;font-size:12px;min-width:1180px;}
+table.roster th,table.roster td{border:1px solid var(--border-light);padding:8px 8px;vertical-align:top;}
+table.roster thead th{background:linear-gradient(135deg,#F8FAFC,#F1F4F8);color:var(--text-2);font-weight:600;text-align:center;position:sticky;top:0;z-index:1;}
+table.roster thead th .sh-name{font-size:12px;font-weight:600;color:var(--text-1);}
+table.roster thead th .sh-time{font-size:11px;color:var(--text-3);font-weight:400;margin-top:2px;}
+table.roster .daycol{width:96px;text-align:center;background:#FAFBFD;font-weight:600;white-space:nowrap;}
+table.roster .daycol .dt{font-size:11px;color:var(--text-3);font-weight:400;margin-top:3px;}
+table.roster tr.is-today .daycol{background:var(--primary-light);color:var(--primary-dark);}
+table.roster td.cell{min-width:132px;}
+table.roster td.cell.today-cell{background:#F4FAFE;}
+.chip-wrap{display:flex;flex-wrap:wrap;gap:5px;}
+.name-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .12s;}
+.name-chip:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm);}
+.name-chip .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.nc-plan{background:#F1F5F9;color:var(--text-2);border-color:var(--border-light);}
+.nc-ok{background:var(--success-bg);color:#0F766E;border-color:var(--success-border);}
+.nc-late{background:var(--warning-bg);color:#9A6500;border-color:var(--warning-border);}
+.nc-miss{background:var(--danger-bg);color:#B91C1C;border-color:var(--danger-border);}
+.nc-working{background:var(--primary-light);color:var(--primary-dark);border-color:#BFDDF6;}
+.d-ok{background:var(--success);}.d-late{background:var(--warning);}.d-miss{background:var(--danger);}.d-plan{background:var(--text-4);}.d-working{background:var(--primary);}
+.sch-legend{display:flex;gap:16px;flex-wrap:wrap;padding:12px 18px;font-size:11px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.sch-legend span{display:inline-flex;align-items:center;gap:5px;}
+.sch-legend i{width:8px;height:8px;border-radius:50%;}
+
+/* 记录表 / 通用 */
+.table-wrap{overflow-x:auto;}
+.table-wrap table{min-width:1320px;}
+.table-wrap thead th,.table-wrap tbody td{white-space:nowrap;}
+.empty-row td{padding:52px 16px!important;text-align:center;color:var(--text-4);font-size:13px;}
+.op-links{display:flex;align-items:center;gap:12px;}
+.op-links a{font-weight:500;font-size:13px;color:var(--primary);}
+.op-links a:hover{text-decoration:underline;}
+.hrs{font-weight:600;color:var(--primary-dark);}
+.hrs.zero{color:var(--text-4);font-weight:400;}
+
+/* 弹窗表单 */
+.form-err{display:none;margin-top:4px;padding:9px 12px;border-radius:8px;font-size:12px;background:var(--danger-bg);border:1px solid var(--danger-border);color:var(--danger);}
+.form-err.show{display:block;}
+.info-note{background:var(--primary-50);border:1px solid #D6EAF9;border-radius:8px;padding:10px 12px;font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:14px;}
+.info-note b{color:var(--primary);}
+.ro-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 16px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px dashed var(--border-light);}
+.ro-grid .k{font-size:12px;color:var(--text-3);}
+.ro-grid .v{font-size:13px;font-weight:500;margin-top:2px;}
+.dur-row{display:flex;align-items:center;gap:8px;}
+.dur-row .input{width:120px;}
+
+/* Excel 导入 */
+.drop-zone{border:2px dashed var(--border);border-radius:12px;padding:26px;text-align:center;background:#FAFBFD;transition:all .15s;cursor:pointer;}
+.drop-zone:hover{border-color:var(--primary);background:var(--primary-50);}
+.drop-zone .di{width:48px;height:48px;border-radius:12px;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+.drop-zone h4{font-size:14px;font-weight:600;}
+.drop-zone p{font-size:12px;color:var(--text-3);margin-top:4px;}
+.file-pill{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:8px 14px;border-radius:8px;background:var(--success-bg);border:1px solid var(--success-border);color:#0F766E;font-size:12px;font-weight:500;}
+.import-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0;}
+.import-sum .card{background:#FAFBFD;border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:center;}
+.import-sum .card strong{font-size:20px;font-weight:700;display:block;color:var(--primary-dark);}
+.import-sum .card span{font-size:11px;color:var(--text-3);}
+.import-preview{max-height:300px;overflow:auto;border:1px solid var(--border-light);border-radius:10px;}
+
+/* 班次配置 */
+.shift-list{display:flex;flex-direction:column;gap:8px;}
+.shift-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border-light);border-radius:10px;}
+.shift-row .idx{width:24px;height:24px;border-radius:6px;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;}
+.shift-row .input{height:32px;}
+.shift-row .del{color:var(--danger);cursor:pointer;font-size:12px;}
+
+/* 统计 */
+.stat-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:0;}
+@media(max-width:1100px){.stat-two{grid-template-columns:1fr;}}
+.hb-row .track .fill.warn{background:linear-gradient(90deg,#F29100,#FFD68F);}
+.hb-row .track .fill.ok{background:linear-gradient(90deg,#1BB975,#A7F3D0);}
+.horiz-bar .hb-row .name{width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.leaflet-container{font-family:inherit;background:#E8EEF4;}
+
+/* 打卡设置：范围滑杆 */
+input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--primary),#BFDDF6);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--primary);box-shadow:var(--shadow-sm);cursor:pointer;}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--primary);cursor:pointer;}
+
+/* 时长汇总：迷你时长条 */
+.sum-track{width:72px;height:6px;background:#F1F2F3;border-radius:3px;overflow:hidden;flex-shrink:0;}
+.sum-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#3087CC,#5BA8DE);transition:width .6s ease;}
+</style>
+</head>
+<body>
+<aside class="sidebar"></aside>
+<main class="main">
+  <header class="topbar"></header>
+  <div class="page">
+    <div class="page-head">
+      <div>
+        <h1>考勤打卡</h1>
+        <p>按周排班（多班次 / 每班次不同人员），支持导入 Excel 排班表；成员在移动端上班 / 下班打卡，系统按上下班时间计算打卡时长（小时，参考值，管理员可调整）</p>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-ghost" onclick="openSettings()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          打卡设置
+        </button>
+        <button class="btn btn-ghost" onclick="openShiftConfig()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6M4.2 4.2l4.3 4.3m7 7 4.3 4.3M1 12h6m6 0h6"/></svg>
+          班次配置
+        </button>
+        <button class="btn btn-ghost" onclick="exportRecords()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          导出打卡记录
+        </button>
+        <button class="btn btn-primary" onclick="openImport()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          导入排班表
+        </button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="blob blob-1"></div>
+        <div class="ic" style="background:var(--primary-light);color:var(--primary);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </div>
+        <div class="label">本周排班人次</div>
+        <div class="num" id="statWeek">0<small>人次</small></div>
+        <div class="delta neutral" id="statWeekSub">7 个班次 · 覆盖 0 人</div>
+      </div>
+      <div class="stat-card">
+        <div class="blob blob-2"></div>
+        <div class="ic" style="background:var(--warning-bg);color:var(--warning);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="label">今日应打卡</div>
+        <div class="num" id="statDue">0<small>人次</small></div>
+        <div class="delta neutral" id="statDueSub">今日 0 个班次</div>
+      </div>
+      <div class="stat-card">
+        <div class="blob blob-3"></div>
+        <div class="ic" style="background:var(--success-bg);color:var(--success);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="label">今日已打卡</div>
+        <div class="num" id="statDone">0<small>人次</small></div>
+        <div class="delta up" id="statRate">出勤率 0%</div>
+      </div>
+      <div class="stat-card">
+        <div class="blob blob-4"></div>
+        <div class="ic" style="background:#F4F0FF;color:#7C5BC1;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="label">本周累计打卡时长</div>
+        <div class="num" id="statHours">0<small>小时</small></div>
+        <div class="delta neutral" id="statHoursSub">按上下班打卡计算</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <button class="active" data-tab="roster">排班表</button>
+      <button data-tab="records">打卡记录</button>
+      <button data-tab="summary">时长汇总</button>
+      <button data-tab="stats">数据统计</button>
+    </div>
+
+    <!-- ============ 页签一：排班表 ============ -->
+    <div class="tab-content" data-tab="roster">
+      <div class="sch-toolbar">
+        <div class="week-switch">
+          <button onclick="moveWeek(-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="wk"><strong id="wkTitle">—</strong><span id="wkRange">—</span></div>
+          <button onclick="moveWeek(1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="gotoThisWeek()">回到本周</button>
+        <div class="spacer" style="flex:1;"></div>
+        <div class="sch-loc">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          打卡地点：<b id="locName">知新馆（校本部）</b> · 围栏 <b id="locRadius">120</b> 米 · 迟到宽限 <b id="locLate">10</b> 分钟
+          <a href="javascript:void(0)" style="color:var(--primary);margin-left:8px;" onclick="openSettings()">设置</a>
+        </div>
+      </div>
+
+      <div class="sch-wrap">
+        <table class="roster">
+          <thead><tr id="rosterHead"></tr></thead>
+          <tbody id="rosterBody"></tbody>
+        </table>
+        <div class="sch-legend">
+          <span><i class="d-plan"></i>已排班/待打卡</span>
+          <span><i class="d-working"></i>已上班打卡（在岗）</span>
+          <span><i class="d-ok"></i>正常（已下班）</span>
+          <span><i class="d-late"></i>迟到</span>
+          <span><i class="d-miss"></i>缺卡</span>
+          <span style="margin-left:auto;color:var(--text-4);">点击姓名可查看/调整该人当班打卡</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 页签二：打卡记录 ============ -->
+    <div class="tab-content" data-tab="records" style="display:none;">
+      <div class="filterbar">
+        <div class="field">
+          <label>日期</label>
+          <input type="date" class="input" id="fRecDate" style="width:160px;" onchange="renderRecordTable()" />
+        </div>
+        <div class="field">
+          <label>班次</label>
+          <select class="select" id="fRecShift" style="width:150px;" onchange="renderRecordTable()">
+            <option value="">全部班次</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>状态</label>
+          <select class="select" id="fRecStatus" style="width:120px;" onchange="renderRecordTable()">
+            <option value="">全部</option>
+            <option value="正常">正常</option>
+            <option value="迟到">迟到</option>
+            <option value="早退">早退</option>
+            <option value="缺卡">缺卡</option>
+            <option value="请假">请假</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>关键字</label>
+          <input type="text" class="input" id="fRecKw" placeholder="姓名、学号" style="width:180px;" oninput="renderRecordTable()" />
+        </div>
+        <div class="spacer"></div>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button class="btn btn-ghost btn-sm" onclick="resetRecFilter()">重置</button>
+          <button class="btn btn-primary btn-sm" onclick="renderRecordTable()">查询</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>星期</th>
+              <th>班次</th>
+              <th>时间段</th>
+              <th>姓名</th>
+              <th>学号</th>
+              <th>部门</th>
+              <th>上班打卡</th>
+              <th>下班打卡</th>
+              <th>打卡时长(小时)</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="recordBody"></tbody>
+        </table>
+        <div class="table-foot">
+          <span class="count" id="recordCount">共 0 条</span>
+          <div class="pager"><button disabled>&lt;</button><button class="active">1</button><button>&gt;</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 页签：时长汇总 ============ -->
+    <div class="tab-content" data-tab="summary" style="display:none;">
+      <div class="filterbar">
+        <div class="field">
+          <label>部门</label>
+          <select class="select" id="fSumDept" style="width:180px;" onchange="renderSummary()">
+            <option value="">全部部门</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>关键字</label>
+          <input type="text" class="input" id="fSumKw" placeholder="姓名、学号" style="width:180px;" oninput="renderSummary()" />
+        </div>
+        <div class="spacer"></div>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button class="btn btn-ghost btn-sm" onclick="resetSumFilter()">重置</button>
+          <button class="btn btn-primary btn-sm" onclick="exportSummary()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            导出
+          </button>
+        </div>
+      </div>
+      <div class="info-note">按<b>当前显示周</b>（截至今天）聚合每位成员的打卡情况；累计时长按上 / 下班打卡时间自动计算，且<b>仅计班次时间段内、提前到岗不计入</b>；管理员可对单人本周累计时长进行手动调整（调整后显示「已调整」标记，可一键恢复自动计算）。默认按累计打卡时长降序排列。</div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>姓名</th>
+              <th>学号</th>
+              <th>部门</th>
+              <th>应打卡次数</th>
+              <th>已打卡次数</th>
+              <th>迟到</th>
+              <th>早退</th>
+              <th>缺卡</th>
+              <th>累计打卡时长(小时)</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="summaryBody"></tbody>
+        </table>
+        <div class="table-foot">
+          <span class="count" id="summaryCount">共 0 人</span>
+          <span style="font-size:11px;color:var(--text-4);">按累计打卡时长降序排列</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 页签四：数据统计 ============ -->
+    <div class="tab-content" data-tab="stats" style="display:none;">
+      <div class="panel" style="margin-bottom:20px;">
+        <div class="panel-head"><div><h3>本周打卡状态构成</h3><p>全部应打卡人次的状态分布，用于评估考勤纪律</p></div></div>
+        <div class="ring-row" id="statRings"></div>
+      </div>
+      <div class="stat-two">
+        <div class="panel">
+          <div class="panel-head"><div><h3>各班次出勤率</h3><p>按班次统计正常 + 迟到占应打卡人次比例</p></div></div>
+          <div class="horiz-bar" id="statByShift"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div><h3>打卡时长排行（本周）</h3><p>按累计上下班打卡时长排序，单位小时</p></div></div>
+          <div class="horiz-bar" id="statByPerson"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ===== 打卡记录调整 ===== -->
+<div class="modal-mask" id="adjustModal">
+  <div class="modal" style="width:560px;">
+    <div class="modal-head">
+      <h3>调整打卡记录</h3>
+      <button onclick="closeModal('adjustModal')" style="color:var(--text-3);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="ro-grid" id="adjInfo"></div>
+      <div class="info-note">打卡时长<b>仅计班次时间段内</b>（提前到岗不计入、晚于班次结束的时间也不计入），为「min(下班,班次结束) − max(上班,班次开始)」的<b>参考值</b>，会随上/下班时间自动重算；如遇异常（漏打卡、补录等），管理员可手动调整状态与时长。</div>
+      <div class="form-row">
+        <div class="form-item">
+          <label>上班打卡时间</label>
+          <input class="input" id="adjIn" type="time" onchange="recalcDur()" />
+        </div>
+        <div class="form-item">
+          <label>下班打卡时间</label>
+          <input class="input" id="adjOut" type="time" onchange="recalcDur()" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-item">
+          <label>打卡状态</label>
+          <select class="select" id="adjStatus">
+            <option value="正常">正常</option>
+            <option value="迟到">迟到</option>
+            <option value="早退">早退</option>
+            <option value="缺卡">缺卡</option>
+            <option value="请假">请假</option>
+          </select>
+        </div>
+        <div class="form-item">
+          <label>打卡时长（小时）</label>
+          <div class="dur-row">
+            <input class="input" id="adjHours" type="number" min="0" max="24" step="0.1" />
+            <button class="btn btn-ghost btn-sm" onclick="recalcDur(true)">按打卡时间重算</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row" style="grid-template-columns:1fr;margin-bottom:0;">
+        <div class="form-item">
+          <label>调整备注</label>
+          <textarea id="adjRemark" rows="2" placeholder="如：忘打下班卡，经核实值班至 22:30，管理员补录"></textarea>
+        </div>
+      </div>
+      <div class="form-err" id="adjErr"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('adjustModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveAdjust()">保存调整</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 导入 Excel 排班表 ===== -->
+<div class="modal-mask" id="importModal">
+  <div class="modal" style="width:760px;">
+    <div class="modal-head">
+      <h3>导入排班表（Excel）</h3>
+      <button onclick="closeModal('importModal')" style="color:var(--text-3);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="info-note">支持上传《周排班表》Excel（首行为班次与时间段，首列为星期与日期，单元格填写打卡人员姓名，多人用空格 / 顿号分隔），系统自动识别<b>班次、日期与每班次人员</b>。表格中若有未在人员库的姓名，将提示自动创建为待完善人员。<a href="javascript:void(0)" style="color:var(--primary);" onclick="showToast('已下载排班表模板 排班表模板.xlsx')">下载模板</a></div>
+
+      <div id="importStep1">
+        <div class="drop-zone" onclick="pickFile()">
+          <div class="di"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <h4>点击选择或拖拽 Excel 文件到此处</h4>
+          <p>支持 .xlsx / .xls，单个文件 ≤ 5MB</p>
+        </div>
+        <div id="filePickedWrap" style="display:none;text-align:center;">
+          <div class="file-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span id="fileName">知新馆第二周排班表.xlsx</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="importStep2" style="display:none;">
+        <div class="import-sum">
+          <div class="card"><strong id="imShifts">0</strong><span>识别班次</span></div>
+          <div class="card"><strong id="imDays">0</strong><span>覆盖天数</span></div>
+          <div class="card"><strong id="imAssign">0</strong><span>排班人次</span></div>
+          <div class="card"><strong id="imNew">0</strong><span>新增待完善人员</span></div>
+        </div>
+        <div class="import-preview">
+          <table class="roster" id="importPreview" style="min-width:900px;"></table>
+        </div>
+      </div>
+      <div class="form-err" id="importErr"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('importModal')">取消</button>
+      <button class="btn btn-secondary" id="parseBtn" onclick="parseFile()">解析文件</button>
+      <button class="btn btn-primary" id="confirmImportBtn" style="display:none;" onclick="confirmImport()">确认导入</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 班次配置 ===== -->
+<div class="modal-mask" id="shiftModal">
+  <div class="modal" style="width:560px;">
+    <div class="modal-head">
+      <h3>班次配置</h3>
+      <button onclick="closeModal('shiftModal')" style="color:var(--text-3);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="info-note">配置每天的打卡班次与时间段；成员在移动端按所排班次进行上班 / 下班打卡。</div>
+      <div class="shift-list" id="shiftList"></div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:12px;" onclick="addShiftRow()">+ 新增班次</button>
+      <div class="form-err" id="shiftErr"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('shiftModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveShifts()">保存班次</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 打卡基础配置（打卡设置） ===== -->
+<div class="modal-mask" id="settingsModal">
+  <div class="modal" style="width:720px;">
+    <div class="modal-head">
+      <h3>打卡设置</h3>
+      <button onclick="closeModal('settingsModal')" style="color:var(--text-3);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="info-note">配置打卡地点、电子围栏范围与考勤判定规则；成员在移动端仅可在<b>围栏范围内</b>打卡，系统据此判定<b>迟到 / 早退</b>并计算打卡时长。</div>
+      <div class="form-row" style="grid-template-columns:1fr;">
+        <div class="form-item">
+          <label>打卡地点名称 <span class="req">*</span></label>
+          <input class="input" id="setName" placeholder="如：知新馆（校本部）" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-item">
+          <label>纬度 (lat) <span class="req">*</span></label>
+          <input class="input" id="setLat" type="number" step="0.00001" placeholder="28.16820" />
+        </div>
+        <div class="form-item">
+          <label>经度 (lng) <span class="req">*</span></label>
+          <input class="input" id="setLng" type="number" step="0.00001" placeholder="112.93750" />
+        </div>
+      </div>
+      <div class="form-item" style="margin-bottom:12px;">
+        <label>有效打卡范围（电子围栏半径）：<b id="setRadiusVal" style="color:var(--primary);">120</b> 米</label>
+        <div class="dur-row" style="gap:14px;">
+          <input type="range" id="setRadiusRange" min="20" max="500" step="10" value="120" style="flex:1;" oninput="syncRadius('range')" />
+          <input class="input" id="setRadius" type="number" min="20" max="500" step="10" value="120" style="width:110px;" oninput="syncRadius('num')" />
+        </div>
+      </div>
+      <div id="setMap" style="height:260px;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:#E8EEF4;"></div>
+      <div style="font-size:11px;color:var(--text-4);margin:6px 0 16px;">点击地图或拖动标记可设置打卡中心（自动回填经纬度），拖动上方滑杆实时调整围栏范围。</div>
+      <div class="form-row">
+        <div class="form-item">
+          <label>迟到宽限（分钟）</label>
+          <input class="input" id="setLate" type="number" min="0" max="120" placeholder="晚于开始 N 分钟记迟到" />
+        </div>
+        <div class="form-item">
+          <label>早退判定（早于结束 N 分钟）</label>
+          <input class="input" id="setEarly" type="number" min="0" max="120" placeholder="早于结束 N 分钟记早退" />
+        </div>
+      </div>
+      <div class="form-row" style="grid-template-columns:1fr;margin-bottom:0;">
+        <div class="form-item">
+          <label>允许提前上班打卡（分钟）</label>
+          <input class="input" id="setAhead" type="number" min="0" max="120" placeholder="班次开始前 N 分钟可打卡" />
+        </div>
+      </div>
+      <div class="form-err" id="setErr"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('settingsModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveSettings()">保存设置</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 调整累计打卡时长 ===== -->
+<div class="modal-mask" id="sumModal">
+  <div class="modal" style="width:520px;">
+    <div class="modal-head">
+      <h3>调整累计打卡时长</h3>
+      <button onclick="closeModal('sumModal')" style="color:var(--text-3);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="ro-grid" id="sumInfo"></div>
+      <div class="info-note">此处为管理员对该成员<b>本周累计打卡时长</b>的手动修正，将覆盖系统自动计算值；调整后该行显示「已调整」标记，可随时「恢复自动计算」。</div>
+      <div class="form-row" style="grid-template-columns:1fr;margin-bottom:14px;">
+        <div class="form-item">
+          <label>本周累计打卡时长（小时）<span class="req">*</span></label>
+          <input class="input" id="sumHours" type="number" min="0" max="168" step="0.1" />
+        </div>
+      </div>
+      <div class="form-row" style="grid-template-columns:1fr;margin-bottom:0;">
+        <div class="form-item">
+          <label>调整备注</label>
+          <textarea id="sumRemark" rows="2" placeholder="如：核实值班期间参与线下辅导，累计时长补记"></textarea>
+        </div>
+      </div>
+      <div class="form-err" id="sumErr"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('sumModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveSum()">保存调整</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== PC 管理端公共脚本（侧边栏渲染、Toast、Modal、Checkbox、Pager 交互） ======
+
+const PC_NAV = [
+  {group:'首页',items:[
+    {id:'dashboard',name:'数据概览',href:'dashboard.html',icon:'<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>'}
+  ]},
+  {group:'辅学义工',items:[
+    {id:'volunteers',name:'申请管理',href:'volunteers.html',badge:12,icon:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/>'},
+    {id:'hours',name:'时长记录',href:'hours.html',icon:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>'},
+    {id:'stars',name:'星级评定',href:'stars.html',badge:5,icon:'<polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/>'},
+    {id:'rewards',name:'积分兑换',href:'rewards.html',icon:'<polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>'},
+    {id:'groups',name:'分组管理',href:'groups.html',icon:'<circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="17" cy="9" r="3"/><path d="M22 21v-1a3 3 0 0 0-2-2.83"/>'},
+    {id:'appeals',name:'意见反馈',href:'appeals.html',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h6"/>'},
+    {id:'volunteer-manage',name:'义工管理',href:'volunteer-manage.html',icon:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>'},
+    {id:'checkin',name:'考勤打卡',href:'checkin.html',icon:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><polyline points="9 10 11 12 15 8"/>'},
+    {id:'checkin-staff',name:'打卡人员',href:'checkin-staff.html',icon:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/>'}
+  ]},
+  {group:'知新选课',items:[
+    {id:'courses',name:'课程管理',href:'courses.html',badge:8,icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'},
+    {id:'course-categories',name:'课程分类',href:'course-categories.html',icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'},
+    {id:'venue-bookings',name:'场地预约',href:'venue-bookings.html',badge:6,icon:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'}
+  ]},
+  {group:'即问即答',items:[
+    {id:'qa-content',name:'内容管理',href:'qa-content.html',badge:3,icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+    {id:'qa-categories',name:'学科分类',href:'qa-categories.html',icon:'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>'},
+    {id:'qa-users',name:'用户管理',href:'qa-users.html',icon:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'}
+  ]},
+  {group:'宝藏资料库',items:[
+    {id:'library',name:'资料库管理',href:'library.html',badge:11,icon:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'},
+    {id:'library-categories',name:'资料分类',href:'library-categories.html',icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'},
+    {id:'uploaders',name:'上传者管理',href:'uploaders.html',icon:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>'},
+    {id:'library-feedback',name:'资料反馈管理',href:'library-feedback.html',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="7" x2="12" y2="11"/><line x1="12" y1="15" x2="12.01" y2="15"/>'},
+    {id:'library-demand',name:'需求池管理',href:'library-demand.html',icon:'<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>'}
+  ]},
+  {group:'系统配置',items:[
+    {id:'analytics',name:'数据分析',href:'analytics.html',icon:'<path d="M3 3v18h18"/><path d="m7 14 4-4 4 4 5-5"/>'},
+    {id:'settings',name:'系统配置',href:'settings.html',icon:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>'},
+    {id:'college-assistants',name:'学院学生助理',href:'college-assistants.html',icon:'<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>'},
+    {id:'zn56-admins',name:'56度中南学生管理员',href:'zn56-admins.html',icon:'<path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/><line x1="16" y1="7" x2="19" y2="7"/><line x1="16" y1="11" x2="19" y2="11"/>'},
+    {id:'zhixin-admins',name:'知新馆学生管理员',href:'zhixin-admins.html',icon:'<polygon points="12 2 20 7 4 7"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><line x1="3" y1="22" x2="21" y2="22"/>'}
+  ]}
+];
+
+function renderSidebar(activeId){
+  const sidebar = document.querySelector('.sidebar');
+  if(!sidebar) return;
+  const navHTML = PC_NAV.map((g,i)=>`
+    <div class="nav-group-title" ${i>0?'style="margin-top:14px;"':''}>${g.group}</div>
+    ${g.items.map(it=>`
+      <a class="nav-item ${it.id===activeId?'active':''}" href="${it.href}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${it.icon}</svg>
+        ${it.name}
+        ${it.badge?`<span class="badge">${it.badge}</span>`:''}
+      </a>
+    `).join('')}
+  `).join('');
+  sidebar.innerHTML = `
+    <div class="brand">
+      <div class="brand-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 6v6c0 5 4 9 9 10 5-1 9-5 9-10V6l-9-4Z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <div class="brand-text">
+        <strong>学风建设系统</strong>
+        <span>管理后台 v2.0</span>
+      </div>
+    </div>
+    <nav class="nav-group">${navHTML}</nav>
+    <div class="user-card">
+      <div class="ava">王</div>
+      <div class="info"><h5>王老师</h5><p>学工部管理员</p></div>
+      <button class="icon-btn" style="width:24px;height:24px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </button>
+    </div>
+  `;
+}
+
+function renderTopbar(crumb){
+  const tb = document.querySelector('.topbar');
+  if(!tb) return;
+  tb.innerHTML = `
+    <button class="icon-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="crumb">
+      <a href="../index.html">学风建设</a>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span style="color:var(--text-1);font-weight:500;">${crumb}</span>
+    </div>
+    <div class="search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input placeholder="搜索学生、课程、资料..." />
+      <span style="font-size:11px;color:var(--text-4);background:#fff;padding:2px 6px;border-radius:4px;border:1px solid var(--border);">⌘K</span>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" title="刷新">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      </button>
+      <button class="icon-btn" title="消息">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="red-dot"></span>
+      </button>
+      <button class="icon-btn" title="帮助">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+      <div class="topbar-user">
+        <div class="ava">王</div>
+        <span>王老师</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3);"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+  `;
+}
+
+// ============= Toast =============
+function showToast(msg){
+  let toast = document.getElementById('toast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id='toast';toast.className='toast';
+    toast.innerHTML=`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span></span>`;
+    document.body.appendChild(toast);
+  }
+  toast.querySelector('span').textContent=msg;
+  toast.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer=setTimeout(()=>toast.classList.remove('show'),2400);
+}
+
+// ============= Modal =============
+function openModal(id){
+  const mask=document.getElementById(id);if(mask)mask.classList.add('show');
+}
+function closeModal(id){
+  const mask=document.getElementById(id);if(mask)mask.classList.remove('show');
+}
+
+// ============= Checkbox =============
+document.addEventListener('click',e=>{
+  if(e.target.classList && e.target.classList.contains('checkbox')){
+    e.target.classList.toggle('checked');
+  }
+});
+
+// ============= Segments / Panel tabs =============
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.seg, .panel-tabs').forEach(g=>{
+    g.querySelectorAll('button').forEach(b=>{
+      b.addEventListener('click',()=>{
+        g.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        // Show corresponding tab content if exists
+        const tab=b.getAttribute('data-tab');
+        if(tab){
+          const wrap=g.closest('.panel,.page,.tab-wrap')||document;
+          wrap.querySelectorAll('.tab-content').forEach(c=>c.style.display='none');
+          const target=wrap.querySelector('.tab-content[data-tab="'+tab+'"]');
+          if(target)target.style.display='';
+        }
+      });
+    });
+  });
+  document.querySelectorAll('.modal-mask').forEach(m=>{
+    m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');});
+  });
+});
+
+</script>
+<script>
+  renderSidebar('checkin');
+  renderTopbar('辅学义工 / 考勤打卡');
+
+  // ====== 班次定义（可在「班次配置」中调整） ======
+  let SHIFTS = [
+    {id:'s1', name:'第1-2节', start:'07:45', end:'10:00'},
+    {id:'s2', name:'第3-4节', start:'10:00', end:'12:00'},
+    {id:'s3', name:'午班',   start:'12:00', end:'14:00'},
+    {id:'s4', name:'第5-6节', start:'14:00', end:'16:00'},
+    {id:'s5', name:'第7-8节', start:'16:00', end:'18:00'},
+    {id:'s6', name:'晚1班',   start:'18:00', end:'21:00'},
+    {id:'s7', name:'晚2班',   start:'21:00', end:'22:30'}
+  ];
+  // ====== 打卡基础配置（可在「打卡设置」中调整） ======
+  const SETTINGS = {
+    name:'知新馆（校本部）',   // 打卡地点名称
+    lat:28.16820, lng:112.93750, // 打卡中心坐标
+    radius:120,               // 有效打卡范围 / 电子围栏半径（米）
+    lateGrace:10,             // 迟到宽限：晚于班次开始 N 分钟记迟到
+    earlyLeave:15,            // 早退判定：早于班次结束 N 分钟下班记早退
+    aheadIn:15                // 允许提前上班打卡：班次开始前 N 分钟可打卡
+  };
+  const LOCATION = SETTINGS;  // 兼容旧引用
+  let LATE_GRACE = SETTINGS.lateGrace;
+
+  // ====== 人员信息（姓名 -> 学号/部门）；未在库中的姓名标记为「待完善」 ======
+  const NAME2INFO = {
+    '任祺':{sid:'2023110640',dept:'知新馆英语组'}, '周昊宇':{sid:'2023110641',dept:'知新馆英语组'},
+    '王悦':{sid:'2023110642',dept:'知新馆文综组'}, '丁文婧':{sid:'2023110643',dept:'知新馆英语组'},
+    '孙镱洋':{sid:'2023110644',dept:'知新馆数学组'}, '胡靓文':{sid:'2023110645',dept:'知新馆综合服务组'},
+    '吴文杰':{sid:'2023110646',dept:'知新馆综合服务组'}, '王宇':{sid:'2023110647',dept:'知新馆理综组'},
+    '张文玉':{sid:'2023110648',dept:'知新馆理综组'}, '孙浩淇':{sid:'2023110649',dept:'知新馆综合服务组'},
+    '杨振利':{sid:'2023110650',dept:'院级辅学组'}, '杨孟媛':{sid:'2023110651',dept:'知新馆英语组'},
+    '王慧':{sid:'2023110652',dept:'知新馆文综组'}, '胡智文':{sid:'2023110653',dept:'知新馆理综组'},
+    '武政宇':{sid:'2023110654',dept:'知新馆数学组'}, '宋子挺':{sid:'2023110655',dept:'知新馆理综组'},
+    '刘馨奕':{sid:'2023110656',dept:'知新馆文综组'}, '张一鸣':{sid:'2023110657',dept:'56度中南组'},
+    '蒋希函':{sid:'2023110658',dept:'知新馆英语组'}
+  };
+  function info(name){ return NAME2INFO[name] || {sid:'', dept:'待完善'}; }
+
+  // ====== 周排班表（星期1-7 × 班次 -> 姓名[]），对应导入的《知新馆排班表》 ======
+  const SCHEDULE = {
+    1:{s1:['任祺','周昊宇'], s2:['王悦','丁文婧'], s3:['王悦','丁文婧'], s4:['孙镱洋','胡靓文'], s5:['吴文杰','孙镱洋'], s6:['王宇','张文玉'], s7:['孙浩淇','杨振利']},
+    2:{s1:['周昊宇','杨孟媛'], s2:['孙浩淇','王慧'], s3:['杨孟媛','吴蓓蓓'], s4:['胡靓','王冠雅'], s5:['孙镱洋','吴文杰'], s6:['胡智文','王宇'], s7:['杨振利','武政宇']},
+    3:{s1:['宋子挺','孙镱洋'], s2:['张文玉','武政宇'], s3:['赵冰妍','孙镱洋'], s4:['兰天祥','张文玉'], s5:['张文玉','宋子挺'], s6:['王悦','刘馨奕'], s7:['兰天祥','杨振利']},
+    4:{s1:['张一鸣','孙镱洋'], s2:['吴文杰','王悦'], s3:['丁文婧','林慧杨'], s4:['张一鸣','吴文杰'], s5:['么熙桐','孙镱洋'], s6:['井鑫月','王悦'], s7:['蒋希函','孙镱洋']},
+    5:{s1:['张嘉亮','宋子挺'], s2:['吴蓓蓓','张嘉亮'], s3:['吴蓓蓓','杨孟媛'], s4:['吴文杰','武政宇'], s5:['王慧','胡智文'], s6:['王宇','王慧'], s7:['张一鸣','蒋希函']},
+    6:{s1:['刘馨奕','宋子挺'], s2:['张文玉','宋子挺'], s3:['张文玉','刘馨奕'], s4:['刘馨奕','丁文婧'], s5:['宋子挺','马可欣'], s6:['张一鸣','王宇'], s7:['杨振利','兰天祥']},
+    7:{s1:['张一鸣','周昊宇'], s2:['宋子挺','蒋希函'], s3:['林慧杨','刘馨奕'], s4:['马可欣','蒋希函'], s5:['刘馨奕','宋子挺'], s6:['王嘉麒','张文玉'], s7:['吴文杰','王昊哲']}
+  };
+  const WEEK_CN = ['日','一','二','三','四','五','六'];
+
+  // ====== 日期工具 ======
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function fmtD(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function toMin(t){ if(!t) return null; const [h,m]=t.split(':').map(Number); return h*60+m; }
+  function toHHMM(min){ min=(min+1440)%1440; return pad(Math.floor(min/60))+':'+pad(min%60); }
+  function mondayOf(d){ const x=new Date(d); const wd=(x.getDay()+6)%7; x.setDate(x.getDate()-wd); x.setHours(0,0,0,0); return x; }
+  function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+  function hash(str){ let h=2166136261; for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);} h^=h>>>16;h=Math.imul(h,2246822507);h^=h>>>13;h=Math.imul(h,3266489909);h^=h>>>16; return (h>>>0)/4294967296; }
+
+  const TODAY_D = new Date();
+  const TODAY = fmtD(TODAY_D);
+  const NOW_MIN = TODAY_D.getHours()*60 + TODAY_D.getMinutes();
+  let weekOffset = 0;                 // 0=本周
+  const OVERRIDES = {};               // 管理员调整：key -> {clockIn,clockOut,hours,status,remark}
+  const shiftById = id => SHIFTS.find(s => s.id === id);
+
+  function weekDays(){
+    const mon = addDays(mondayOf(TODAY_D), weekOffset*7);
+    return [...Array(7)].map((_,i)=>{ const d=addDays(mon,i); return {d, ds:fmtD(d), wd:(i+1)}; }); // wd 1..7 (Mon..Sun)
+  }
+  function recKey(ds, sid, name){ return ds+'|'+sid+'|'+name; }
+
+  // 生成/读取单条打卡记录（含管理员覆盖）
+  function recordFor(ds, shift, name){
+    const key = recKey(ds, shift.id, name);
+    if(OVERRIDES[key]) return Object.assign({key, name, ds, shift}, OVERRIDES[key]);
+    const startM = toMin(shift.start), endM = toMin(shift.end);
+    const future = ds > TODAY || (ds === TODAY && NOW_MIN < startM);
+    if(future) return {key, name, ds, shift, status:'未开始', clockIn:'', clockOut:'', hours:0};
+    const h = hash(key), h2 = hash(name+ds+shift.id), h3 = hash(shift.id+name+ds);
+    if(h < 0.08) return {key, name, ds, shift, status:'缺卡', clockIn:'', clockOut:'', hours:0};
+    let status, inM;
+    if(h < 0.20){ status='迟到'; inM = startM + SETTINGS.lateGrace + Math.round(h2*22); }
+    else { status='正常'; inM = startM - Math.round(h2*Math.min(7, SETTINGS.aheadIn)); }
+    // 今天且班次进行中：已上班未下班（在岗）；时长只计班次时间段内（早于开始不计）
+    if(ds === TODAY && NOW_MIN < endM){
+      const running = Math.max(0, Math.min(NOW_MIN, endM) - Math.max(inM, startM));
+      return {key, name, ds, shift, status:(status==='迟到'?'迟到':'在岗'), clockIn:toHHMM(inM), clockOut:'', hours:Math.round(running/6)/10};
+    }
+    let outM;
+    if(h >= 0.20 && h < 0.27){ status='早退'; outM = endM - (SETTINGS.earlyLeave + 3 + Math.round(h3*40)); }
+    else outM = endM - Math.round(h3*6);
+    // 打卡时长只计班次时间段范围内：提前到岗/超时下班均不计入
+    const effective = Math.max(0, Math.min(outM, endM) - Math.max(inM, startM));
+    const hours = Math.round(effective/6)/10;
+    return {key, name, ds, shift, status, clockIn:toHHMM(inM), clockOut:toHHMM(outM), hours};
+  }
+
+  // ====== 顶部统计（本周 / 今日） ======
+  function computeWeek(){
+    const days = weekDays();
+    let assign=0, hours=0, names=new Set(), dueToday=0, doneToday=0, todayShifts=0;
+    days.forEach(day=>{
+      SHIFTS.forEach(sh=>{
+        const list = (SCHEDULE[day.wd]||{})[sh.id] || [];
+        list.forEach(nm=>{
+          assign++; names.add(nm);
+          const r = recordFor(day.ds, sh, nm);
+          hours += r.hours || 0;
+          if(day.ds === TODAY){ dueToday++; if(['正常','迟到','早退','在岗'].includes(r.status)) doneToday++; }
+        });
+      });
+    });
+    const todayWd = ((TODAY_D.getDay()+6)%7)+1;
+    SHIFTS.forEach(sh=>{ if(((SCHEDULE[todayWd]||{})[sh.id]||[]).length) todayShifts++; });
+    return {assign, hours:Math.round(hours*10)/10, coverage:names.size, dueToday, doneToday, todayShifts};
+  }
+  function renderStats(){
+    const w = computeWeek();
+    document.getElementById('statWeek').innerHTML = w.assign + '<small>人次</small>';
+    document.getElementById('statWeekSub').textContent = SHIFTS.length + ' 个班次 · 覆盖 ' + w.coverage + ' 人';
+    document.getElementById('statDue').innerHTML = w.dueToday + '<small>人次</small>';
+    document.getElementById('statDueSub').textContent = '今日 ' + w.todayShifts + ' 个班次';
+    document.getElementById('statDone').innerHTML = w.doneToday + '<small>人次</small>';
+    document.getElementById('statRate').textContent = '出勤率 ' + (w.dueToday ? Math.round(w.doneToday/w.dueToday*100) : 0) + '%';
+    document.getElementById('statHours').innerHTML = w.hours + '<small>小时</small>';
+  }
+
+  // ====== 排班表 ======
+  const STATUS_CLASS = {'未开始':'nc-plan','在岗':'nc-working','正常':'nc-ok','迟到':'nc-late','早退':'nc-late','缺卡':'nc-miss','请假':'nc-plan'};
+  const DOT_CLASS = {'未开始':'d-plan','在岗':'d-working','正常':'d-ok','迟到':'d-late','早退':'d-late','缺卡':'d-miss','请假':'d-plan'};
+  function renderRoster(){
+    const days = weekDays();
+    const mon = days[0].d, sun = days[6].d;
+    document.getElementById('wkTitle').textContent = (weekOffset===0?'本周':(weekOffset<0?'前'+(-weekOffset)+'周':'后'+weekOffset+'周'));
+    document.getElementById('wkRange').textContent = (mon.getMonth()+1)+'月'+mon.getDate()+'日 - '+(sun.getMonth()+1)+'月'+sun.getDate()+'日';
+    document.getElementById('locName').textContent = SETTINGS.name;
+    document.getElementById('locRadius').textContent = SETTINGS.radius;
+    document.getElementById('locLate').textContent = SETTINGS.lateGrace;
+
+    document.getElementById('rosterHead').innerHTML =
+      '<th class="daycol">星期 / 日期</th>' + SHIFTS.map(s =>
+        `<th><div class="sh-name">${s.name}</div><div class="sh-time">${s.start}-${s.end}</div></th>`).join('');
+
+    document.getElementById('rosterBody').innerHTML = days.map(day => {
+      const isToday = day.ds === TODAY;
+      const cells = SHIFTS.map(sh => {
+        const list = (SCHEDULE[day.wd]||{})[sh.id] || [];
+        const chips = list.map(nm => {
+          const r = recordFor(day.ds, sh, nm);
+          const cls = STATUS_CLASS[r.status] || 'nc-plan';
+          const dot = DOT_CLASS[r.status] || 'd-plan';
+          return `<span class="name-chip ${cls}" onclick="openAdjust('${day.ds}','${sh.id}','${nm}')"><i class="dot ${dot}"></i>${nm}</span>`;
+        }).join('');
+        return `<td class="cell ${isToday?'today-cell':''}"><div class="chip-wrap">${chips||'<span style="color:var(--text-4);font-size:11px;">—</span>'}</div></td>`;
+      }).join('');
+      return `<tr class="${isToday?'is-today':''}"><td class="daycol">星期${WEEK_CN[day.d.getDay()]}<div class="dt">${pad(day.d.getMonth()+1)}.${pad(day.d.getDate())}</div></td>${cells}</tr>`;
+    }).join('');
+  }
+
+  // ====== 打卡记录 ======
+  function weekRecords(){
+    const rows = [];
+    weekDays().forEach(day => {
+      if(day.ds > TODAY) return;
+      SHIFTS.forEach(sh => {
+        ((SCHEDULE[day.wd]||{})[sh.id]||[]).forEach(nm => {
+          const r = recordFor(day.ds, sh, nm);
+          if(r.status === '未开始') return;
+          rows.push(r);
+        });
+      });
+    });
+    return rows;
+  }
+  function statusTag(s){
+    const map = {'正常':'tag-success','迟到':'tag-warning','早退':'tag-warning','缺卡':'tag-danger','在岗':'','请假':'tag-grey','未开始':'tag-grey'};
+    return `<span class="tag ${map[s]||''}">${s}</span>`;
+  }
+  function filteredRecords(){
+    const date = document.getElementById('fRecDate').value;
+    const sid = document.getElementById('fRecShift').value;
+    const st = document.getElementById('fRecStatus').value;
+    const kw = document.getElementById('fRecKw').value.trim().toLowerCase();
+    return weekRecords().filter(r => {
+      if(date && r.ds !== date) return false;
+      if(sid && r.shift.id !== sid) return false;
+      if(st && r.status !== st) return false;
+      if(kw){ const nf = (r.name + info(r.name).sid).toLowerCase(); if(!nf.includes(kw)) return false; }
+      return true;
+    });
+  }
+  function renderRecordTable(){
+    const list = filteredRecords();
+    const tbody = document.getElementById('recordBody');
+    if(!list.length){ tbody.innerHTML = '<tr class="empty-row"><td colspan="12">该周暂无符合条件的打卡记录</td></tr>'; }
+    else{
+      tbody.innerHTML = list.map(r => {
+        const nf = info(r.name);
+        const d = new Date(r.ds);
+        const hrs = r.hours ? `<span class="hrs">${r.hours.toFixed(1)}</span>` : '<span class="hrs zero">0.0</span>';
+        return `<tr>
+          <td>${r.ds}</td>
+          <td>星期${WEEK_CN[d.getDay()]}</td>
+          <td>${r.shift.name}</td>
+          <td>${r.shift.start}-${r.shift.end}</td>
+          <td style="font-weight:500;">${r.name}</td>
+          <td>${nf.sid||'—'}</td>
+          <td>${nf.dept}</td>
+          <td>${r.clockIn||'—'}</td>
+          <td>${r.clockOut||(r.status==='在岗'?'<span style="color:var(--primary);">在岗中</span>':'—')}</td>
+          <td>${hrs}</td>
+          <td>${statusTag(r.status)}</td>
+          <td><div class="op-links"><a href="javascript:void(0)" onclick="openAdjust('${r.ds}','${r.shift.id}','${r.name}')">调整</a></div></td>
+        </tr>`;
+      }).join('');
+    }
+    document.getElementById('recordCount').textContent = '共 ' + list.length + ' 条（当前周）';
+  }
+  function resetRecFilter(){
+    document.getElementById('fRecDate').value='';
+    document.getElementById('fRecShift').value='';
+    document.getElementById('fRecStatus').value='';
+    document.getElementById('fRecKw').value='';
+    renderRecordTable();
+  }
+
+  // ====== 调整打卡记录 ======
+  let _adj = null;
+  function openAdjust(ds, sid, name){
+    const sh = shiftById(sid);
+    const r = recordFor(ds, sh, name);
+    if(r.status === '未开始'){ showToast(name + ' 的「' + sh.name + '」尚未开始，暂无可调整记录'); return; }
+    _adj = {ds, sid, name};
+    const nf = info(name);
+    const d = new Date(ds);
+    document.getElementById('adjInfo').innerHTML = [
+      ['姓名', name + (nf.sid?('（'+nf.sid+'）'):'')],
+      ['部门', nf.dept],
+      ['日期', ds + ' 星期' + WEEK_CN[d.getDay()]],
+      ['班次', sh.name + ' · ' + sh.start + '-' + sh.end]
+    ].map(([k,v])=>`<div><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+    document.getElementById('adjIn').value = r.clockIn || '';
+    document.getElementById('adjOut').value = r.clockOut || '';
+    document.getElementById('adjStatus').value = (r.status==='在岗'?'正常':r.status);
+    document.getElementById('adjHours').value = (r.hours||0).toFixed(1);
+    document.getElementById('adjRemark').value = r.remark || '';
+    document.getElementById('adjErr').classList.remove('show');
+    openModal('adjustModal');
+  }
+  function recalcDur(force){
+    const inM = toMin(document.getElementById('adjIn').value);
+    const outM = toMin(document.getElementById('adjOut').value);
+    if(inM!=null && outM!=null && outM>inM){
+      // 时长只计班次时间段内：提前到岗/超时下班均不计入
+      const sh = _adj ? shiftById(_adj.sid) : null;
+      const startM = sh ? toMin(sh.start) : inM, endM = sh ? toMin(sh.end) : outM;
+      const effective = Math.max(0, Math.min(outM, endM) - Math.max(inM, startM));
+      document.getElementById('adjHours').value = (Math.round(effective/6)/10).toFixed(1);
+    }else if(force){ showToast('请先填写有效的上班 / 下班打卡时间'); }
+  }
+  function saveAdjust(){
+    const inV = document.getElementById('adjIn').value;
+    const outV = document.getElementById('adjOut').value;
+    const status = document.getElementById('adjStatus').value;
+    const hours = parseFloat(document.getElementById('adjHours').value) || 0;
+    const err = document.getElementById('adjErr');
+    if(inV && outV && toMin(outV) <= toMin(inV)){ err.textContent='下班打卡时间需晚于上班打卡时间'; err.classList.add('show'); return; }
+    if(hours < 0 || hours > 24){ err.textContent='打卡时长需在 0-24 小时之间'; err.classList.add('show'); return; }
+    const sh = shiftById(_adj.sid);
+    OVERRIDES[recKey(_adj.ds, _adj.sid, _adj.name)] = {
+      clockIn:inV, clockOut:outV, status, hours,
+      remark: document.getElementById('adjRemark').value.trim(), shift:sh, name:_adj.name, ds:_adj.ds
+    };
+    closeModal('adjustModal');
+    renderAll();
+    showToast('已更新 ' + _adj.name + ' 的打卡记录为「' + status + '」');
+  }
+
+  // ====== 数据统计 ======
+  function bar(name, rate, cls, sub){
+    return `<div class="hb-row"><div class="name" title="${name}">${name}</div><div class="track"><div class="fill ${cls}" style="width:${rate}%;"></div></div><div class="val">${rate}%</div></div>${sub?`<div style="font-size:11px;color:var(--text-4);margin:-8px 0 12px 130px;">${sub}</div>`:''}`;
+  }
+  function barH(name, hours, max){
+    const pct = max? Math.round(hours/max*100):0;
+    return `<div class="hb-row"><div class="name" title="${name}">${name}</div><div class="track"><div class="fill" style="width:${pct}%;"></div></div><div class="val">${hours.toFixed(1)}h</div></div>`;
+  }
+  function renderCharts(){
+    const recs = weekRecords();
+    const total = recs.length;
+    const cnt = s => recs.filter(r => (s==='正常'?['正常','在岗']:[s]).includes(r.status)).length;
+    const items = [
+      {label:'正常 / 在岗', val:cnt('正常'), color:'var(--success)'},
+      {label:'迟到', val:cnt('迟到'), color:'var(--warning)'},
+      {label:'早退', val:cnt('早退'), color:'#F29100'},
+      {label:'缺卡', val:cnt('缺卡'), color:'var(--danger)'},
+      {label:'出勤率', val: total?Math.round((total-cnt('缺卡'))/total*100):0, color:'var(--primary)', pct:true}
+    ];
+    document.getElementById('statRings').innerHTML = items.map(i=>`
+      <div class="ring-item"><div style="width:36px;height:36px;border-radius:50%;background:${i.color};opacity:.15;flex-shrink:0;"></div>
+      <div><div class="label">${i.label}</div><div class="val" style="color:${i.color};">${i.val}<small>${i.pct?'%':'人次'}</small></div></div></div>`).join('');
+
+    // 各班次出勤率
+    document.getElementById('statByShift').innerHTML = SHIFTS.map(sh=>{
+      const rs = recs.filter(r => r.shift.id === sh.id);
+      const ok = rs.filter(r => r.status !== '缺卡').length;
+      const rate = rs.length ? Math.round(ok/rs.length*100) : 0;
+      return bar(sh.name, rate, rate>=90?'ok':(rate>=80?'':'warn'), ok+' / '+rs.length+' 人次已打卡');
+    }).join('');
+
+    // 打卡时长排行
+    const byName = {};
+    recs.forEach(r => { byName[r.name] = (byName[r.name]||0) + (r.hours||0); });
+    const rank = Object.keys(byName).map(n=>({name:n, hours:byName[n]})).sort((a,b)=>b.hours-a.hours).slice(0,8);
+    const max = rank.length ? rank[0].hours : 0;
+    document.getElementById('statByPerson').innerHTML = rank.length ? rank.map(x=>barH(x.name, x.hours, max)).join('') : '<div style="color:var(--text-4);font-size:12px;padding:20px;text-align:center;">暂无数据</div>';
+  }
+
+  // ====== 导入 Excel ======
+  function openImport(){
+    document.getElementById('importStep1').style.display='';
+    document.getElementById('importStep2').style.display='none';
+    document.getElementById('filePickedWrap').style.display='none';
+    document.getElementById('parseBtn').style.display='';
+    document.getElementById('confirmImportBtn').style.display='none';
+    document.getElementById('importErr').classList.remove('show');
+    window._filePicked = false;
+    openModal('importModal');
+  }
+  function pickFile(){ window._filePicked = true; document.getElementById('filePickedWrap').style.display=''; document.getElementById('fileName').textContent='知新馆排班表（第'+(weekOffset+2)+'周）.xlsx'; }
+  function parseFile(){
+    if(!window._filePicked){ const e=document.getElementById('importErr'); e.textContent='请先选择要导入的 Excel 文件'; e.classList.add('show'); return; }
+    document.getElementById('importErr').classList.remove('show');
+    // 统计（原型按内置样例排班表识别）
+    let assign=0; const names=new Set(); const newNames=new Set();
+    for(let wd=1; wd<=7; wd++) SHIFTS.forEach(sh=>((SCHEDULE[wd]||{})[sh.id]||[]).forEach(nm=>{ assign++; names.add(nm); if(!NAME2INFO[nm]) newNames.add(nm); }));
+    document.getElementById('imShifts').textContent = SHIFTS.length;
+    document.getElementById('imDays').textContent = 7;
+    document.getElementById('imAssign').textContent = assign;
+    document.getElementById('imNew').textContent = newNames.size;
+    // 预览网格
+    let html = '<thead><tr><th class="daycol">星期</th>' + SHIFTS.map(s=>`<th><div class="sh-name">${s.name}</div><div class="sh-time">${s.start}-${s.end}</div></th>`).join('') + '</tr></thead><tbody>';
+    for(let wd=1; wd<=7; wd++){
+      html += '<tr><td class="daycol">星期'+['一','二','三','四','五','六','日'][wd-1]+'</td>' +
+        SHIFTS.map(sh=>{
+          const list=(SCHEDULE[wd]||{})[sh.id]||[];
+          return '<td class="cell"><div class="chip-wrap">'+list.map(nm=>`<span class="name-chip ${NAME2INFO[nm]?'nc-plan':'nc-late'}">${nm}${NAME2INFO[nm]?'':' ⚠'}</span>`).join('')+'</div></td>';
+        }).join('') + '</tr>';
+    }
+    document.getElementById('importPreview').innerHTML = html + '</tbody>';
+    document.getElementById('importStep2').style.display='';
+    document.getElementById('parseBtn').style.display='none';
+    document.getElementById('confirmImportBtn').style.display='';
+  }
+  function confirmImport(){ closeModal('importModal'); renderAll(); showToast('排班表导入成功：已识别 ' + SHIFTS.length + ' 个班次、7 天排班'); }
+
+  // ====== 班次配置 ======
+  let _shiftDraft = [];
+  function openShiftConfig(){ _shiftDraft = SHIFTS.map(s=>Object.assign({},s)); renderShiftList(); document.getElementById('shiftErr').classList.remove('show'); openModal('shiftModal'); }
+  function renderShiftList(){
+    document.getElementById('shiftList').innerHTML = _shiftDraft.map((s,i)=>`
+      <div class="shift-row">
+        <div class="idx">${i+1}</div>
+        <input class="input" style="flex:1;" value="${s.name}" oninput="_shiftDraft[${i}].name=this.value" placeholder="班次名称"/>
+        <input class="input" type="time" value="${s.start}" oninput="_shiftDraft[${i}].start=this.value"/>
+        <span style="color:var(--text-3);">-</span>
+        <input class="input" type="time" value="${s.end}" oninput="_shiftDraft[${i}].end=this.value"/>
+        <span class="del" onclick="delShiftRow(${i})">删除</span>
+      </div>`).join('');
+  }
+  function addShiftRow(){ _shiftDraft.push({id:'s'+(Date.now()), name:'新班次', start:'08:00', end:'10:00'}); renderShiftList(); }
+  function delShiftRow(i){ _shiftDraft.splice(i,1); renderShiftList(); }
+  function saveShifts(){
+    for(const s of _shiftDraft){ if(!s.name.trim()||!s.start||!s.end){ const e=document.getElementById('shiftErr'); e.textContent='请完整填写每个班次的名称与起止时间'; e.classList.add('show'); return; } }
+    SHIFTS = _shiftDraft.map(s=>Object.assign({},s));
+    closeModal('shiftModal'); initShiftFilter(); renderAll(); showToast('已保存班次配置（共 '+SHIFTS.length+' 个班次）');
+  }
+
+  // ====== 打卡设置（地点 / 围栏 / 判定规则） ======
+  let _setMap=null, _setMarker=null, _setCircle=null;
+  function syncRadius(from){
+    let v;
+    if(from==='range'){ v=+document.getElementById('setRadiusRange').value; document.getElementById('setRadius').value=v; }
+    else{ v=Math.max(20, Math.min(500, +document.getElementById('setRadius').value||0)); document.getElementById('setRadiusRange').value=v; }
+    document.getElementById('setRadiusVal').textContent=v;
+    if(_setCircle) _setCircle.setRadius(v);
+  }
+  function setCenterFrom(lat, lng){
+    document.getElementById('setLat').value=(+lat).toFixed(5);
+    document.getElementById('setLng').value=(+lng).toFixed(5);
+    if(_setMarker) _setMarker.setLatLng([lat,lng]);
+    if(_setCircle) _setCircle.setLatLng([lat,lng]);
+  }
+  function openSettings(){
+    document.getElementById('setName').value=SETTINGS.name;
+    document.getElementById('setLat').value=SETTINGS.lat;
+    document.getElementById('setLng').value=SETTINGS.lng;
+    document.getElementById('setRadius').value=SETTINGS.radius;
+    document.getElementById('setRadiusRange').value=SETTINGS.radius;
+    document.getElementById('setRadiusVal').textContent=SETTINGS.radius;
+    document.getElementById('setLate').value=SETTINGS.lateGrace;
+    document.getElementById('setEarly').value=SETTINGS.earlyLeave;
+    document.getElementById('setAhead').value=SETTINGS.aheadIn;
+    document.getElementById('setErr').classList.remove('show');
+    openModal('settingsModal');
+    setupSettingsMap();
+  }
+  function setupSettingsMap(){
+    const box=document.getElementById('setMap');
+    if(typeof L==='undefined'){
+      box.innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-4);text-align:center;padding:0 20px;">地图需联网加载（当前无法访问地图服务）<br/>可直接在上方填写经纬度坐标</div>';
+      return;
+    }
+    const lat=SETTINGS.lat, lng=SETTINGS.lng;
+    if(!_setMap){
+      _setMap=L.map('setMap',{zoomControl:true,attributionControl:false}).setView([lat,lng],16);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(_setMap);
+      _setCircle=L.circle([lat,lng],{radius:SETTINGS.radius,color:'#3087CC',weight:2,fillColor:'#3087CC',fillOpacity:.18}).addTo(_setMap);
+      _setMarker=L.marker([lat,lng],{draggable:true}).addTo(_setMap).bindTooltip('打卡中心');
+      _setMarker.on('drag',e=>{ const p=e.target.getLatLng(); setCenterFrom(p.lat,p.lng); });
+      _setMap.on('click',e=>{ setCenterFrom(e.latlng.lat,e.latlng.lng); });
+    }else{
+      _setMap.setView([lat,lng],16);
+      _setMarker.setLatLng([lat,lng]);
+      _setCircle.setLatLng([lat,lng]).setRadius(SETTINGS.radius);
+    }
+    setTimeout(()=>{ try{ _setMap.invalidateSize(); }catch(e){} },80);
+  }
+  function saveSettings(){
+    const err=document.getElementById('setErr');
+    const name=document.getElementById('setName').value.trim();
+    const lat=parseFloat(document.getElementById('setLat').value);
+    const lng=parseFloat(document.getElementById('setLng').value);
+    const radius=parseInt(document.getElementById('setRadius').value,10);
+    const late=parseInt(document.getElementById('setLate').value,10);
+    const early=parseInt(document.getElementById('setEarly').value,10);
+    const ahead=parseInt(document.getElementById('setAhead').value,10);
+    if(!name){ err.textContent='请填写打卡地点名称'; err.classList.add('show'); return; }
+    if(isNaN(lat)||lat<-90||lat>90||isNaN(lng)||lng<-180||lng>180){ err.textContent='请填写有效的经纬度坐标（纬度 -90~90，经度 -180~180）'; err.classList.add('show'); return; }
+    if(isNaN(radius)||radius<10||radius>2000){ err.textContent='电子围栏半径需在 10-2000 米之间'; err.classList.add('show'); return; }
+    if([late,early,ahead].some(v=>isNaN(v)||v<0||v>120)){ err.textContent='迟到宽限 / 早退判定 / 提前打卡分钟数需在 0-120 之间'; err.classList.add('show'); return; }
+    SETTINGS.name=name; SETTINGS.lat=lat; SETTINGS.lng=lng; SETTINGS.radius=radius;
+    SETTINGS.lateGrace=late; SETTINGS.earlyLeave=early; SETTINGS.aheadIn=ahead;
+    LATE_GRACE=SETTINGS.lateGrace;
+    closeModal('settingsModal');
+    renderAll();
+    showToast('已保存打卡设置：'+name+' · 围栏 '+radius+' 米');
+  }
+
+  // ====== 时长汇总（按人聚合当前显示周） ======
+  const SUM_OVERRIDE = {};                 // key: 姓名|本周周一日期 -> {hours, remark}
+  function sumKey(name){ return name+'|'+weekDays()[0].ds; }
+  function summaryData(){
+    const map={};
+    weekDays().forEach(day=>{
+      if(day.ds > TODAY) return;
+      SHIFTS.forEach(sh=>{
+        ((SCHEDULE[day.wd]||{})[sh.id]||[]).forEach(nm=>{
+          const r=recordFor(day.ds, sh, nm);
+          if(r.status==='未开始') return;   // 未到打卡时间的班次不计入
+          if(!map[nm]) map[nm]={name:nm, due:0, done:0, late:0, early:0, miss:0, hours:0};
+          const o=map[nm];
+          o.due++;
+          if(r.status==='缺卡'){ o.miss++; }
+          else{
+            o.done++;
+            if(r.status==='迟到') o.late++;
+            if(r.status==='早退') o.early++;
+          }
+          o.hours += r.hours||0;
+        });
+      });
+    });
+    const arr=Object.keys(map).map(nm=>{
+      const o=map[nm];
+      o.autoHours=Math.round(o.hours*10)/10;
+      const ov=SUM_OVERRIDE[sumKey(nm)];
+      if(ov){ o.hours=ov.hours; o.adjusted=true; o.remark=ov.remark||''; }
+      else{ o.hours=o.autoHours; o.adjusted=false; o.remark=''; }
+      return o;
+    });
+    arr.sort((a,b)=> b.hours-a.hours || a.name.localeCompare(b.name,'zh'));
+    return arr;
+  }
+  function initSumFilter(){
+    const set=new Set();
+    for(let wd=1; wd<=7; wd++) SHIFTS.forEach(sh=>((SCHEDULE[wd]||{})[sh.id]||[]).forEach(nm=>set.add(info(nm).dept)));
+    const cur=document.getElementById('fSumDept').value;
+    document.getElementById('fSumDept').innerHTML='<option value="">全部部门</option>'+[...set].sort((a,b)=>a.localeCompare(b,'zh')).map(d=>`<option value="${d}">${d}</option>`).join('');
+    document.getElementById('fSumDept').value=cur;
+  }
+  function renderSummary(){
+    const dept=document.getElementById('fSumDept').value;
+    const kw=document.getElementById('fSumKw').value.trim().toLowerCase();
+    let arr=summaryData().filter(o=>{
+      const nf=info(o.name);
+      if(dept && nf.dept!==dept) return false;
+      if(kw){ const nfk=(o.name+(nf.sid||'')).toLowerCase(); if(!nfk.includes(kw)) return false; }
+      return true;
+    });
+    const tbody=document.getElementById('summaryBody');
+    if(!arr.length){
+      tbody.innerHTML='<tr class="empty-row"><td colspan="10">该周暂无符合条件的打卡汇总数据</td></tr>';
+    }else{
+      const maxH=arr.reduce((m,o)=>Math.max(m,o.hours),0);
+      tbody.innerHTML=arr.map(o=>{
+        const nf=info(o.name);
+        const pct=maxH? Math.round(o.hours/maxH*100):0;
+        const adjBadge=o.adjusted?`<span class="tag tag-warning" style="margin-left:6px;" title="自动计算原值：${o.autoHours.toFixed(1)} 小时${o.remark?('　备注：'+o.remark):''}">已调整</span>`:'';
+        const hrsCls=o.hours>0?'hrs':'hrs zero';
+        return `<tr>
+          <td style="font-weight:500;">${o.name}</td>
+          <td>${nf.sid||'—'}</td>
+          <td>${nf.dept}</td>
+          <td>${o.due}</td>
+          <td>${o.done}</td>
+          <td>${o.late?`<span style="color:var(--warning);font-weight:600;">${o.late}</span>`:'0'}</td>
+          <td>${o.early?`<span style="color:var(--warning);font-weight:600;">${o.early}</span>`:'0'}</td>
+          <td>${o.miss?`<span style="color:var(--danger);font-weight:600;">${o.miss}</span>`:'0'}</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div class="sum-track"><div class="sum-fill" style="width:${pct}%;"></div></div><span class="${hrsCls}">${o.hours.toFixed(1)}</span>${adjBadge}</div></td>
+          <td><div class="op-links"><a href="javascript:void(0)" onclick="openSumAdjust('${o.name}')">调整时长</a>${o.adjusted?`<a href="javascript:void(0)" style="color:var(--text-3);" onclick="resetSum('${o.name}')">恢复自动</a>`:''}</div></td>
+        </tr>`;
+      }).join('');
+    }
+    document.getElementById('summaryCount').textContent='共 '+arr.length+' 人（当前周）';
+  }
+  function resetSumFilter(){ document.getElementById('fSumDept').value=''; document.getElementById('fSumKw').value=''; renderSummary(); }
+  function exportSummary(){ showToast('已导出本周 '+summaryData().length+' 人打卡时长汇总为 Excel'); }
+
+  // ====== 调整累计时长（管理员） ======
+  let _sum=null;
+  function openSumAdjust(name){
+    const o=summaryData().find(x=>x.name===name);
+    if(!o){ showToast('未找到 '+name+' 的本周汇总数据'); return; }
+    _sum={name};
+    const nf=info(name);
+    document.getElementById('sumInfo').innerHTML=[
+      ['姓名', name+(nf.sid?('（'+nf.sid+'）'):'')],
+      ['部门', nf.dept],
+      ['本周区间', weekDays()[0].ds+' 至 '+weekDays()[6].ds],
+      ['自动计算时长', o.autoHours.toFixed(1)+' 小时（应打卡 '+o.due+' · 已打卡 '+o.done+'）']
+    ].map(([k,v])=>`<div><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+    document.getElementById('sumHours').value=o.hours.toFixed(1);
+    const ov=SUM_OVERRIDE[sumKey(name)];
+    document.getElementById('sumRemark').value=(ov&&ov.remark)||'';
+    document.getElementById('sumErr').classList.remove('show');
+    openModal('sumModal');
+  }
+  function saveSum(){
+    const hours=parseFloat(document.getElementById('sumHours').value);
+    const err=document.getElementById('sumErr');
+    if(isNaN(hours)||hours<0||hours>168){ err.textContent='本周累计时长需在 0-168 小时之间'; err.classList.add('show'); return; }
+    SUM_OVERRIDE[sumKey(_sum.name)]={hours:Math.round(hours*10)/10, remark:document.getElementById('sumRemark').value.trim()};
+    closeModal('sumModal');
+    renderSummary();
+    showToast('已调整 '+_sum.name+' 本周累计打卡时长为 '+hours.toFixed(1)+' 小时');
+  }
+  function resetSum(name){
+    delete SUM_OVERRIDE[sumKey(name)];
+    renderSummary();
+    showToast('已恢复 '+name+' 的自动计算时长');
+  }
+
+  function exportRecords(){ showToast('已导出本周 ' + filteredRecords().length + ' 条打卡记录为 Excel'); }
+
+  // ====== 周切换 ======
+  function moveWeek(step){ weekOffset += step; renderAll(); }
+  function gotoThisWeek(){ weekOffset = 0; renderAll(); }
+
+  // ====== 初始化 ======
+  function initShiftFilter(){
+    document.getElementById('fRecShift').innerHTML = '<option value="">全部班次</option>' + SHIFTS.map(s=>`<option value="${s.id}">${s.name}（${s.start}-${s.end}）</option>`).join('');
+  }
+  function renderAll(){ renderStats(); renderRoster(); renderRecordTable(); renderSummary(); renderCharts(); }
+  (function init(){ initShiftFilter(); initSumFilter(); renderAll(); })();
+</script>
+
+</body>
+</html>

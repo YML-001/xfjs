@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="980" viewBox="0 0 390 980" font-family="-apple-system,'PingFang SC','Microsoft YaHei',sans-serif">
+  <title>移动端 · 宝藏资料库</title>
+  <desc>学涯七篇 · 资料卡片 · 检索 + 推荐 · 1:1 高保真矢量稿</desc>
+  <defs>
+    <linearGradient id="lhe2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7C5CFF"/><stop offset="1" stop-color="#3087CC"/></linearGradient>
+    <linearGradient id="lcv1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3087CC"/><stop offset="1" stop-color="#006DAD"/></linearGradient>
+    <linearGradient id="lcv2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8A3D"/><stop offset="1" stop-color="#FF6B6B"/></linearGradient>
+    <linearGradient id="lcv3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00C4B6"/><stop offset="1" stop-color="#10B981"/></linearGradient>
+    <linearGradient id="lcv4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7C5CFF"/><stop offset="1" stop-color="#5B3FE0"/></linearGradient>
+    <linearGradient id="lcv5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFCB47"/><stop offset="1" stop-color="#FF8A3D"/></linearGradient>
+    <filter id="ms3" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#0A4A78" flood-opacity="0.08"/></filter>
+  </defs>
+
+  <rect width="390" height="980" fill="#F5F8FC"/>
+
+  <g id="status-bar">
+    <rect x="0" y="0" width="390" height="44" fill="#F5F8FC"/>
+    <text x="32" y="28" font-size="14" font-weight="600" fill="#1A2A3A">9:41</text>
+    <rect x="155" y="10" width="80" height="24" rx="12" fill="#1A2A3A"/>
+    <rect x="346" y="14" width="20" height="10" rx="2.5" fill="none" stroke="#1A2A3A" stroke-width="1"/>
+    <rect x="348" y="16" width="14" height="6" rx="1" fill="#1A2A3A"/>
+    <path d="M328 22 q-3 -3 0 -6 q3 -3 6 0 q3 3 0 6 z" fill="#1A2A3A" fill-rule="evenodd"/>
+  </g>
+
+  <g id="navbar">
+    <rect x="0" y="44" width="390" height="48" fill="#F5F8FC"/>
+    <path d="M28 60 l-8 8 l8 8" stroke="#1A2A3A" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="195" y="74" text-anchor="middle" font-size="15" font-weight="600" fill="#1A2A3A">宝藏资料库</text>
+    <rect x="334" y="56" width="32" height="32" rx="16" fill="#FFFFFF" filter="url(#ms3)"/>
+    <rect x="346" y="64" width="8" height="14" rx="2" fill="none" stroke="#1A2A3A" stroke-width="1.4"/>
+    <line x1="350" y1="68" x2="350" y2="74" stroke="#1A2A3A" stroke-width="1.4"/>
+  </g>
+
+  <g id="hero">
+    <rect x="16" y="100" width="358" height="120" rx="16" fill="url(#lhe2)" filter="url(#ms3)"/>
+    <circle cx="320" cy="180" r="80" fill="#FFFFFF" fill-opacity="0.06"/>
+    <text x="32" y="130" font-size="10" fill="#FFFFFF" fill-opacity="0.7" letter-spacing="1">TreasureLib</text>
+    <text x="32" y="156" font-size="18" font-weight="700" fill="#FFFFFF">学涯七篇 · 6,820 份</text>
+    <text x="32" y="178" font-size="10" fill="#FFFFFF" fill-opacity="0.85">学习方法 · 考研经验 · 心理调适…</text>
+    <rect x="32" y="186" width="74" height="22" rx="11" fill="#FFFFFF"/>
+    <text x="69" y="200" text-anchor="middle" font-size="10" font-weight="600" fill="#7C5CFF">+ 投稿</text>
+    <rect x="114" y="186" width="74" height="22" rx="11" fill="#FFFFFF" fill-opacity="0.18"/>
+    <text x="151" y="200" text-anchor="middle" font-size="10" font-weight="500" fill="#FFFFFF">收藏 12</text>
+  </g>
+
+  <g id="search">
+    <rect x="16" y="236" width="358" height="40" rx="20" fill="#FFFFFF" filter="url(#ms3)"/>
+    <circle cx="40" cy="256" r="6" stroke="#9CA3AF" stroke-width="1.6" fill="none"/>
+    <line x1="44" y1="260" x2="50" y2="266" stroke="#9CA3AF" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="60" y="260" font-size="11" fill="#9CA3AF">搜索资料标题 / 标签 / 作者</text>
+    <rect x="316" y="246" width="48" height="20" rx="10" fill="#7C5CFF"/>
+    <text x="340" y="260" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="500">检索</text>
+  </g>
+
+  <g id="seven">
+    <text x="32" y="306" font-size="14" font-weight="600" fill="#1A2A3A">学涯七篇</text>
+    <text x="358" y="306" text-anchor="end" font-size="11" fill="#7C5CFF">全部分类 →</text>
+
+    <g filter="url(#ms3)">
+      <rect x="16" y="318" width="358" height="172" rx="14" fill="#FFFFFF"/>
+      <g id="r1">
+        <rect x="32" y="334" width="76" height="68" rx="12" fill="#E8F2FB"/>
+        <circle cx="70" cy="358" r="14" fill="#3087CC"/>
+        <path d="M62 358 a8 4 0 0 1 16 0" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
+        <line x1="62" y1="362" x2="78" y2="362" stroke="#FFFFFF" stroke-width="1.5"/>
+        <text x="70" y="386" text-anchor="middle" font-size="11" font-weight="600" fill="#1A2A3A">学习方法</text>
+        <text x="70" y="398" text-anchor="middle" font-size="9" fill="#9CA3AF">782 份</text>
+      </g>
+      <g id="r2">
+        <rect x="116" y="334" width="76" height="68" rx="12" fill="#FFF1E5"/>
+        <rect x="58" y="0" width="0" height="0"/>
+        <rect x="148" y="346" width="14" height="20" rx="2" fill="none" stroke="#FF8A3D" stroke-width="1.6"/>
+        <line x1="151" y1="352" x2="160" y2="352" stroke="#FF8A3D" stroke-width="1.4"/>
+        <line x1="151" y1="358" x2="158" y2="358" stroke="#FF8A3D" stroke-width="1.4"/>
+        <text x="154" y="386" text-anchor="middle" font-size="11" font-weight="600" fill="#1A2A3A">考试技巧</text>
+        <text x="154" y="398" text-anchor="middle" font-size="9" fill="#9CA3AF">684 份</text>
+      </g>
+      <g id="r3">
+        <rect x="200" y="334" width="76" height="68" rx="12" fill="#E0F7F4"/>
+        <path d="M232 348 l3 7 l8 1 l-6 5 l1 8 l-7 -4 l-7 4 l1 -8 l-6 -5 l8 -1 z" fill="#00C4B6"/>
+        <text x="238" y="386" text-anchor="middle" font-size="11" font-weight="600" fill="#1A2A3A">竞赛指导</text>
+        <text x="238" y="398" text-anchor="middle" font-size="9" fill="#9CA3AF">512 份</text>
+      </g>
+      <g id="r4">
+        <rect x="284" y="334" width="76" height="68" rx="12" fill="#EFEAFB"/>
+        <rect x="312" y="346" width="20" height="14" rx="2" fill="none" stroke="#7C5CFF" stroke-width="1.6"/>
+        <rect x="316" y="350" width="12" height="6" fill="#7C5CFF"/>
+        <text x="322" y="386" text-anchor="middle" font-size="11" font-weight="600" fill="#1A2A3A">考研经验</text>
+        <text x="322" y="398" text-anchor="middle" font-size="9" fill="#9CA3AF">628 份</text>
+      </g>
+      <g id="r5">
+        <rect x="32" y="412" width="76" height="68" rx="12" fill="#FFFAEB"/>
+        <circle cx="62" cy="436" r="8" fill="none" stroke="#D89000" stroke-width="1.6"/>
+        <path d="M70 432 q5 -2 10 4" stroke="#D89000" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <text x="70" y="464" text-anchor="middle" font-size="11" font-weight="600" fill="#1A2A3A">出国留学</text>
+        <text x="70" y="476" text-anchor="middle" font-size="9" fill="#9CA3AF">386 份</text>
+      </g>
+      <g id="r6">
+        <rect x="116" y="412" width="76" height="68" rx="12" fill="#FCE7E7"/>
+        <rect x="146" y="426" width="16" height="20" rx="2" fill="none" stroke="#FF6B6B" stroke-width="1.6"/>
+        <path d="M150 442 q4 4 8 0" stroke="#FF6B6B" stroke-width="1.6" fill="none"/>
+        <text x="154" y="464" text-anchor="middle" font-size="11" font-weight="600" fill="#1A2A3A">职业规划</text>
+        <text x="154" y="476" text-anchor="middle" font-size="9" fill="#9CA3AF">468 份</text>
+      </g>
+      <g id="r7">
+        <rect x="200" y="412" width="76" height="68" rx="12" fill="#E1F5DC"/>
+        <path d="M226 432 q12 -10 24 0 q-12 10 -24 0" fill="#10B981"/>
+        <text x="238" y="464" text-anchor="middle" font-size="11" font-weight="600" fill="#1A2A3A">心理调适</text>
+        <text x="238" y="476" text-anchor="middle" font-size="9" fill="#9CA3AF">700 份</text>
+      </g>
+      <g id="r8">
+        <rect x="284" y="412" width="76" height="68" rx="12" fill="#F5F8FC"/>
+        <text x="322" y="448" text-anchor="middle" font-size="22" fill="#9CA3AF">+</text>
+        <text x="322" y="464" text-anchor="middle" font-size="11" font-weight="600" fill="#9CA3AF">更多</text>
+        <text x="322" y="476" text-anchor="middle" font-size="9" fill="#9CA3AF">25 学院</text>
+      </g>
+    </g>
+  </g>
+
+  <g id="featured">
+    <text x="32" y="518" font-size="14" font-weight="600" fill="#1A2A3A">本周精选</text>
+    <text x="358" y="518" text-anchor="end" font-size="11" fill="#7C5CFF">查看更多 →</text>
+
+    <g id="ft-1" filter="url(#ms3)">
+      <rect x="16" y="530" width="358" height="120" rx="14" fill="#FFFFFF"/>
+      <rect x="32" y="546" width="100" height="88" rx="10" fill="url(#lcv1)"/>
+      <rect x="40" y="554" width="32" height="18" rx="3" fill="#FF6B6B"/>
+      <text x="56" y="567" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="700">PDF</text>
+      <text x="82" y="608" text-anchor="middle" font-size="11" font-weight="600" fill="#FFFFFF">高数考研</text>
+      <text x="82" y="624" text-anchor="middle" font-size="9" fill="#FFFFFF" fill-opacity="0.8">真题 2020-24</text>
+
+      <rect x="148" y="546" width="40" height="18" rx="9" fill="#FFE7DB"/>
+      <text x="168" y="558" text-anchor="middle" font-size="9" fill="#FF8A3D">置顶</text>
+      <text x="148" y="582" font-size="14" font-weight="600" fill="#1A2A3A">高数考研真题精解 2024</text>
+      <text x="148" y="600" font-size="10" fill="#9CA3AF">考研经验 · 32MB · 5 章节</text>
+      <text x="148" y="620" font-size="10" fill="#3087CC" font-weight="600">⬇ 1,458</text>
+      <text x="208" y="620" font-size="10" fill="#FF8A3D" font-weight="600">★ 4.9</text>
+      <text x="252" y="620" font-size="10" fill="#9CA3AF">2 天前</text>
+      <rect x="306" y="610" width="56" height="28" rx="14" fill="#7C5CFF"/>
+      <text x="334" y="628" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="500">下载</text>
+    </g>
+
+    <g id="ft-2" filter="url(#ms3)">
+      <rect x="16" y="666" width="358" height="120" rx="14" fill="#FFFFFF"/>
+      <rect x="32" y="682" width="100" height="88" rx="10" fill="url(#lcv2)"/>
+      <rect x="40" y="690" width="32" height="18" rx="3" fill="#FF8A3D"/>
+      <text x="56" y="703" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="700">PPT</text>
+      <text x="82" y="744" text-anchor="middle" font-size="11" font-weight="600" fill="#FFFFFF">雅思口语</text>
+      <text x="82" y="760" text-anchor="middle" font-size="9" fill="#FFFFFF" fill-opacity="0.8">800 题</text>
+
+      <rect x="148" y="682" width="40" height="18" rx="9" fill="#FFE7DB"/>
+      <text x="168" y="694" text-anchor="middle" font-size="9" fill="#FF8A3D">热门</text>
+      <text x="148" y="718" font-size="14" font-weight="600" fill="#1A2A3A">雅思口语 800 题精讲</text>
+      <text x="148" y="736" font-size="10" fill="#9CA3AF">出国留学 · 18MB · 8 模块</text>
+      <text x="148" y="756" font-size="10" fill="#3087CC" font-weight="600">⬇ 1,286</text>
+      <text x="208" y="756" font-size="10" fill="#FF8A3D" font-weight="600">★ 4.8</text>
+      <text x="252" y="756" font-size="10" fill="#9CA3AF">5 天前</text>
+      <rect x="306" y="746" width="56" height="28" rx="14" fill="#7C5CFF"/>
+      <text x="334" y="764" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="500">下载</text>
+    </g>
+
+    <g id="ft-3" filter="url(#ms3)">
+      <rect x="16" y="802" width="358" height="120" rx="14" fill="#FFFFFF"/>
+      <rect x="32" y="818" width="100" height="88" rx="10" fill="url(#lcv3)"/>
+      <rect x="40" y="826" width="32" height="18" rx="3" fill="#3087CC"/>
+      <text x="56" y="839" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="700">DOC</text>
+      <text x="82" y="880" text-anchor="middle" font-size="11" font-weight="600" fill="#FFFFFF">C 错题集</text>
+      <text x="82" y="896" text-anchor="middle" font-size="9" fill="#FFFFFF" fill-opacity="0.8">200 道高频</text>
+
+      <text x="148" y="854" font-size="14" font-weight="600" fill="#1A2A3A">C 语言常见错题集</text>
+      <text x="148" y="872" font-size="10" fill="#9CA3AF">专业资料 · 计算机 · 12MB</text>
+      <text x="148" y="892" font-size="10" fill="#3087CC" font-weight="600">⬇ 986</text>
+      <text x="200" y="892" font-size="10" fill="#FF8A3D" font-weight="600">★ 4.7</text>
+      <text x="244" y="892" font-size="10" fill="#9CA3AF">1 周前</text>
+      <rect x="306" y="882" width="56" height="28" rx="14" fill="#7C5CFF"/>
+      <text x="334" y="900" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="500">下载</text>
+    </g>
+  </g>
+
+  <g id="tabbar">
+    <rect x="0" y="940" width="390" height="40" fill="#FFFFFF"/>
+    <line x1="0" y1="940" x2="390" y2="940" stroke="#E5EAF1"/>
+    <g id="tt1">
+      <rect x="32" y="952" width="22" height="22" rx="2" fill="none" stroke="#9CA3AF" stroke-width="1.6"/>
+      <text x="43" y="978" text-anchor="middle" font-size="10" fill="#9CA3AF">首页</text>
+    </g>
+    <g id="tt2">
+      <rect x="111" y="952" width="22" height="20" rx="2" fill="none" stroke="#9CA3AF" stroke-width="1.6"/>
+      <text x="122" y="978" text-anchor="middle" font-size="10" fill="#9CA3AF">选课</text>
+    </g>
+    <g id="tt3">
+      <circle cx="195" cy="958" r="14" fill="url(#lcv4)"/>
+      <text x="195" y="963" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">+</text>
+      <text x="195" y="978" text-anchor="middle" font-size="10" fill="#9CA3AF">投稿</text>
+    </g>
+    <g id="tt4">
+      <circle cx="268" cy="958" r="9" fill="none" stroke="#9CA3AF" stroke-width="1.6"/>
+      <text x="268" y="962" text-anchor="middle" font-size="10" font-weight="700" fill="#9CA3AF">?</text>
+      <text x="268" y="978" text-anchor="middle" font-size="10" fill="#9CA3AF">问答</text>
+    </g>
+    <g id="tt5">
+      <rect x="338" y="950" width="20" height="14" rx="2" fill="none" stroke="#7C5CFF" stroke-width="1.6"/>
+      <line x1="342" y1="954" x2="354" y2="954" stroke="#7C5CFF" stroke-width="1.4"/>
+      <line x1="342" y1="958" x2="352" y2="958" stroke="#7C5CFF" stroke-width="1.4"/>
+      <line x1="342" y1="962" x2="350" y2="962" stroke="#7C5CFF" stroke-width="1.4"/>
+      <text x="347" y="978" text-anchor="middle" font-size="10" fill="#7C5CFF" font-weight="600">资料</text>
+    </g>
+  </g>
+</svg>

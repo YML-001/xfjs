@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>打卡结果 · 学风建设系统</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{
+  --primary:#3087CC;
+  --primary-light:#E3F1F9;
+  --primary-dark:#006DAD;
+  --primary-50:#F4FAFE;
+  --text-1:#3C444F;
+  --text-2:#696F7D;
+  --text-3:#9096A2;
+  --text-4:#ABB0BA;
+  --border:#E5E8EE;
+  --border-light:#EFF1F5;
+  --bg:#F4F6FA;
+  --bg-card:#FFFFFF;
+  --success:#1BB975;
+  --success-bg:#E8FCF4;
+  --warning:#F29100;
+  --warning-bg:#FFF5E5;
+  --danger:#DF2027;
+  --danger-bg:#FCE8EA;
+  --shadow-sm:0 1px 3px rgba(15,32,55,.05);
+  --shadow-md:0 6px 20px rgba(15,32,55,.06);
+  --shadow-lg:0 12px 32px rgba(15,32,55,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:"OPPOSans","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;color:var(--text-1);background:#E8ECF2;-webkit-font-smoothing:antialiased;font-size:14px;}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+svg{display:block;flex-shrink:0;}
+::-webkit-scrollbar{display:none;}
+
+/* === Phone shell === */
+.phone-shell{
+  width:390px;height:844px;background:#1F2733;border-radius:48px;padding:10px;
+  box-shadow:0 40px 80px rgba(31,39,51,.32),0 8px 24px rgba(31,39,51,.16);
+  position:relative;
+}
+.phone-shell::before{
+  content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);
+  width:120px;height:32px;background:#1F2733;border-radius:0 0 22px 22px;z-index:5;
+}
+.phone-shell::after{
+  content:"";position:absolute;left:50%;bottom:6px;transform:translateX(-50%);
+  width:130px;height:5px;background:#fff;border-radius:3px;z-index:5;
+}
+.screen{
+  width:100%;height:100%;background:var(--bg);border-radius:38px;overflow:hidden;
+  position:relative;display:flex;flex-direction:column;
+}
+
+/* === Status Bar === */
+.status-bar{
+  height:44px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px 0 32px;font-size:14px;font-weight:600;
+  background:transparent;color:var(--text-1);
+  flex-shrink:0;
+}
+.status-bar.dark{color:#fff;}
+.status-bar .right{display:flex;gap:6px;align-items:center;}
+
+/* === App container === */
+.app{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.pages{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative;padding-bottom:90px;}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.page{animation:slideIn .3s ease;}
+
+/* === Mobile Header (banner) === */
+.m-header.banner{
+  background:linear-gradient(135deg,#3087CC 0%,#006DAD 100%);
+  color:#fff;padding:0 16px 80px;margin-bottom:-60px;
+  position:relative;overflow:hidden;
+}
+.m-header.banner::before{
+  content:"";position:absolute;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);
+  right:-80px;top:-100px;
+}
+.m-header.banner::after{
+  content:"";position:absolute;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.1),transparent 65%);
+  left:-60px;bottom:-60px;
+}
+.h-row{display:flex;align-items:center;justify-content:space-between;padding-top:8px;}
+.h-greet{display:flex;align-items:center;gap:10px;}
+.h-greet .ava{
+  width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,.4);
+  background:linear-gradient(135deg,#FFD68F,#F29100);
+  display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:#fff;
+}
+.h-greet .text strong{font-size:15px;display:block;}
+.h-greet .text p{font-size:11px;opacity:.85;margin-top:2px;}
+.h-icons{display:flex;gap:10px;}
+.h-icons button{
+  width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.18);
+  color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);
+  position:relative;
+}
+.h-icons button .red-dot{
+  position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;
+  background:#FF6B6B;border:2px solid #3087CC;
+}
+.star-card{
+  margin-top:18px;background:rgba(255,255,255,.15);backdrop-filter:blur(20px);
+  border-radius:16px;padding:14px 16px;border:1px solid rgba(255,255,255,.18);
+}
+.star-card .row{display:flex;align-items:center;justify-content:space-between;}
+.star-card .row .left strong{font-size:24px;font-weight:700;}
+.star-card .row .left strong small{font-size:13px;font-weight:400;opacity:.8;margin-left:2px;}
+.star-card .row .left p{font-size:11px;opacity:.85;margin-top:2px;}
+.star-card .row .right{display:flex;align-items:center;gap:4px;}
+.star-card .row .right svg{width:14px;height:14px;}
+.progress-bar{
+  margin-top:10px;height:5px;background:rgba(255,255,255,.18);border-radius:3px;overflow:hidden;
+}
+.progress-bar .fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,#FFD68F,#FFC53D);
+}
+.star-card .progress-meta{
+  display:flex;justify-content:space-between;font-size:10px;opacity:.85;margin-top:6px;
+}
+
+/* === Quick actions === */
+.quick-row{
+  margin:0 12px;padding:18px 6px;background:#fff;border-radius:16px;
+  box-shadow:var(--shadow-sm);position:relative;z-index:2;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+}
+.qa{
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 4px;border-radius:10px;
+  transition:all .15s;text-decoration:none;color:inherit;
+}
+.qa:active{background:var(--primary-50);transform:scale(.96);}
+.qa-ic{
+  width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+}
+.qa span{font-size:11px;color:var(--text-2);font-weight:500;}
+
+/* === Section title === */
+.sec-title{
+  padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;
+}
+.sec-title h3{font-size:15px;font-weight:600;}
+.sec-title h3 small{font-size:11px;color:var(--text-3);font-weight:400;margin-left:6px;}
+.sec-title .more{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:2px;}
+
+/* === Course card === */
+.course-list{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+.course-card{
+  background:#fff;border-radius:14px;padding:14px;display:flex;gap:12px;
+  box-shadow:var(--shadow-sm);transition:all .15s;cursor:pointer;
+}
+.course-card:active{transform:scale(.99);box-shadow:var(--shadow-md);}
+.course-card .c-icon{
+  width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;color:#fff;
+}
+.ci-math{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.ci-eng{background:linear-gradient(135deg,#F29100,#FFD68F);}
+.ci-cs{background:linear-gradient(135deg,#0EA5E9,#7DD3FC);}
+.ci-phy{background:linear-gradient(135deg,#7C5BC1,#B59CE5);}
+.ci-chem{background:linear-gradient(135deg,#1BB975,#A7F3D0);}
+.ci-mech{background:linear-gradient(135deg,#DF2027,#F6BCBE);}
+.course-card .c-text{flex:1;min-width:0;}
+.course-card .c-text h5{font-size:14px;font-weight:600;line-height:1.4;}
+.course-card .c-text .meta{margin-top:6px;display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-3);}
+.course-card .c-text .meta span{display:inline-flex;align-items:center;gap:3px;}
+.course-card .c-tag{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:3px 8px;border-radius:5px;font-size:10px;font-weight:500;
+  background:var(--primary-light);color:var(--primary);align-self:flex-start;
+}
+.c-tag.warning{background:var(--warning-bg);color:var(--warning);}
+.c-tag.success{background:var(--success-bg);color:var(--success);}
+.c-tag.grey{background:#F1F2F3;color:var(--text-3);}
+
+/* === News list === */
+.news-list{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+.news-card{
+  background:#fff;border-radius:12px;padding:12px;display:flex;gap:10px;
+  box-shadow:var(--shadow-sm);
+}
+.news-card .n-icon{
+  width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.news-card h6{font-size:13px;font-weight:500;line-height:1.4;}
+.news-card p{font-size:11px;color:var(--text-3);margin-top:4px;}
+
+/* === Bottom Tab Bar === */
+.tabbar{
+  position:absolute;bottom:0;left:0;right:0;height:74px;background:#fff;
+  border-top:1px solid var(--border-light);
+  display:flex;align-items:flex-start;justify-content:space-around;
+  padding:8px 0 18px;backdrop-filter:blur(20px);background:rgba(255,255,255,.94);
+  z-index:10;
+}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  color:var(--text-3);font-size:10px;padding:4px 0;
+  transition:all .15s;text-decoration:none;
+}
+.tab.active{color:var(--primary);}
+.tab.active svg{color:var(--primary);}
+.tab svg{width:22px;height:22px;}
+
+/* === Header simple (white) === */
+.m-h-simple{
+  padding:10px 16px 14px;display:flex;align-items:center;justify-content:space-between;
+  background:#fff;
+}
+.m-h-simple .title{font-size:18px;font-weight:600;}
+.m-h-simple .actions{display:flex;gap:8px;}
+.m-h-simple .actions button{
+  width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);background:#F4F6FA;
+}
+
+/* === Search === */
+.search-bar{
+  margin:8px 16px 14px;height:38px;border-radius:12px;background:#fff;
+  display:flex;align-items:center;padding:0 14px;gap:8px;
+  border:1px solid var(--border-light);
+}
+.search-bar input{
+  flex:1;border:none;outline:none;background:transparent;font-size:13px;color:var(--text-1);
+}
+.search-bar input::placeholder{color:var(--text-4);}
+
+/* === Pill filter === */
+.pills{
+  display:flex;gap:8px;padding:0 16px 12px;overflow-x:auto;scrollbar-width:none;
+}
+.pills::-webkit-scrollbar{display:none;}
+.pill{
+  flex-shrink:0;padding:7px 14px;border-radius:999px;background:#fff;border:1px solid var(--border-light);
+  font-size:12px;color:var(--text-2);transition:all .15s;
+}
+.pill.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+
+/* === Subject grid === */
+.subj-grid{
+  padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+}
+.subj-card{
+  background:#fff;border-radius:14px;padding:16px 10px;text-align:center;
+  box-shadow:var(--shadow-sm);transition:all .15s;cursor:pointer;
+}
+.subj-card:active{transform:scale(.96);}
+.subj-card .ic{
+  width:48px;height:48px;border-radius:14px;margin:0 auto 8px;
+  display:flex;align-items:center;justify-content:center;
+}
+.subj-card .name{font-size:13px;font-weight:600;}
+.subj-card .count{font-size:11px;color:var(--text-3);margin-top:2px;}
+
+/* === Hot volunteer === */
+.vol-row{
+  padding:0 16px;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;
+}
+.vol-row::-webkit-scrollbar{display:none;}
+.vol-card{
+  flex-shrink:0;width:130px;background:#fff;border-radius:14px;padding:14px 10px;
+  text-align:center;box-shadow:var(--shadow-sm);
+}
+.vol-card .ava{
+  width:54px;height:54px;border-radius:50%;margin:0 auto 8px;
+  background:linear-gradient(135deg,#9CBFDA,#3087CC);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;
+}
+.vol-card h5{font-size:13px;font-weight:600;}
+.vol-card .subj{font-size:10px;color:var(--text-3);margin-top:2px;}
+.vol-card .stars{display:inline-flex;gap:1px;margin-top:6px;}
+.vol-card .stars svg{width:11px;height:11px;color:#FFC53D;}
+
+/* === QA list === */
+.qa-list{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+.qa-card{
+  background:#fff;border-radius:14px;padding:14px;box-shadow:var(--shadow-sm);
+}
+.qa-card .head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.qa-card .head .ava{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,#9CBFDA,#3087CC);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;
+}
+.qa-card .head .info{flex:1;min-width:0;}
+.qa-card .head .info .n{font-size:12px;font-weight:500;}
+.qa-card .head .info .t{font-size:10px;color:var(--text-3);}
+.qa-card h5{font-size:14px;font-weight:600;line-height:1.4;}
+.qa-card .tags{margin-top:8px;display:flex;gap:6px;}
+.qa-card .tag{
+  font-size:10px;padding:2px 8px;border-radius:4px;
+  background:var(--primary-light);color:var(--primary);
+}
+.qa-card .tag.solved{background:var(--success-bg);color:var(--success);}
+.qa-card .tag.unsolved{background:var(--warning-bg);color:var(--warning);}
+.qa-card .meta{
+  margin-top:10px;padding-top:10px;border-top:1px dashed var(--border-light);
+  display:flex;gap:14px;font-size:11px;color:var(--text-3);
+}
+.qa-card .meta span{display:inline-flex;align-items:center;gap:3px;}
+.qa-card .meta span.like.active{color:var(--danger);}
+
+/* === Resource card === */
+.res-grid{padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.res-card{
+  background:#fff;border-radius:14px;padding:14px;box-shadow:var(--shadow-sm);
+  transition:all .15s;cursor:pointer;
+}
+.res-card:active{transform:scale(.97);}
+.res-card .ftype{
+  width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:11px;font-weight:600;margin-bottom:10px;
+}
+.ftype-pdf{background:linear-gradient(135deg,#DF2027,#FF6B6B);}
+.ftype-ppt{background:linear-gradient(135deg,#F29100,#FFAA33);}
+.ftype-doc{background:linear-gradient(135deg,#3087CC,#5BA8DE);}
+.ftype-xls{background:linear-gradient(135deg,#1BB975,#34D399);}
+.res-card h5{font-size:13px;font-weight:500;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.res-card .meta{margin-top:8px;display:flex;justify-content:space-between;align-items:center;}
+.res-card .meta .stats{display:flex;gap:6px;font-size:10px;color:var(--text-3);}
+.res-card .meta .stats span{display:inline-flex;align-items:center;gap:2px;}
+
+/* === Profile === */
+.profile-banner{
+  background:linear-gradient(135deg,#3087CC 0%,#006DAD 100%);
+  color:#fff;padding:24px 16px 56px;position:relative;
+  border-radius:0 0 24px 24px;
+}
+.profile-banner::before{
+  content:"";position:absolute;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%);
+  right:-100px;top:-120px;
+}
+.pro-head{display:flex;align-items:center;gap:14px;position:relative;z-index:1;}
+.pro-head .ava{
+  width:64px;height:64px;border-radius:50%;border:3px solid rgba(255,255,255,.4);
+  background:linear-gradient(135deg,#FFD68F,#F29100);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;
+}
+.pro-head .info h3{font-size:18px;font-weight:600;}
+.pro-head .info p{font-size:12px;opacity:.85;margin-top:4px;}
+.pro-head .info .stars{margin-top:6px;display:flex;gap:2px;}
+.pro-head .info .stars svg{width:14px;height:14px;color:#FFD43B;}
+.pro-stats{
+  position:relative;z-index:1;margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);
+  background:rgba(255,255,255,.16);backdrop-filter:blur(10px);
+  border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,.2);
+}
+.pro-stats .item{text-align:center;border-right:1px solid rgba(255,255,255,.2);}
+.pro-stats .item:last-child{border-right:none;}
+.pro-stats .item strong{font-size:20px;font-weight:700;display:block;}
+.pro-stats .item span{font-size:11px;opacity:.85;}
+
+.pro-menu{
+  margin:-32px 16px 16px;background:#fff;border-radius:16px;padding:8px 0;
+  box-shadow:var(--shadow-sm);position:relative;z-index:2;
+}
+.pro-row{
+  padding:12px 16px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--border-light);text-decoration:none;color:inherit;
+  cursor:pointer;
+}
+.pro-row:last-child{border-bottom:none;}
+.pro-row .ic{
+  width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+}
+.pro-row .info{flex:1;min-width:0;}
+.pro-row .info h6{font-size:14px;font-weight:500;}
+.pro-row .info p{font-size:11px;color:var(--text-3);margin-top:2px;}
+.pro-row .arrow{color:var(--text-4);}
+.pro-row .badge{
+  background:var(--danger);color:#fff;padding:1px 8px;border-radius:8px;font-size:10px;font-weight:500;
+}
+
+/* === Notice card === */
+.notice-card{
+  margin:14px 16px;background:linear-gradient(135deg,#FFF8E1,#FFE0B3);
+  border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;
+  border:1px solid #FFE0B3;
+}
+.notice-card .ic{
+  width:40px;height:40px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center;color:#F29100;flex-shrink:0;
+}
+.notice-card h6{font-size:13px;font-weight:600;color:#9A6500;}
+.notice-card p{font-size:11px;color:#9A6500;opacity:.8;margin-top:2px;line-height:1.4;}
+
+/* === Section in profile === */
+.pro-section{
+  margin:0 16px 14px;background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow-sm);
+}
+.pro-section h4{font-size:14px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;}
+.pro-section h4 a{font-size:11px;color:var(--text-3);font-weight:400;}
+
+/* === Star milestone (mobile) === */
+.milestones{display:flex;justify-content:space-between;align-items:flex-start;margin-top:8px;position:relative;}
+.milestones::before{
+  content:"";position:absolute;left:14px;right:14px;top:14px;height:2px;background:var(--border);
+}
+.milestones .ms{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;
+}
+.ms .dot{
+  width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-3);font-weight:600;
+}
+.ms.done .dot{background:var(--primary);border-color:var(--primary);color:#fff;}
+.ms.current .dot{background:#fff;border-color:var(--success);color:var(--success);box-shadow:0 0 0 4px rgba(27,185,117,.18);}
+.ms .lbl{font-size:10px;color:var(--text-3);text-align:center;}
+.ms.done .lbl,.ms.current .lbl{color:var(--text-1);font-weight:500;}
+
+/* === Detail page header === */
+.nav-header{
+  height:48px;display:flex;align-items:center;padding:0 4px;background:#fff;
+  border-bottom:1px solid var(--border-light);
+}
+.nav-header .back{
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--text-1);
+  background:none;border:none;cursor:pointer;
+}
+.nav-header .title{flex:1;text-align:center;font-size:16px;font-weight:600;}
+.nav-header .right{width:40px;display:flex;justify-content:center;}
+
+/* === Form === */
+.form{padding:14px 16px;}
+.form-group{
+  background:#fff;border-radius:14px;padding:4px 16px;margin-bottom:14px;
+  box-shadow:var(--shadow-sm);
+}
+.form-row{
+  padding:14px 0;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border-light);
+}
+.form-row:last-child{border-bottom:none;}
+.form-row label{
+  font-size:13px;color:var(--text-1);min-width:80px;
+}
+.form-row label .req{color:var(--danger);}
+.form-row input,.form-row select,.form-row textarea{
+  flex:1;border:none;outline:none;font-size:13px;color:var(--text-1);text-align:right;background:transparent;font-family:inherit;
+}
+.form-row input::placeholder{color:var(--text-4);}
+.form-row select{appearance:none;background:transparent;}
+.form-row textarea{text-align:left;resize:none;min-height:72px;}
+.form-actions{padding:18px 0;}
+.btn-block{
+  width:100%;height:46px;border-radius:14px;background:var(--primary);color:#fff;
+  font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .15s;border:none;cursor:pointer;font-family:inherit;
+}
+.btn-block:active{transform:scale(.98);background:var(--primary-dark);}
+
+/* Modal toast */
+.toast{
+  position:fixed;left:50%;top:60px;transform:translate(-50%,-20px);
+  background:#1F2733;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;
+  opacity:0;pointer-events:none;transition:all .25s;z-index:200;
+  box-shadow:var(--shadow-lg);
+}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+
+/* Floating action / notice */
+.floating-tip{
+  position:absolute;left:16px;right:16px;bottom:90px;background:#1F2733;color:#fff;
+  border-radius:12px;padding:12px 14px;font-size:12px;display:flex;gap:10px;align-items:center;
+  z-index:8;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(20px);transition:all .3s;
+  pointer-events:none;
+}
+.floating-tip.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.floating-tip .ic{
+  width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#FFD68F,#F29100);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.floating-tip .text{flex:1;}
+.floating-tip h6{font-size:12px;font-weight:600;}
+.floating-tip p{font-size:10px;opacity:.7;margin-top:2px;}
+.floating-tip button{color:#7DD3FC;font-size:12px;font-weight:500;}
+
+/* === Message Drawer (mobile) === */
+.msg-overlay{
+  position:absolute;inset:0;background:rgba(15,32,55,.45);backdrop-filter:blur(3px);
+  z-index:50;opacity:0;pointer-events:none;transition:opacity .3s;border-radius:38px;
+}
+.msg-overlay.show{opacity:1;pointer-events:auto;}
+.msg-drawer{
+  position:absolute;left:0;right:0;bottom:0;
+  background:#fff;border-radius:24px 24px 0 0;
+  z-index:51;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);
+  display:flex;flex-direction:column;max-height:78%;
+}
+.msg-drawer.show{transform:translateY(0);}
+.msg-drawer .drag-bar{
+  width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;flex-shrink:0;
+}
+.msg-drawer-head{
+  padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.msg-drawer-head h4{font-size:16px;font-weight:600;}
+.msg-drawer-head .unread-badge{
+  background:var(--danger);color:#fff;font-size:10px;font-weight:600;
+  padding:1px 7px;border-radius:8px;margin-left:6px;
+}
+.msg-drawer-head .mark-all{font-size:12px;color:var(--primary);}
+.msg-tabs{
+  display:flex;gap:0;padding:0 16px 10px;border-bottom:1px solid var(--border-light);flex-shrink:0;
+}
+.msg-tab{
+  padding:6px 14px;font-size:13px;border-radius:999px;color:var(--text-3);transition:all .15s;
+}
+.msg-tab.active{background:var(--primary-light);color:var(--primary);font-weight:500;}
+.msg-list{overflow-y:auto;flex:1;padding:8px 0 24px;}
+.msg-item{
+  display:flex;gap:12px;padding:12px 16px;transition:background .15s;position:relative;
+}
+.msg-item:active{background:var(--bg);}
+.msg-item .unread-dot{
+  position:absolute;top:16px;right:14px;width:7px;height:7px;border-radius:50%;background:var(--danger);
+}
+.msg-item .m-ic{
+  width:40px;height:40px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.msg-item .m-body{flex:1;min-width:0;}
+.msg-item .m-body .m-title{font-size:13px;font-weight:500;line-height:1.4;}
+.msg-item .m-body .m-desc{font-size:11px;color:var(--text-3);margin-top:3px;line-height:1.5;}
+.msg-item .m-body .m-time{font-size:10px;color:var(--text-4);margin-top:4px;}
+.msg-item.read .m-body .m-title{color:var(--text-3);font-weight:400;}
+.msg-sep{font-size:11px;color:var(--text-4);padding:10px 16px 4px;font-weight:500;}
+.msg-empty{padding:40px 0;text-align:center;color:var(--text-4);font-size:13px;}
+
+/* Course detail banner */
+.course-detail-banner{
+  margin-top:14px;background:linear-gradient(135deg,#3087CC,#006DAD);color:#fff;
+  border-radius:18px;padding:20px;position:relative;overflow:hidden;
+}
+.course-detail-banner::before{
+  content:"";position:absolute;width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 60%);
+  right:-40px;top:-50px;
+}
+
+/* Notice (warning) banner */
+.warn-banner{
+  padding:14px 16px;background:linear-gradient(135deg,#FFF8E1,#FFE0B3);
+  display:flex;align-items:center;gap:12px;
+}
+.warn-banner .ic{
+  width:48px;height:48px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;color:#F29100;
+}
+.warn-banner h3{font-size:15px;font-weight:600;color:#9A6500;}
+.warn-banner p{font-size:11px;color:#9A6500;opacity:.8;margin-top:2px;}
+
+/* === Rank page slide-in layer === */
+.rank-layer{
+  position:absolute;inset:0;background:var(--bg);border-radius:38px;overflow:hidden;
+  display:flex;flex-direction:column;z-index:60;
+  transform:translateX(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);
+}
+.rank-layer.show{transform:translateX(0);}
+
+/* Rank header banner */
+.rank-banner{
+  background:linear-gradient(135deg,#EF4444 0%,#B91C1C 100%);
+  color:#fff;padding:14px 16px 60px;flex-shrink:0;position:relative;overflow:hidden;
+}
+.rank-banner::before{
+  content:"";position:absolute;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);
+  right:-60px;top:-80px;
+}
+.rank-banner::after{
+  content:"";position:absolute;width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.1),transparent 65%);
+  left:-40px;bottom:-40px;
+}
+.rank-nav{display:flex;align-items:center;margin-bottom:14px;position:relative;z-index:1;}
+.rank-nav .back{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;margin-right:10px;}
+.rank-nav h2{font-size:17px;font-weight:700;flex:1;}
+.rank-nav .share-btn{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;}
+
+/* Period tabs */
+.rank-tabs{
+  display:flex;background:rgba(255,255,255,.15);border-radius:12px;padding:3px;position:relative;z-index:1;
+}
+.rank-tab{
+  flex:1;text-align:center;padding:8px 0;font-size:13px;border-radius:10px;color:rgba(255,255,255,.7);
+  transition:all .2s;font-weight:500;
+}
+.rank-tab.active{background:#fff;color:#EF4444;font-weight:700;}
+
+/* Podium */
+.podium-wrap{
+  margin:-44px 16px 0;position:relative;z-index:2;
+  display:flex;align-items:flex-end;justify-content:center;gap:0;
+}
+.podium-item{display:flex;flex-direction:column;align-items:center;flex:1;}
+.podium-item .p-ava{
+  border-radius:50%;border:3px solid #fff;
+  display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;position:relative;
+  box-shadow:0 4px 12px rgba(0,0,0,.18);margin-bottom:6px;
+}
+.podium-item .p-ava .crown{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  font-size:18px;line-height:1;
+}
+.podium-item .p-name{font-size:12px;font-weight:600;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px;}
+.podium-item .p-val{font-size:11px;color:var(--text-3);margin-top:2px;}
+.podium-item .p-base{
+  border-radius:10px 10px 0 0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding-bottom:12px;padding-top:12px;
+}
+.podium-1st .p-base{background:linear-gradient(180deg,#FFD700,#FFA500);height:72px;}
+.podium-2nd .p-base{background:linear-gradient(180deg,#C0C0C0,#A0A0A0);height:52px;}
+.podium-3rd .p-base{background:linear-gradient(180deg,#CD7F32,#A0522D);height:42px;}
+.podium-1st .p-base .rank-num{font-size:20px;font-weight:800;color:#fff;}
+.podium-2nd .p-base .rank-num,.podium-3rd .p-base .rank-num{font-size:16px;font-weight:700;color:rgba(255,255,255,.9);}
+
+/* Rank list */
+.rank-list-wrap{
+  flex:1;overflow-y:auto;padding:14px 16px 80px;
+}
+.rank-item{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  background:#fff;border-radius:14px;margin-bottom:10px;
+  box-shadow:0 1px 4px rgba(15,32,55,.05);transition:all .15s;
+}
+.rank-item.me{background:linear-gradient(135deg,#FFF0F0,#FFE4E4);border:1.5px solid rgba(239,68,68,.25);}
+.rank-item .r-num{
+  width:28px;text-align:center;font-size:15px;font-weight:700;color:var(--text-3);flex-shrink:0;
+}
+.rank-item .r-num.top4{color:#EF4444;}
+.rank-item .r-num.top5{color:#EF4444;}
+.rank-item .r-ava{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;
+}
+.rank-item .r-info{flex:1;min-width:0;}
+.rank-item .r-info .r-name{font-size:14px;font-weight:600;}
+.rank-item .r-info .r-sub{font-size:11px;color:var(--text-3);margin-top:2px;}
+.rank-item .r-right{text-align:right;flex-shrink:0;}
+.rank-item .r-right .r-val{font-size:15px;font-weight:700;color:var(--text-1);}
+.rank-item .r-right .r-unit{font-size:10px;color:var(--text-3);margin-top:2px;}
+.rank-item .r-right .r-change{font-size:10px;margin-top:2px;}
+.r-change.up{color:var(--success);}
+.r-change.down{color:var(--danger);}
+.r-change.same{color:var(--text-3);}
+
+/* My rank sticky bar */
+.my-rank-bar{
+  margin:0 16px 12px;padding:11px 14px;background:linear-gradient(135deg,#FFF0F0,#FFE4E4);
+  border-radius:14px;border:1.5px solid rgba(239,68,68,.25);
+  display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+.my-rank-bar .r-ava{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#FFD68F,#F29100);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.my-rank-bar .r-info{flex:1;}
+.my-rank-bar .r-info .r-name{font-size:13px;font-weight:600;}
+.my-rank-bar .r-info .r-sub{font-size:11px;color:var(--text-3);}
+.my-rank-bar .r-right{text-align:right;}
+.my-rank-bar .r-right .r-val{font-size:14px;font-weight:700;color:#EF4444;}
+.my-rank-bar .r-right .r-rank{font-size:11px;color:var(--text-3);}
+
+/* Generic small section card */
+.detail-card{
+  margin-top:14px;background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow-sm);
+}
+.detail-card h4{font-size:14px;font-weight:600;margin-bottom:12px;}
+.detail-card .info-list{display:flex;flex-direction:column;gap:10px;font-size:13px;}
+.detail-card .info-list .info-row{display:flex;justify-content:space-between;}
+.detail-card .info-list .info-row span:first-child{color:var(--text-3);}
+.detail-card p{font-size:13px;color:var(--text-2);line-height:1.7;}
+
+</style>
+<style>
+/* ====== 移动端 · 上/下班打卡页专用 ====== */
+.ck-hero{margin:14px 16px 0;border-radius:18px;padding:18px 16px;background:linear-gradient(135deg,#3087CC 0%,#006DAD 100%);color:#fff;position:relative;overflow:hidden;}
+.ck-hero::before{content:"";position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);right:-70px;top:-90px;}
+.ck-hero .date{font-size:12px;opacity:.88;position:relative;}
+.ck-hero .clock{font-size:36px;font-weight:700;letter-spacing:-1px;margin-top:2px;position:relative;font-variant-numeric:tabular-nums;}
+.ck-hero .worked{margin-top:8px;position:relative;font-size:12px;opacity:.9;}
+.ck-hero .worked b{font-size:15px;font-weight:700;}
+.ck-geo{margin-top:12px;display:inline-flex;align-items:center;gap:6px;position:relative;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.26);padding:6px 12px;border-radius:999px;font-size:11px;font-weight:500;}
+.ck-geo.out{background:rgba(223,32,39,.34);}
+
+.ck-map-wrap{margin:12px 16px 0;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);background:#fff;position:relative;z-index:0;}
+.ck-map{height:150px;background:#E8EEF4;}
+.ck-sim{display:flex;align-items:center;gap:10px;padding:10px 12px;border-top:1px solid var(--border-light);}
+.ck-sim .lbl{font-size:11px;color:var(--text-3);flex-shrink:0;}
+.ck-sim .segbtns{display:flex;gap:4px;background:#F4F6FA;border-radius:9px;padding:3px;flex:1;}
+.ck-sim .segbtns button{flex:1;height:28px;border-radius:7px;font-size:11px;color:var(--text-2);font-weight:500;}
+.ck-sim .segbtns button.on{background:#fff;color:var(--primary);box-shadow:var(--shadow-sm);}
+
+/* 当前班次 + 上/下班大按钮 */
+.active-card{margin:14px 16px 0;background:#fff;border-radius:16px;box-shadow:var(--shadow-sm);padding:16px;text-align:center;}
+.active-card .ac-shift{font-size:15px;font-weight:700;}
+.active-card .ac-meta{font-size:11px;color:var(--text-3);margin-top:4px;}
+.punch-row{display:flex;gap:14px;justify-content:center;margin-top:16px;}
+.punch{width:120px;height:120px;border-radius:50%;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;cursor:pointer;font-family:inherit;transition:transform .15s;}
+.punch:active{transform:scale(.96);}
+.punch small{font-size:11px;opacity:.9;font-weight:400;}
+.punch strong{font-size:17px;font-weight:700;}
+.punch.in{background:linear-gradient(135deg,#3087CC,#006DAD);box-shadow:0 12px 26px rgba(48,135,204,.34);}
+.punch.out{background:linear-gradient(135deg,#F29100,#D67C00);box-shadow:0 12px 26px rgba(242,145,0,.30);}
+.punch.done{background:linear-gradient(135deg,#1BB975,#0F9D63);box-shadow:0 12px 26px rgba(27,185,117,.30);}
+.punch.disabled{background:linear-gradient(135deg,#C4CBD4,#9EA7B3);box-shadow:none;}
+.punch-tip{margin-top:14px;font-size:12px;color:var(--text-3);line-height:1.6;}
+.punch-tip b{color:var(--danger);font-weight:600;} .punch-tip b.ok{color:var(--success);}
+
+.sec-title{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;}
+.sec-title h3{font-size:15px;font-weight:600;}
+.sec-title .more{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:2px;}
+.ck-list{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+.shift-card{background:#fff;border-radius:14px;padding:14px;box-shadow:var(--shadow-sm);}
+.shift-card.cur{border:1.5px solid var(--primary);}
+.shift-card .sc-head{display:flex;align-items:center;gap:10px;}
+.shift-card .sc-ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;background:linear-gradient(135deg,#C4B5F0,#7C5BC1);}
+.shift-card .sc-t{flex:1;min-width:0;}
+.shift-card .sc-t h5{font-size:14px;font-weight:600;}
+.shift-card .sc-t p{font-size:11px;color:var(--text-3);margin-top:3px;}
+.shift-card .c-tag{align-self:flex-start;flex-shrink:0;}
+.shift-card .sc-punch{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border-light);display:flex;gap:12px;}
+.sc-slot{flex:1;text-align:center;}
+.sc-slot .k{font-size:10px;color:var(--text-3);}
+.sc-slot .v{font-size:15px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums;}
+.sc-slot .v.empty{color:var(--text-4);font-weight:400;}
+.sc-slot .v.hrs{color:var(--primary-dark);}
+
+.ck-note{margin:14px 16px 4px;padding:12px 14px;border-radius:12px;background:var(--primary-50);border:1px solid #D6EAF9;font-size:11px;color:var(--text-2);line-height:1.7;display:flex;gap:8px;}
+.ck-note svg{color:var(--primary);flex-shrink:0;margin-top:1px;}
+
+.ck-result{position:absolute;inset:0;background:rgba(15,32,55,.5);backdrop-filter:blur(3px);z-index:1200;display:flex;align-items:center;justify-content:center;padding:26px;border-radius:38px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.ck-result.show{opacity:1;pointer-events:auto;}
+.ck-result .box{background:#fff;border-radius:20px;padding:24px 20px;width:100%;text-align:center;transform:scale(.92);transition:transform .25s;}
+.ck-result.show .box{transform:scale(1);}
+.ck-result .rc{width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;}
+.ck-result h4{font-size:18px;font-weight:700;}
+.ck-result .sub{font-size:12px;color:var(--text-3);margin-top:6px;line-height:1.6;}
+.ck-result .rows{margin-top:16px;border-top:1px dashed var(--border-light);padding-top:14px;display:flex;flex-direction:column;gap:9px;text-align:left;}
+.ck-result .rows .r{display:flex;justify-content:space-between;font-size:12px;gap:12px;}
+.ck-result .rows .r span:first-child{color:var(--text-3);flex-shrink:0;}
+.ck-result .rows .r span:last-child{font-weight:500;text-align:right;}
+.ck-result .acts{margin-top:18px;display:flex;flex-direction:column;gap:8px;}
+.ck-result .link{font-size:12px;color:var(--primary);font-weight:500;}
+.leaflet-container{font-family:inherit;background:#E8EEF4;}
+.ck-map .leaflet-control-attribution{font-size:9px;}
+</style>
+</head>
+<body>
+<div class="phone-shell">
+  <div class="screen">
+    <div class="status-bar"></div>
+    <div class="app">
+      <div class="pages" style="padding-bottom:24px;">
+        <div class="nav-header">
+          <button class="back" onclick="history.back()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="title">辅学打卡</div>
+          <div class="right"><a href="checkin-records.html" style="color:var(--primary);font-size:12px;font-weight:500;">记录</a></div>
+        </div>
+
+        <div class="page">
+          <div class="ck-hero">
+            <div class="date" id="ckDate">—</div>
+            <div class="clock" id="ckClock">--:--:--</div>
+            <div class="worked">今日已工作 <b id="ckWorked">0.0</b> 小时 · 共 <span id="ckShiftN">0</span> 个班次</div>
+            <div class="ck-geo" id="ckGeo">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span id="ckGeoText">正在定位…</span>
+            </div>
+          </div>
+
+          <div class="ck-map-wrap">
+            <div class="ck-map" id="ckMap"></div>
+            <div class="ck-sim">
+              <span class="lbl">模拟定位</span>
+              <div class="segbtns">
+                <button class="on" id="simIn" onclick="setSim('in')">范围内</button>
+                <button id="simOut" onclick="setSim('out')">范围外</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="active-card">
+            <div class="ac-shift" id="acShift">—</div>
+            <div class="ac-meta" id="acMeta">—</div>
+            <div class="punch-row">
+              <button class="punch in" id="btnIn" onclick="doPunch('in')"><small>上班打卡</small><strong id="inLabel">--:--</strong></button>
+              <button class="punch out" id="btnOut" onclick="doPunch('out')"><small>下班打卡</small><strong id="outLabel">--:--</strong></button>
+            </div>
+            <div class="punch-tip" id="punchTip">正在获取今日班次…</div>
+          </div>
+
+          <div class="sec-title">
+            <h3>今日班次</h3>
+            <a class="more" href="checkin-records.html">打卡记录 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+          <div class="ck-list" id="ckList"></div>
+
+          <div class="ck-note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div>需在打卡地点有效范围（电子围栏）内完成<b style="color:var(--primary);">上班打卡</b>与<b style="color:var(--primary);">下班打卡</b>；打卡时长<b style="color:var(--primary);">仅计班次时间段内</b>（提前到岗不计入），为参考值，管理员可在后台调整。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ck-result" id="ckResult">
+      <div class="box">
+        <div class="rc" id="rcIcon"></div>
+        <h4 id="rcTitle"></h4>
+        <div class="sub" id="rcSub"></div>
+        <div class="rows" id="rcRows"></div>
+        <div class="acts">
+          <button class="btn-block" onclick="closeResult()">我知道了</button>
+          <a class="link" href="checkin-records.html">查看我的打卡记录</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== 移动端公共脚本（Tab 渲染、状态栏、Toast） ======
+
+const MOBILE_TABS = [
+  {id:'home',name:'首页',href:'home.html',icon:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'},
+  {id:'courses',name:'选课',href:'courses.html',icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'},
+  {id:'qa',name:'问答',href:'qa.html',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+  {id:'library',name:'资料库',href:'library.html',icon:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'},
+  {id:'profile',name:'我的',href:'profile.html',icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'}
+];
+
+function renderTabbar(activeId){
+  const tabbar = document.querySelector('.tabbar');
+  if(!tabbar) return;
+  tabbar.innerHTML = MOBILE_TABS.map(t=>{
+    return `<a class="tab ${t.id===activeId?'active':''}" href="${t.href}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg>
+      ${t.name}
+    </a>`;
+  }).join('');
+}
+
+function renderStatusBar(dark=false){
+  const sb = document.querySelector('.status-bar');
+  if(!sb) return;
+  sb.classList.toggle('dark',dark);
+  sb.innerHTML = `
+    <span>9:41</span>
+    <span class="right">
+      <svg width="16" height="10" viewBox="0 0 17 11" fill="currentColor"><rect y="6" width="3" height="5" rx=".5"/><rect x="4" y="4" width="3" height="7" rx=".5"/><rect x="8" y="2" width="3" height="9" rx=".5"/><rect x="12" width="3" height="11" rx=".5"/></svg>
+      <svg width="14" height="10" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 9.5C5.6 9.5 3.4 8.5 1.7 7L8 1l6.3 6c-1.7 1.5-3.9 2.5-6.3 2.5z" fill="currentColor"/></svg>
+      <svg width="22" height="10" viewBox="0 0 24 11" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="1" y="1" width="20" height="9" rx="2" stroke-opacity=".5"/><rect x="22" y="4" width="1.5" height="3" rx=".5" fill="currentColor" stroke="none"/><rect x="2.5" y="2.5" width="14" height="6" rx="1" fill="currentColor"/></svg>
+    </span>
+  `;
+}
+
+// ============= Toast =============
+function showToast(msg){
+  let toast = document.getElementById('toast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id='toast';toast.className='toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent=msg;
+  toast.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer=setTimeout(()=>toast.classList.remove('show'),1800);
+}
+
+// ============= Quick Actions (中间 + 按钮) =============
+function showQuickActions(){
+  showToast('快速提问已打开');
+}
+
+// ============= Pills toggle =============
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.pills').forEach(g=>{
+    g.querySelectorAll('.pill').forEach(p=>{
+      p.addEventListener('click',()=>{
+        g.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+        p.classList.add('active');
+      });
+    });
+  });
+});
+
+// ============= Message Drawer =============
+const MOBILE_MESSAGES = [
+  {id:1,type:'success',icon:'<polyline points="20 6 9 17 4 12"/>',color:'var(--success-bg)',iconColor:'var(--success)',title:'义工申请审核通过',desc:'你的 2026 春季辅学义工申请已通过三级审核，即将正式上岗！',time:'刚刚',read:false},
+  {id:2,type:'warning',icon:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',color:'var(--warning-bg)',iconColor:'var(--warning)',title:'课程即将开始提醒',desc:'高等数学A · 微分方程专题 将在 30 分钟后开始，地点：知新馆 301',time:'30 分钟前',read:false},
+  {id:3,type:'primary',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',color:'var(--primary-light)',iconColor:'var(--primary)',title:'即问即答有新回答',desc:'你提问的「高数证明数列收敛的常用方法」已有 3 个新回答',time:'2 小时前',read:false},
+  {id:4,type:'gold',icon:'<polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.7 5.5 21 7 14 2 9.3 9 8.5"/>',color:'#FFF8E1',iconColor:'#F29100',title:'星级评定结果通知',desc:'恭喜！你的四星级义工评定已通过，相关权益已在个人中心生效',time:'2 天前',read:true},
+  {id:5,type:'primary',icon:'<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>',color:'var(--primary-light)',iconColor:'var(--primary)',title:'2026 春季义工招募开启',desc:'学风建设中心面向全校学生开放义工报名，截止 5 月 15 日',time:'3 天前',read:true},
+];
+let mobileCurrentTab = 'all';
+function renderMobileMessages(){
+  const list = document.getElementById('msgListMobile');
+  if(!list) return;
+  const msgs = mobileCurrentTab==='unread' ? MOBILE_MESSAGES.filter(m=>!m.read) : MOBILE_MESSAGES;
+  if(!msgs.length){list.innerHTML='<div class="msg-empty">暂无消息 🎉</div>';return;}
+  const unread = msgs.filter(m=>!m.read);
+  const read = msgs.filter(m=>m.read);
+  let html = '';
+  if(unread.length && mobileCurrentTab==='all'){html+='<div class="msg-sep">未读消息</div>';}
+  unread.forEach(m=>{ html+=renderMsgItem(m); });
+  if(read.length && mobileCurrentTab==='all'){html+='<div class="msg-sep">已读</div>';}
+  if(mobileCurrentTab==='all') read.forEach(m=>{ html+=renderMsgItem(m); });
+  list.innerHTML = html;
+  list.querySelectorAll('.msg-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const id=parseInt(el.dataset.id);
+      const msg=MOBILE_MESSAGES.find(m=>m.id===id);
+      if(msg&&!msg.read){msg.read=true;updateMobileUnread();renderMobileMessages();}
+    });
+  });
+}
+function renderMsgItem(m){
+  return `<div class="msg-item${m.read?' read':''}" data-id="${m.id}">
+    <div class="m-ic" style="background:${m.color};">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${m.iconColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${m.icon}</svg>
+    </div>
+    <div class="m-body">
+      <div class="m-title">${m.title}</div>
+      <div class="m-desc">${m.desc}</div>
+      <div class="m-time">${m.time}</div>
+    </div>
+    ${!m.read?'<div class="unread-dot"></div>':''}
+  </div>`;
+}
+function updateMobileUnread(){
+  const cnt = MOBILE_MESSAGES.filter(m=>!m.read).length;
+  const badge = document.getElementById('mobileUnreadBadge');
+  const dot = document.getElementById('msgDotMobile');
+  if(badge) badge.textContent=cnt, badge.style.display=cnt?'inline':'none';
+  if(dot) dot.style.display=cnt?'block':'none';
+}
+function switchMsgTab(el,tab){
+  document.querySelectorAll('.msg-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  mobileCurrentTab=tab;
+  renderMobileMessages();
+}
+function markAllReadMobile(){
+  MOBILE_MESSAGES.forEach(m=>m.read=true);
+  updateMobileUnread();
+  renderMobileMessages();
+}
+function openMsgDrawer(){
+  document.getElementById('msgOverlay').classList.add('show');
+  document.getElementById('msgDrawer').classList.add('show');
+  renderMobileMessages();
+}
+function closeMsgDrawer(){
+  document.getElementById('msgOverlay').classList.remove('show');
+  document.getElementById('msgDrawer').classList.remove('show');
+}
+
+// 浮动提示
+function showFloatingTip(){
+  const tip=document.getElementById('floatingTip');
+  if(!tip)return;
+  tip.classList.add('show');
+  setTimeout(()=>tip.classList.remove('show'),5000);
+}
+
+</script>
+<script>
+  renderStatusBar(false);
+
+  const ME = {sid:'2023110045', name:'王诗韵'};
+  const LOC = {name:'知新馆（校本部）', lat:28.16820, lng:112.93750, radius:120};
+  const LATE_GRACE = 10;
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function hhmm(d){ return pad(d.getHours())+':'+pad(d.getMinutes()); }
+  function toMin(t){ if(!t) return null; const [h,m]=t.split(':').map(Number); return h*60+m; }
+  function nowMin(){ const d=new Date(); return d.getHours()*60+d.getMinutes(); }
+  function shiftMin(min){ return hhmm(new Date(Date.now()+min*60000)); }
+  function offsetLatLng(lat,lng,dist,ang){ return [lat+(dist*Math.cos(ang))/111320, lng+(dist*Math.sin(ang))/(111320*Math.cos(lat*Math.PI/180))]; }
+  function distM(a,b){ const R=6371000,rad=x=>x*Math.PI/180; const dLat=rad(b[0]-a[0]),dLng=rad(b[1]-a[1]); const s=Math.sin(dLat/2)**2+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(dLng/2)**2; return Math.round(2*R*Math.asin(Math.sqrt(s))); }
+
+  // ====== 今日班次（其中一节围绕当前时间，便于演示上/下班打卡） ======
+  const SHIFTS = [
+    {id:'m1', name:'第3-4节', start:'10:00', end:'12:00', clockIn:'09:56', clockOut:'12:01', status:'正常'},
+    {id:'m2', name:'午班',   start:shiftMin(-40), end:shiftMin(80), clockIn:'', clockOut:'', status:'待上班'},
+    {id:'m3', name:'晚1班',   start:'18:00', end:'21:00', clockIn:'', clockOut:'', status:'未开始'}
+  ];
+  // 当前可操作班次：优先取「进行中且未完成」的班次
+  function currentShift(){
+    const n = nowMin();
+    let cur = SHIFTS.find(s => n>=toMin(s.start) && n<=toMin(s.end)+30 && s.status!=='正常' && s.status!=='迟到完成');
+    return cur || SHIFTS.find(s => s.status==='待上班') || SHIFTS[1];
+  }
+
+  function durH(s){
+    const startM=toMin(s.start), endM=toMin(s.end), i=toMin(s.clockIn);
+    if(i==null) return 0;
+    const rawEnd=(toMin(s.clockOut)!=null)?toMin(s.clockOut):nowMin();
+    const eff=Math.min(rawEnd,endM)-Math.max(i,startM);
+    return Math.max(0, Math.round(eff/6)/10);
+  }
+  function todayWorked(){ return Math.round(SHIFTS.reduce((a,s)=>a+durH(s),0)*10)/10; }
+
+  // ====== 定位（模拟） ======
+  const SIM={in:offsetLatLng(LOC.lat,LOC.lng,46,0.9), out:offsetLatLng(LOC.lat,LOC.lng,380,2.4)};
+  let simMode='in';
+  function myPos(){ return SIM[simMode]; }
+  function myDist(){ return distM(myPos(),[LOC.lat,LOC.lng]); }
+  function inFence(){ return myDist()<=LOC.radius; }
+
+  const MAP_OK=(typeof L!=='undefined');
+  let map=null,fence=null,meMarker=null;
+  function initMap(){
+    if(!MAP_OK){ document.getElementById('ckMap').innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-4);">地图需联网加载</div>'; return; }
+    map=L.map('ckMap',{zoomControl:false,dragging:true,tap:false}).setView([LOC.lat,LOC.lng],16);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+    fence=L.circle([LOC.lat,LOC.lng],{radius:LOC.radius,color:'#3087CC',weight:2,fillColor:'#3087CC',fillOpacity:.18}).addTo(map);
+    L.circleMarker([LOC.lat,LOC.lng],{radius:5,color:'#fff',weight:2,fillColor:'#3087CC',fillOpacity:1}).addTo(map).bindTooltip(LOC.name);
+    meMarker=L.circleMarker(myPos(),{radius:9,color:'#fff',weight:3,fillColor:'#1BB975',fillOpacity:1}).addTo(map).bindTooltip('我的位置');
+    fit();
+  }
+  function fit(){ if(map){ map.fitBounds(fence.getBounds().extend(myPos()).pad(0.3)); setTimeout(()=>map.invalidateSize(),80); } }
+  function setSim(m){ simMode=m; document.getElementById('simIn').classList.toggle('on',m==='in'); document.getElementById('simOut').classList.toggle('on',m==='out'); if(meMarker){ meMarker.setLatLng(myPos()); meMarker.setStyle({fillColor:inFence()?'#1BB975':'#DF2027'}); fit(); } updateUI(); }
+
+  // ====== 渲染 ======
+  function statusTag(s){
+    if(s==='正常'||s==='迟到完成') return '<span class="c-tag success">已完成 · '+(s==='迟到完成'?'迟到':'正常')+'</span>';
+    if(s==='在岗') return '<span class="c-tag">在岗中</span>';
+    if(s==='待上班') return '<span class="c-tag warning">待上班</span>';
+    if(s==='缺卡') return '<span class="c-tag" style="background:var(--danger-bg);color:var(--danger);">缺卡</span>';
+    return '<span class="c-tag grey">未开始</span>';
+  }
+  function renderList(){
+    document.getElementById('ckShiftN').textContent = SHIFTS.length;
+    document.getElementById('ckWorked').textContent = todayWorked().toFixed(1);
+    const cur = currentShift();
+    document.getElementById('ckList').innerHTML = SHIFTS.map(s=>{
+      const h = durH(s);
+      return `<div class="shift-card ${s.id===cur.id?'cur':''}">
+        <div class="sc-head">
+          <div class="sc-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <div class="sc-t"><h5>${s.name} <span style="font-weight:400;color:var(--text-3);font-size:12px;">${s.start}-${s.end}</span></h5><p>${LOC.name} · 围栏 ${LOC.radius} 米</p></div>
+          ${statusTag(s.status)}
+        </div>
+        <div class="sc-punch">
+          <div class="sc-slot"><div class="k">上班打卡</div><div class="v ${s.clockIn?'':'empty'}">${s.clockIn||'—'}</div></div>
+          <div class="sc-slot"><div class="k">下班打卡</div><div class="v ${s.clockOut?'':'empty'}">${s.clockOut||'—'}</div></div>
+          <div class="sc-slot"><div class="k">打卡时长</div><div class="v hrs">${h?h.toFixed(1)+'h':'—'}</div></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  function updateUI(){
+    const d=myDist(), ok=inFence();
+    const geo=document.getElementById('ckGeo');
+    geo.classList.toggle('out',!ok);
+    document.getElementById('ckGeoText').textContent = ok ? ('已进入打卡范围 · 距中心 '+d+' 米') : ('不在打卡范围 · 距中心 '+d+' 米（需 ≤ '+LOC.radius+'）');
+
+    const cur=currentShift();
+    document.getElementById('acShift').textContent = '当前班次：'+cur.name;
+    document.getElementById('acMeta').textContent = cur.start+' - '+cur.end+' · '+LOC.name;
+    const n=nowMin(), started=cur.clockIn, ended=cur.clockOut;
+    const btnIn=document.getElementById('btnIn'), btnOut=document.getElementById('btnOut');
+    document.getElementById('inLabel').textContent = started||'上班';
+    document.getElementById('outLabel').textContent = ended||'下班';
+    btnIn.className='punch in'; btnOut.className='punch out';
+    const tip=document.getElementById('punchTip');
+    if(started){ btnIn.className='punch done'; }
+    if(ended){ btnOut.className='punch done'; }
+    if(!ok){ if(!started) btnIn.className='punch disabled'; if(started&&!ended) btnOut.className='punch disabled'; }
+
+    if(started&&ended){ tip.innerHTML='「'+cur.name+'」已完成打卡，工作时长 <b class="ok">'+durH(cur).toFixed(1)+'</b> 小时'; }
+    else if(started){ tip.innerHTML = ok?('已上班打卡（'+started+'），下班时请在范围内点击<b class="ok">下班打卡</b>'):'你已上班打卡，<b>当前不在打卡范围</b>，下班打卡需回到 '+LOC.name; }
+    else { tip.innerHTML = ok?'已进入有效范围，点击<b class="ok">上班打卡</b>开始当班':'请进入 '+LOC.name+' 打卡范围后再进行<b>上班打卡</b>'; }
+    renderList();
+  }
+
+  function doPunch(type){
+    const cur=currentShift(), d=myDist();
+    if(type==='in' && cur.clockIn){ showToast('本班次已完成上班打卡'); return; }
+    if(type==='out' && !cur.clockIn){ showToast('请先完成上班打卡'); return; }
+    if(type==='out' && cur.clockOut){ showToast('本班次已完成下班打卡'); return; }
+    if(d>LOC.radius){ showResult(false,type,d,cur); return; }
+    const t=hhmm(new Date());
+    if(type==='in'){ cur.clockIn=t; cur.status = (nowMin()>toMin(cur.start)+LATE_GRACE)?'迟到完成':'在岗'; if(cur.status==='迟到完成') cur.status='在岗'; cur._late = (nowMin()>toMin(cur.start)+LATE_GRACE); }
+    else { cur.clockOut=t; cur.status = cur._late?'迟到完成':'正常'; }
+    updateUI();
+    showResult(true,type,d,cur);
+  }
+
+  function showResult(ok,type,d,cur){
+    const icon=document.getElementById('rcIcon'); const rows=[];
+    const label = type==='in'?'上班打卡':'下班打卡';
+    if(ok){
+      icon.style.background='var(--success-bg)';
+      icon.innerHTML='<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1BB975" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      document.getElementById('rcTitle').textContent=label+'成功'; document.getElementById('rcTitle').style.color='var(--text-1)';
+      document.getElementById('rcSub').textContent='「'+cur.name+'」'+(type==='in'?(cur._late?'（迟到）':''):'（工作 '+durH(cur).toFixed(1)+' 小时）');
+      rows.push([label+'时间', type==='in'?cur.clockIn:cur.clockOut]);
+      rows.push(['班次', cur.name+' · '+cur.start+'-'+cur.end]);
+      rows.push(['打卡地点', LOC.name]);
+      rows.push(['定位距离', '距中心 '+d+' 米（范围内）']);
+      if(type==='out') rows.push(['打卡时长', durH(cur).toFixed(1)+' 小时（参考值）']);
+    }else{
+      icon.style.background='var(--danger-bg)';
+      icon.innerHTML='<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#DF2027" stroke-width="2.6" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      document.getElementById('rcTitle').textContent=label+'失败'; document.getElementById('rcTitle').style.color='var(--danger)';
+      document.getElementById('rcSub').textContent='当前不在打卡有效范围内，请前往打卡地点后重试';
+      rows.push(['打卡地点', LOC.name]);
+      rows.push(['有效范围', '≤ '+LOC.radius+' 米']);
+      rows.push(['当前距离', '<span style="color:var(--danger);">'+d+' 米（超出 '+(d-LOC.radius)+' 米）</span>']);
+    }
+    document.getElementById('rcRows').innerHTML = rows.map(([k,v])=>`<div class="r"><span>${k}</span><span>${v}</span></div>`).join('');
+    document.getElementById('ckResult').classList.add('show');
+  }
+  function closeResult(){ document.getElementById('ckResult').classList.remove('show'); }
+
+  const WEEK=['周日','周一','周二','周三','周四','周五','周六'];
+  function tick(){ const d=new Date();
+    document.getElementById('ckDate').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 · '+WEEK[d.getDay()];
+    document.getElementById('ckClock').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+    const cur=currentShift(); if(cur.clockIn&&!cur.clockOut){ document.getElementById('ckWorked').textContent=todayWorked().toFixed(1); }
+  }
+  (function init(){ tick(); setInterval(tick,1000); initMap(); updateUI(); })();
+</script>
+<script>window.addEventListener("load",function(){setTimeout(function(){try{doPunch('in');}catch(e){}},180);});</script>
+
+</body>
+</html>

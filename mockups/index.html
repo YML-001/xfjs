@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<title>矢量稿索引 · 学风建设系统</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(180deg,#F0F4FB 0%,#E8F2FB 60%,#F5F8FC 100%);color:#1A2A3A;min-height:100vh;}
+  .wrap{max-width:1400px;margin:0 auto;padding:48px 32px 80px;}
+  .header{margin-bottom:48px;}
+  .crumb{font-size:12px;color:#6B7280;display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+  .crumb a{color:#3087CC;text-decoration:none;}
+  .crumb a:hover{text-decoration:underline;}
+  h1{font-size:36px;font-weight:700;letter-spacing:-0.5px;background:linear-gradient(135deg,#006DAD,#3087CC,#7C5CFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:14px;}
+  .lead{font-size:15px;color:#4A5560;line-height:1.7;max-width:840px;margin-bottom:24px;}
+  .meta-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#FFFFFF;border:1px solid #E5EAF1;border-radius:999px;font-size:11px;color:#4A5560;}
+  .pill.accent{background:linear-gradient(135deg,#3087CC,#7C5CFF);color:#FFFFFF;border-color:transparent;}
+
+  .howto{margin-top:28px;background:#FFFFFF;border:1px solid #E5EAF1;border-radius:16px;padding:24px 28px;box-shadow:0 4px 20px rgba(10,74,120,.04);}
+  .howto h3{font-size:14px;font-weight:600;margin-bottom:14px;color:#1A2A3A;display:flex;align-items:center;gap:8px;}
+  .howto h3::before{content:'';width:4px;height:14px;background:linear-gradient(180deg,#3087CC,#7C5CFF);border-radius:2px;}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .step{padding:14px 16px;background:#F8FAFD;border-radius:12px;border:1px solid #F0F4F9;}
+  .step .n{font-size:11px;color:#7C5CFF;font-weight:600;margin-bottom:4px;}
+  .step .t{font-size:13px;font-weight:600;margin-bottom:4px;}
+  .step .d{font-size:11px;color:#6B7280;line-height:1.6;}
+
+  .section{margin-top:48px;}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;}
+  .sec-title{font-size:20px;font-weight:600;display:flex;align-items:center;gap:10px;}
+  .sec-title .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:10px;font-weight:500;}
+  .sec-title .badge.b1{background:#E8F2FB;color:#3087CC;}
+  .sec-title .badge.b2{background:#E0F7F4;color:#00C4B6;}
+  .sec-title .badge.b3{background:#FFF1E5;color:#FF8A3D;}
+  .sec-desc{font-size:12px;color:#6B7280;}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .grid.mobile{grid-template-columns:repeat(4,1fr);}
+  .card{background:#FFFFFF;border-radius:18px;overflow:hidden;border:1px solid #E5EAF1;box-shadow:0 4px 20px rgba(10,74,120,.04);transition:transform .3s,box-shadow .3s;cursor:pointer;}
+  .card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(48,135,204,.16);}
+  .card .preview{position:relative;background:#F0F4FB;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .card.pc .preview{aspect-ratio:1440 / 900;}
+  .card.mobile .preview{aspect-ratio:9 / 16;}
+  .card .preview object,.card .preview embed,.card .preview img{width:100%;height:100%;object-fit:contain;display:block;}
+  .card .info{padding:18px 20px 16px;}
+  .card .name{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;}
+  .card .name::before{content:'';width:8px;height:8px;border-radius:50%;}
+  .card.pc-admin .name::before{background:linear-gradient(135deg,#3087CC,#006DAD);}
+  .card.pc-student .name::before{background:linear-gradient(135deg,#00C4B6,#10B981);}
+  .card.mobile .name::before{background:linear-gradient(135deg,#7C5CFF,#5B3FE0);}
+  .card .desc{margin-top:4px;font-size:11px;color:#6B7280;line-height:1.5;}
+  .card .actions{margin-top:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;font-size:11px;font-weight:500;text-decoration:none;border:none;cursor:pointer;}
+  .btn.primary{background:linear-gradient(135deg,#3087CC,#7C5CFF);color:#FFFFFF;}
+  .btn.ghost{background:#F5F8FC;color:#1A2A3A;}
+  .btn:hover{filter:brightness(1.05);}
+  .specs{margin-top:10px;display:flex;gap:8px;font-size:10px;color:#9CA3AF;}
+  .specs span{padding:2px 8px;background:#F5F8FC;border-radius:6px;}
+
+  .footer{margin-top:64px;padding:24px;border-top:1px solid #E5EAF1;font-size:11px;color:#9CA3AF;display:flex;justify-content:space-between;align-items:center;}
+  .footer a{color:#3087CC;text-decoration:none;margin-left:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="crumb"><a href="../index.html">学风建设系统</a> <span>›</span> <span>矢量稿索引</span></div>
+    <h1>整页矢量稿 · 9 个关键页面</h1>
+    <p class="lead">每个页面都是 1:1 复刻的纯 SVG 矢量文件，所有矩形、文字、图标都是独立可编辑的图层。直接拖入 Figma / Sketch / Adobe Illustrator，即可作为分层稿继续设计。</p>
+    <div class="meta-pills">
+      <span class="pill accent">9 个高保真矢量稿</span>
+      <span class="pill">PC 管理 1440×1080</span>
+      <span class="pill">PC 学生 1440×1080</span>
+      <span class="pill">移动 390×980</span>
+      <span class="pill">支持 Figma / Sketch / AI</span>
+    </div>
+
+    <div class="howto">
+      <h3>如何导入到 Figma 编辑</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="n">STEP 01</div>
+          <div class="t">下载 SVG</div>
+          <div class="d">点击下方卡片 "下载 SVG"，本地保存即可。也可直接拖入 Figma 画布。</div>
+        </div>
+        <div class="step">
+          <div class="n">STEP 02</div>
+          <div class="t">导入到 Figma</div>
+          <div class="d">在 Figma 中 File → Place image / 直接拖拽 .svg 进画布；Figma 会自动转为分层 Frame。</div>
+        </div>
+        <div class="step">
+          <div class="n">STEP 03</div>
+          <div class="t">展开图层</div>
+          <div class="d">侧边图层面板按 group id 分组（如 sidebar / topbar / hero / kpi-cards 等），一键定位组件。</div>
+        </div>
+        <div class="step">
+          <div class="n">STEP 04</div>
+          <div class="t">改样式 / 改文案</div>
+          <div class="d">所有色块为 Rectangle，文字为 Text 图层，可直接换颜色 / 字号 / 文案。Sketch / AI 同理。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="sec-head">
+      <div class="sec-title">PC 管理端 <span class="badge b1">1440 × 1080 · 3 个版式</span></div>
+      <div class="sec-desc">仪表盘 · 表格 · 网格 三种典型布局</div>
+    </div>
+    <div class="grid">
+      <div class="card pc pc-admin">
+        <div class="preview"><object type="image/svg+xml" data="pc-dashboard.svg" aria-label="PC 数据概览"></object></div>
+        <div class="info">
+          <div class="name">数据概览 · Dashboard</div>
+          <div class="desc">Hero Banner + 4 KPI 卡片 + 趋势线图 + Top 5 排行 + 待办列表 + 时间线动态</div>
+          <div class="specs"><span>Hero</span><span>KPI×4</span><span>Line/Bar</span><span>Timeline</span></div>
+          <div class="actions">
+            <a class="btn primary" href="pc-dashboard.svg" target="_blank">查看 SVG</a>
+            <a class="btn ghost" href="pc-dashboard.svg" download>下载 SVG</a>
+            <a class="btn ghost" href="../pc/dashboard.html" target="_blank">原型页面 ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="card pc pc-admin">
+        <div class="preview"><object type="image/svg+xml" data="pc-volunteers.svg" aria-label="PC 义工管理"></object></div>
+        <div class="info">
+          <div class="name">辅学义工管理 · Table</div>
+          <div class="desc">4 个统计卡 + 筛选条 + 全屏表格（9 行示例）+ 星级评分 + 进度条 + 分页器</div>
+          <div class="specs"><span>Stats×4</span><span>Filter</span><span>Table</span><span>Pagination</span></div>
+          <div class="actions">
+            <a class="btn primary" href="pc-volunteers.svg" target="_blank">查看 SVG</a>
+            <a class="btn ghost" href="pc-volunteers.svg" download>下载 SVG</a>
+            <a class="btn ghost" href="../pc/volunteers.html" target="_blank">原型页面 ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="card pc pc-admin">
+        <div class="preview"><object type="image/svg+xml" data="pc-library.svg" aria-label="PC 资料库"></object></div>
+        <div class="info">
+          <div class="name">宝藏资料库 · Grid</div>
+          <div class="desc">分类树侧栏 + Hero + 类型筛选 Pills + 8 张精美资料卡片网格</div>
+          <div class="specs"><span>SideTree</span><span>Hero</span><span>Cards×8</span><span>Pills</span></div>
+          <div class="actions">
+            <a class="btn primary" href="pc-library.svg" target="_blank">查看 SVG</a>
+            <a class="btn ghost" href="pc-library.svg" download>下载 SVG</a>
+            <a class="btn ghost" href="../pc/library.html" target="_blank">原型页面 ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-head">
+      <div class="sec-title">PC 学生端 <span class="badge b2">1440 × 1080 · 3 个版式</span></div>
+      <div class="sec-desc">学生视角 · 首页 / 选课 / 资料库</div>
+    </div>
+    <div class="grid">
+      <div class="card pc pc-student">
+        <div class="preview"><object type="image/svg+xml" data="student-home.svg" aria-label="学生 首页"></object></div>
+        <div class="info">
+          <div class="name">学生首页 · Home</div>
+          <div class="desc">Hero 渐变 + 本期统计 + 我的课程×3 + 本周日程 + 即问即答 + 推荐课程×4</div>
+          <div class="specs"><span>Hero</span><span>Stats</span><span>Courses</span><span>Schedule</span></div>
+          <div class="actions">
+            <a class="btn primary" href="student-home.svg" target="_blank">查看 SVG</a>
+            <a class="btn ghost" href="student-home.svg" download>下载 SVG</a>
+            <a class="btn ghost" href="../pc-student/home.html" target="_blank">原型页面 ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="card pc pc-student">
+        <div class="preview"><object type="image/svg+xml" data="student-courses.svg" aria-label="学生 选课"></object></div>
+        <div class="info">
+          <div class="name">知新选课 · Courses</div>
+          <div class="desc">Hero + 四大坊导航 + 多维筛选 + 8 张课程卡片网格 + 报名进度条</div>
+          <div class="specs"><span>4-Fang</span><span>Filter</span><span>Cards×8</span><span>Progress</span></div>
+          <div class="actions">
+            <a class="btn primary" href="student-courses.svg" target="_blank">查看 SVG</a>
+            <a class="btn ghost" href="student-courses.svg" download>下载 SVG</a>
+            <a class="btn ghost" href="../pc-student/courses.html" target="_blank">原型页面 ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="card pc pc-student">
+        <div class="preview"><object type="image/svg+xml" data="student-library.svg" aria-label="学生 资料库"></object></div>
+        <div class="info">
+          <div class="name">宝藏资料库 · Library</div>
+          <div class="desc">紫蓝渐变 Hero 搜索 + 类型 Pill 筛选 + 4 张精选卡片 + 5 行 Top 列表</div>
+          <div class="specs"><span>Hero+Search</span><span>Featured×4</span><span>List×5</span></div>
+          <div class="actions">
+            <a class="btn primary" href="student-library.svg" target="_blank">查看 SVG</a>
+            <a class="btn ghost" href="student-library.svg" download>下载 SVG</a>
+            <a class="btn ghost" href="../pc-student/library.html" target="_blank">原型页面 ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-head">
+      <div class="sec-title">移动端 <span class="badge b3">390 × 980 · 3 个版式</span></div>
+      <div class="sec-desc">iPhone 14 视口 · 状态栏 + 内容 + Tabbar</div>
+    </div>
+    <div class="grid mobile">
+      <div class="card mobile">
+        <div class="preview"><object type="image/svg+xml" data="mobile-home.svg" aria-label="移动 首页"></object></div>
+        <div class="info">
+          <div class="name">移动首页</div>
+          <div class="desc">动态岛 + Hero 圆环进度 + 4 项统计 + 4 个常用功能 + 四大坊 + 课表</div>
+          <div class="actions">
+            <a class="btn primary" href="mobile-home.svg" target="_blank">查看</a>
+            <a class="btn ghost" href="mobile-home.svg" download>下载</a>
+          </div>
+        </div>
+      </div>
+      <div class="card mobile">
+        <div class="preview"><object type="image/svg+xml" data="mobile-courses.svg" aria-label="移动 选课"></object></div>
+        <div class="info">
+          <div class="name">移动 · 知新选课</div>
+          <div class="desc">Hero + 搜索 + 四大坊 Segment + 学科 Pills + 3 张课程大卡 + 报名状态</div>
+          <div class="actions">
+            <a class="btn primary" href="mobile-courses.svg" target="_blank">查看</a>
+            <a class="btn ghost" href="mobile-courses.svg" download>下载</a>
+          </div>
+        </div>
+      </div>
+      <div class="card mobile">
+        <div class="preview"><object type="image/svg+xml" data="mobile-library.svg" aria-label="移动 资料库"></object></div>
+        <div class="info">
+          <div class="name">移动 · 宝藏资料库</div>
+          <div class="desc">紫蓝渐变 Hero + 学涯七篇 2×4 网格 + 3 张精选大卡 + 各种文件类型 Tag</div>
+          <div class="actions">
+            <a class="btn primary" href="mobile-library.svg" target="_blank">查看</a>
+            <a class="btn ghost" href="mobile-library.svg" download>下载</a>
+          </div>
+        </div>
+      </div>
+      <div class="card mobile" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#F8FAFD,#F0F4FB);border:2px dashed #C8D5E5;">
+        <div style="text-align:center;padding:40px 20px;">
+          <div style="font-size:36px;color:#7C5CFF;font-weight:300;line-height:1;margin-bottom:14px;">+</div>
+          <div style="font-size:13px;font-weight:600;color:#4A5560;margin-bottom:6px;">需要更多页面？</div>
+          <div style="font-size:11px;color:#9CA3AF;line-height:1.6;">告诉我你需要哪些页面 / 状态<br/>（如：移动 · 提问 / 学时打卡 / 投稿…），<br/>我可以批量补齐为矢量稿。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <span>学风建设系统 · 矢量稿索引 · 9 个高保真页面</span>
+    <span>
+      <a href="../index.html">‹ 返回主页</a>
+      <a href="../pc/dashboard.html">PC 管理端</a>
+      <a href="../pc-student/home.html">PC 学生端</a>
+      <a href="../mobile/home.html">移动端</a>
+    </span>
+  </div>
+</div>
+</body>
+</html>

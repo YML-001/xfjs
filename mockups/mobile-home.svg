@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="980" viewBox="0 0 390 980" font-family="-apple-system,'PingFang SC','Microsoft YaHei',sans-serif">
+  <title>移动端 · 首页</title>
+  <desc>iPhone 14 视口 · 状态栏 + Hero + 学时进度 + 四大坊 + 推荐 + Tabbar · 1:1 高保真矢量稿</desc>
+  <defs>
+    <linearGradient id="mhero" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#006DAD"/><stop offset="0.5" stop-color="#3087CC"/><stop offset="1" stop-color="#7C5CFF"/>
+    </linearGradient>
+    <linearGradient id="mring" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#00C4B6"/><stop offset="1" stop-color="#3087CC"/>
+    </linearGradient>
+    <linearGradient id="mc1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3087CC"/><stop offset="1" stop-color="#006DAD"/></linearGradient>
+    <linearGradient id="mc2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8A3D"/><stop offset="1" stop-color="#FF6B6B"/></linearGradient>
+    <linearGradient id="mc3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00C4B6"/><stop offset="1" stop-color="#10B981"/></linearGradient>
+    <linearGradient id="mc4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7C5CFF"/><stop offset="1" stop-color="#5B3FE0"/></linearGradient>
+    <filter id="ms" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#0A4A78" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="390" height="980" fill="#F5F8FC"/>
+
+  <g id="status-bar">
+    <rect x="0" y="0" width="390" height="44" fill="#F5F8FC"/>
+    <text x="32" y="28" font-size="14" font-weight="600" fill="#1A2A3A">9:41</text>
+    <g id="dynamic-island">
+      <rect x="155" y="10" width="80" height="24" rx="12" fill="#1A2A3A"/>
+    </g>
+    <g id="indicators">
+      <rect x="304" y="20" width="3" height="6" fill="#1A2A3A"/>
+      <rect x="309" y="17" width="3" height="9" fill="#1A2A3A"/>
+      <rect x="314" y="14" width="3" height="12" fill="#1A2A3A"/>
+      <rect x="319" y="11" width="3" height="15" fill="#1A2A3A"/>
+      <path d="M328 22 q-3 -3 0 -6 q3 -3 6 0 q3 3 0 6 z" fill="#1A2A3A" fill-rule="evenodd"/>
+      <rect x="346" y="14" width="20" height="10" rx="2.5" fill="none" stroke="#1A2A3A" stroke-width="1"/>
+      <rect x="348" y="16" width="14" height="6" rx="1" fill="#1A2A3A"/>
+      <rect x="367" y="17" width="1.5" height="4" rx="0.5" fill="#1A2A3A"/>
+    </g>
+  </g>
+
+  <g id="topnav">
+    <rect x="0" y="44" width="390" height="56" fill="#F5F8FC"/>
+    <circle cx="32" cy="72" r="20" fill="#FFFFFF" filter="url(#ms)"/>
+    <circle cx="32" cy="72" r="16" fill="#FF8A3D"/>
+    <text x="32" y="76" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">林</text>
+    <text x="60" y="68" font-size="10" fill="#6B7280">早安，</text>
+    <text x="60" y="84" font-size="14" font-weight="600" fill="#1A2A3A">林雅雯 · 五星辅学</text>
+    <rect x="290" y="56" width="32" height="32" rx="16" fill="#FFFFFF" filter="url(#ms)"/>
+    <circle cx="306" cy="68" r="5" stroke="#1A2A3A" stroke-width="1.5" fill="none"/>
+    <line x1="310" y1="72" x2="314" y2="76" stroke="#1A2A3A" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="332" y="56" width="32" height="32" rx="16" fill="#FFFFFF" filter="url(#ms)"/>
+    <path d="M342 66 a6 6 0 0 1 12 0 v6 l2 4 h-16 l2 -4 z" fill="none" stroke="#1A2A3A" stroke-width="1.4"/>
+    <circle cx="356" cy="62" r="4" fill="#FF6B6B"/>
+    <text x="356" y="65" text-anchor="middle" font-size="7" fill="#FFFFFF" font-weight="600">5</text>
+  </g>
+
+  <g id="hero">
+    <rect x="16" y="116" width="358" height="184" rx="20" fill="url(#mhero)" filter="url(#ms)"/>
+    <circle cx="320" cy="252" r="80" fill="#FFFFFF" fill-opacity="0.06"/>
+    <circle cx="360" cy="140" r="40" fill="#FFFFFF" fill-opacity="0.08"/>
+    <text x="36" y="148" font-size="10" fill="#FFFFFF" fill-opacity="0.7" letter-spacing="1">SmartCampus · 学风建设</text>
+    <text x="36" y="178" font-size="20" font-weight="700" fill="#FFFFFF">让学习路上不再独行 ✨</text>
+    <text x="36" y="200" font-size="11" fill="#FFFFFF" fill-opacity="0.85">辅学义工 · 知新选课 · 即问即答 · 资料库</text>
+
+    <g id="ring">
+      <circle cx="316" cy="220" r="42" fill="#FFFFFF" fill-opacity="0.12"/>
+      <circle cx="316" cy="220" r="32" fill="none" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="6"/>
+      <circle cx="316" cy="220" r="32" fill="none" stroke="url(#mring)" stroke-width="6" stroke-linecap="round" stroke-dasharray="128 200" transform="rotate(-90 316 220)"/>
+      <text x="316" y="216" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">64%</text>
+      <text x="316" y="230" text-anchor="middle" font-size="9" fill="#FFFFFF" fill-opacity="0.85">学时进度</text>
+    </g>
+
+    <g id="hero-meta">
+      <text x="36" y="232" font-size="10" fill="#FFFFFF" fill-opacity="0.7">本学期学时</text>
+      <text x="36" y="258" font-size="22" font-weight="700" fill="#FFFFFF">128h</text>
+      <text x="100" y="258" font-size="10" fill="#FFFFFF" fill-opacity="0.7">/ 200h 目标</text>
+      <rect x="36" y="270" width="220" height="6" rx="3" fill="#FFFFFF" fill-opacity="0.18"/>
+      <rect x="36" y="270" width="142" height="6" rx="3" fill="#FFFFFF"/>
+    </g>
+  </g>
+
+  <g id="quick-stat">
+    <rect x="16" y="316" width="358" height="80" rx="14" fill="#FFFFFF" filter="url(#ms)"/>
+    <line x1="105" y1="334" x2="105" y2="378" stroke="#F0F4F9"/>
+    <line x1="195" y1="334" x2="195" y2="378" stroke="#F0F4F9"/>
+    <line x1="285" y1="334" x2="285" y2="378" stroke="#F0F4F9"/>
+
+    <text x="60" y="346" text-anchor="middle" font-size="9" fill="#9CA3AF">本周学时</text>
+    <text x="60" y="370" text-anchor="middle" font-size="20" font-weight="700" fill="#3087CC">12</text>
+    <text x="60" y="386" text-anchor="middle" font-size="9" fill="#10B981">↑ +3</text>
+
+    <text x="150" y="346" text-anchor="middle" font-size="9" fill="#9CA3AF">已选课程</text>
+    <text x="150" y="370" text-anchor="middle" font-size="20" font-weight="700" fill="#FF8A3D">4</text>
+    <text x="150" y="386" text-anchor="middle" font-size="9" fill="#9CA3AF">3 进行中</text>
+
+    <text x="240" y="346" text-anchor="middle" font-size="9" fill="#9CA3AF">已答疑</text>
+    <text x="240" y="370" text-anchor="middle" font-size="20" font-weight="700" fill="#00C4B6">28</text>
+    <text x="240" y="386" text-anchor="middle" font-size="9" fill="#9CA3AF">★ 23 好评</text>
+
+    <text x="330" y="346" text-anchor="middle" font-size="9" fill="#9CA3AF">资料下载</text>
+    <text x="330" y="370" text-anchor="middle" font-size="20" font-weight="700" fill="#7C5CFF">36</text>
+    <text x="330" y="386" text-anchor="middle" font-size="9" fill="#9CA3AF">收藏 12</text>
+  </g>
+
+  <g id="quick-actions">
+    <text x="32" y="426" font-size="14" font-weight="600" fill="#1A2A3A">常用功能</text>
+
+    <g id="qa-1">
+      <rect x="16" y="438" width="86" height="86" rx="14" fill="#FFFFFF" filter="url(#ms)"/>
+      <rect x="38" y="456" width="42" height="42" rx="12" fill="#E8F2FB"/>
+      <path d="M48 478 a4 4 0 1 1 8 0 a4 4 0 1 1 -8 0 M44 492 q8 -8 16 0" stroke="#3087CC" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <text x="59" y="514" text-anchor="middle" font-size="11" fill="#1A2A3A">学时打卡</text>
+    </g>
+    <g id="qa-2">
+      <rect x="108" y="438" width="86" height="86" rx="14" fill="#FFFFFF" filter="url(#ms)"/>
+      <rect x="130" y="456" width="42" height="42" rx="12" fill="#E0F7F4"/>
+      <circle cx="151" cy="472" r="5" stroke="#00C4B6" stroke-width="1.6" fill="none"/>
+      <path d="M141 490 q10 -8 20 0" stroke="#00C4B6" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <text x="151" y="514" text-anchor="middle" font-size="11" fill="#1A2A3A">即问即答</text>
+    </g>
+    <g id="qa-3">
+      <rect x="200" y="438" width="86" height="86" rx="14" fill="#FFFFFF" filter="url(#ms)"/>
+      <rect x="222" y="456" width="42" height="42" rx="12" fill="#FFF1E5"/>
+      <rect x="234" y="466" width="18" height="22" rx="2" fill="none" stroke="#FF8A3D" stroke-width="1.6"/>
+      <line x1="238" y1="472" x2="248" y2="472" stroke="#FF8A3D" stroke-width="1.4"/>
+      <line x1="238" y1="478" x2="246" y2="478" stroke="#FF8A3D" stroke-width="1.4"/>
+      <line x1="238" y1="484" x2="244" y2="484" stroke="#FF8A3D" stroke-width="1.4"/>
+      <text x="243" y="514" text-anchor="middle" font-size="11" fill="#1A2A3A">资料投稿</text>
+    </g>
+    <g id="qa-4">
+      <rect x="292" y="438" width="86" height="86" rx="14" fill="#FFFFFF" filter="url(#ms)"/>
+      <rect x="314" y="456" width="42" height="42" rx="12" fill="#EFEAFB"/>
+      <path d="M335 466 l3 7 l8 1 l-6 5 l1 8 l-7 -4 l-7 4 l1 -8 l-6 -5 l8 -1 z" fill="#7C5CFF"/>
+      <text x="335" y="514" text-anchor="middle" font-size="11" fill="#1A2A3A">星级评定</text>
+    </g>
+  </g>
+
+  <g id="four-fang">
+    <text x="32" y="556" font-size="14" font-weight="600" fill="#1A2A3A">四大坊 · 知新选课</text>
+    <text x="358" y="556" text-anchor="end" font-size="11" fill="#3087CC">查看全部 →</text>
+
+    <g id="fang-row" filter="url(#ms)">
+      <rect x="16" y="568" width="358" height="200" rx="14" fill="#FFFFFF"/>
+      <g id="ff-1">
+        <rect x="32" y="584" width="158" height="84" rx="12" fill="url(#mc1)"/>
+        <rect x="42" y="594" width="44" height="20" rx="10" fill="#FFFFFF" fill-opacity="0.25"/>
+        <text x="64" y="608" text-anchor="middle" font-size="10" fill="#FFFFFF">学有所惑</text>
+        <text x="42" y="640" font-size="14" font-weight="700" fill="#FFFFFF">公共基础辅学</text>
+        <text x="42" y="658" font-size="9" fill="#FFFFFF" fill-opacity="0.8">在开 28 门 · 高数 / 大物</text>
+      </g>
+      <g id="ff-2">
+        <rect x="200" y="584" width="158" height="84" rx="12" fill="url(#mc2)"/>
+        <rect x="210" y="594" width="44" height="20" rx="10" fill="#FFFFFF" fill-opacity="0.25"/>
+        <text x="232" y="608" text-anchor="middle" font-size="10" fill="#FFFFFF">业有所专</text>
+        <text x="210" y="640" font-size="14" font-weight="700" fill="#FFFFFF">专业课答疑</text>
+        <text x="210" y="658" font-size="9" fill="#FFFFFF" fill-opacity="0.8">在开 22 门 · 实验指导</text>
+      </g>
+      <g id="ff-3">
+        <rect x="32" y="676" width="158" height="84" rx="12" fill="url(#mc3)"/>
+        <rect x="42" y="686" width="44" height="20" rx="10" fill="#FFFFFF" fill-opacity="0.25"/>
+        <text x="64" y="700" text-anchor="middle" font-size="10" fill="#FFFFFF">师有所传</text>
+        <text x="42" y="732" font-size="14" font-weight="700" fill="#FFFFFF">名师讲堂</text>
+        <text x="42" y="750" font-size="9" fill="#FFFFFF" fill-opacity="0.8">在开 18 门 · 学术讲座</text>
+      </g>
+      <g id="ff-4">
+        <rect x="200" y="676" width="158" height="84" rx="12" fill="url(#mc4)"/>
+        <rect x="210" y="686" width="44" height="20" rx="10" fill="#FFFFFF" fill-opacity="0.25"/>
+        <text x="232" y="700" text-anchor="middle" font-size="10" fill="#FFFFFF">朋有所长</text>
+        <text x="210" y="732" font-size="14" font-weight="700" fill="#FFFFFF">同伴互助</text>
+        <text x="210" y="750" font-size="9" fill="#FFFFFF" fill-opacity="0.8">在开 18 门 · 兴趣社群</text>
+      </g>
+    </g>
+  </g>
+
+  <g id="my-courses">
+    <text x="32" y="800" font-size="14" font-weight="600" fill="#1A2A3A">本周课表 · 我的课程</text>
+    <text x="358" y="800" text-anchor="end" font-size="11" fill="#3087CC">全部 →</text>
+
+    <g id="my-cs-row" filter="url(#ms)">
+      <rect x="16" y="812" width="358" height="120" rx="14" fill="#FFFFFF"/>
+
+      <g id="course-a">
+        <rect x="32" y="828" width="60" height="60" rx="12" fill="url(#mc1)"/>
+        <text x="62" y="864" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">数</text>
+        <rect x="38" y="838" width="44" height="14" rx="7" fill="#FFFFFF" fill-opacity="0.25"/>
+        <text x="60" y="848" text-anchor="middle" font-size="8" fill="#FFFFFF">进行中</text>
+        <text x="100" y="844" font-size="13" font-weight="600" fill="#1A2A3A">高数辅学 · 线性代数</text>
+        <text x="100" y="858" font-size="10" fill="#9CA3AF">林雅雯 · 周二 19:00 · A301</text>
+        <rect x="100" y="868" width="120" height="6" rx="3" fill="#F0F4F9"/>
+        <rect x="100" y="868" width="76" height="6" rx="3" fill="#3087CC"/>
+        <text x="226" y="874" font-size="10" font-weight="600" fill="#3087CC">62%</text>
+        <rect x="276" y="846" width="64" height="28" rx="14" fill="#006DAD"/>
+        <text x="308" y="864" text-anchor="middle" font-size="11" font-weight="500" fill="#FFFFFF">进入</text>
+        <line x1="32" y1="900" x2="358" y2="900" stroke="#F0F4F9"/>
+      </g>
+
+      <g id="course-b">
+        <rect x="32" y="908" width="20" height="20" rx="4" fill="#FFF1E5"/>
+        <text x="42" y="922" text-anchor="middle" font-size="10" font-weight="700" fill="#FF8A3D">!</text>
+        <text x="60" y="922" font-size="11" fill="#1A2A3A">下次：周四 19:00 · 英语口语训练营</text>
+        <text x="316" y="922" font-size="10" fill="#9CA3AF">B205</text>
+      </g>
+    </g>
+  </g>
+
+  <g id="tabbar">
+    <rect x="0" y="940" width="390" height="40" fill="#FFFFFF"/>
+    <line x1="0" y1="940" x2="390" y2="940" stroke="#E5EAF1"/>
+    <g id="tab-1">
+      <rect x="32" y="952" width="22" height="22" rx="2" fill="none" stroke="#3087CC" stroke-width="1.6"/>
+      <path d="M28 956 L43 944 L58 956" stroke="#3087CC" stroke-width="1.6" fill="#3087CC" fill-opacity="0.1" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="43" y="978" text-anchor="middle" font-size="10" fill="#3087CC" font-weight="600">首页</text>
+    </g>
+    <g id="tab-2">
+      <rect x="111" y="952" width="22" height="20" rx="2" fill="none" stroke="#9CA3AF" stroke-width="1.6"/>
+      <line x1="116" y1="956" x2="128" y2="956" stroke="#9CA3AF" stroke-width="1.4"/>
+      <line x1="116" y1="960" x2="128" y2="960" stroke="#9CA3AF" stroke-width="1.4"/>
+      <line x1="116" y1="964" x2="124" y2="964" stroke="#9CA3AF" stroke-width="1.4"/>
+      <text x="122" y="978" text-anchor="middle" font-size="10" fill="#9CA3AF">选课</text>
+    </g>
+    <g id="tab-3">
+      <circle cx="195" cy="958" r="14" fill="url(#mc1)"/>
+      <text x="195" y="963" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">+</text>
+      <text x="195" y="978" text-anchor="middle" font-size="10" fill="#3087CC" font-weight="600">提问</text>
+    </g>
+    <g id="tab-4">
+      <circle cx="268" cy="958" r="9" fill="none" stroke="#9CA3AF" stroke-width="1.6"/>
+      <text x="268" y="962" text-anchor="middle" font-size="10" font-weight="700" fill="#9CA3AF">?</text>
+      <text x="268" y="978" text-anchor="middle" font-size="10" fill="#9CA3AF">问答</text>
+    </g>
+    <g id="tab-5">
+      <circle cx="347" cy="958" r="9" fill="none" stroke="#9CA3AF" stroke-width="1.6"/>
+      <circle cx="347" cy="956" r="3" fill="none" stroke="#9CA3AF" stroke-width="1.5"/>
+      <path d="M340 964 q7 -5 14 0" stroke="#9CA3AF" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <text x="347" y="978" text-anchor="middle" font-size="10" fill="#9CA3AF">我的</text>
+    </g>
+  </g>
+</svg>

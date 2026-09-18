@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -1506,6 +1506,7 @@ input.eg:focus,textarea.eg:focus{color:var(--text-1);}
       <button class="p-subtab" data-ptab="mycourses" onclick="pSwitchTab('mycourses')">我的课程</button>
       <button class="p-subtab" data-ptab="progress" onclick="pSwitchTab('progress')">时长 & 积分</button>
       <button class="p-subtab" data-ptab="stars" onclick="pSwitchTab('stars')">星级申报</button>
+      <button class="p-subtab" data-ptab="complaints" onclick="pSwitchTab('complaints')">我的投诉</button>
     </div>
     <div class="p-pane active" id="ppane-overview">
     <div class="row-2-stu">
@@ -2141,6 +2142,17 @@ input.eg:focus,textarea.eg:focus{color:var(--text-1);}
       </div>
     </div><!-- /#pane-stars -->
 
+    <div class="p-pane" id="ppane-complaints">
+      <div class="panel-stu">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+          <h4 style="margin:0;">我的投诉</h4>
+          <a href="qa.html" style="font-size:12px;color:var(--primary);font-weight:500;">去即问即答 →</a>
+        </div>
+        <p style="font-size:12px;color:var(--text-3);margin:6px 0 16px;">您在「即问即答」对问题或回答提交的投诉及处理进度，结果会由管理员在此回复。</p>
+        <div id="myComplaintList"></div>
+      </div>
+    </div><!-- /#ppane-complaints -->
+
   </main>
 </div>
 
@@ -2503,6 +2515,57 @@ function filterBook(type, btn) {
     item.classList.toggle('hidden', !match);
   });
 }
+
+// ===== 接真实数据：课程报名 + 场地预约（来自其他页面的提交，经 localStorage 共享）=====
+function _lsGet(k){try{return JSON.parse(localStorage.getItem(k)||'[]');}catch(e){return [];}}
+function renderDynamicBookings(){
+  const list=document.getElementById('bookList');if(!list)return;
+  const enrolled=_lsGet('xfjs_enrolled');
+  const bookings=_lsGet('xfjs_bookings');
+  let html='';
+  enrolled.forEach(e=>{
+    html+=`<div class="book-item" data-type="course" onclick="showToast('${(e.title||'').replace(/'/g,'')} · ${e.time||''}')">
+      <div class="c-icon ci-math" style="width:42px;height:42px;border-radius:11px;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div style="flex:1;min-width:0;"><h6 style="font-size:14px;font-weight:600;">${e.title||'辅学课程'}</h6><p style="font-size:11px;color:var(--text-3);margin-top:3px;">${e.time||''} · ${e.place||''}</p></div>
+      <span class="tag-stu" style="background:var(--success-bg);color:var(--success);flex-shrink:0;">已报名</span>
+    </div>`;
+  });
+  bookings.forEach(b=>{
+    const meta={approved:{bg:'var(--success-bg)',c:'var(--success)',l:'已批准'},pending:{bg:'var(--warning-bg)',c:'var(--warning)',l:'待审批'},rejected:{bg:'var(--danger-bg)',c:'var(--danger)',l:'已驳回'},ended:{bg:'',c:'',l:'已结束'}}[b.status]||{bg:'var(--warning-bg)',c:'var(--warning)',l:'待审批'};
+    const dtype=b.status==='ended'?'ended':'venue';
+    html+=`<div class="book-item" data-type="${dtype}" onclick="showToast('${b.id} · ${(b.purpose||'').replace(/'/g,'')}')"${b.status==='ended'?' style="opacity:.72;"':''}>
+      <div class="c-icon" style="background:var(--primary-light);color:var(--primary);width:42px;height:42px;border-radius:11px;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <div style="flex:1;min-width:0;"><h6 style="font-size:14px;font-weight:600;">${b.venue||'场地'} · 场地预约</h6><p style="font-size:11px;color:var(--text-3);margin-top:3px;">${b.date||''} ${b.time||''} · ${b.purpose||''}</p></div>
+      <span class="tag-stu"${meta.bg?` style="background:${meta.bg};color:${meta.c};flex-shrink:0;"`:' style="flex-shrink:0;"'}>${meta.l}</span>
+    </div>`;
+  });
+  if(html) list.insertAdjacentHTML('afterbegin',html);
+}
+
+// ===== 接真实数据：我的提问 / 我上传的（来自 qa / library 的提交）=====
+function renderDynamicQa(){
+  const box=document.getElementById('qaQuestion');if(!box)return;
+  const qs=_lsGet('xfjs_myquestions');
+  if(!qs.length)return;
+  const html=qs.map(q=>`<div style="padding:12px;background:var(--bg);border-radius:8px;cursor:pointer;transition:background .15s;" onmouseenter="this.style.background='#EEF3F9'" onmouseleave="this.style.background='var(--bg)'" onclick="location.href='qa.html'">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;"><h6 style="font-size:13px;font-weight:500;line-height:1.5;flex:1;">${(q.title||'').replace(/</g,'&lt;')}</h6><span class="tag-stu" style="background:var(--warning-bg);color:var(--warning);flex-shrink:0;">待回答</span></div>
+      <p style="font-size:11px;color:var(--text-3);margin-top:6px;">提问于 ${q.time||'刚刚'} · 0 个回答</p>
+    </div>`).join('');
+  box.insertAdjacentHTML('afterbegin',html);
+}
+function renderDynamicUploads(){
+  const grid=document.querySelector('#ppane-overview .res-grid-stu');if(!grid)return;
+  const ups=_lsGet('xfjs_myuploads');
+  if(!ups.length)return;
+  const html=ups.map(u=>`<div class="res-card-stu" onclick="showToast('${(u.title||'').replace(/'/g,'')}')" style="position:relative;">
+      <div class="ftype ftype-pdf">${(u.ext||'PDF')}</div>
+      <h5>${(u.title||'').replace(/</g,'&lt;')}</h5>
+      <div class="meta"><span class="cat">${u.major||'资料'}</span><span class="tag-stu" style="background:var(--warning-bg);color:var(--warning);font-size:10px;">待审核</span></div>
+      <div class="stats"><span>刚上传</span></div>
+    </div>`).join('');
+  grid.insertAdjacentHTML('afterbegin',html);
+}
+document.addEventListener('DOMContentLoaded',()=>{renderDynamicBookings();renderDynamicQa();renderDynamicUploads();});
 
 // ===== 问答 Tab 切换 =====
 function switchQaTab(tab, btn) {
@@ -3371,16 +3434,117 @@ function closeStarHistoryDetail(){
 function pSwitchTab(name){
   document.querySelectorAll('.p-subtab').forEach(b=>b.classList.toggle('active', b.dataset.ptab===name));
   document.querySelectorAll('.p-pane').forEach(p=>p.classList.toggle('active', p.id==='ppane-'+name));
+  if(name==='complaints') renderMyComplaints();
   if(history.replaceState) history.replaceState(null,'','#'+name);
   window.scrollTo({top:0,behavior:'smooth'});
 }
 document.addEventListener('DOMContentLoaded',()=>{
   const h=(location.hash||'').replace('#','');
-  if(['mycourses','progress','stars','overview'].includes(h)) pSwitchTab(h);
+  if(['mycourses','progress','stars','overview','complaints'].includes(h)) pSwitchTab(h);
+  renderMyComplaints();
 });
+
+// ====================================================
+//  我的投诉（即问即答投诉记录）
+// ====================================================
+const COMPLAINT_SEED=[
+  {target:'王彦哲 的回答',type:'无效回答',desc:'回答内容与所提问题无关，未能解决疑问。',time:'2026-05-20 14:30',status:'resolved',reply:'经核实情况属实，已对该回答作下架处理，感谢您的反馈。'},
+  {target:'「高等数学·洛必达法则适用条件」',type:'内容错误',desc:'问题描述中的公式有误，容易误导其他同学。',time:'2026-05-25 09:10',status:'accepted',reply:''},
+  {target:'李梦琪 的回答',type:'不当言论',desc:'回答中含有不文明用语。',time:'2026-05-28 20:05',status:'pending',reply:''}
+];
+function getMyComplaints(){
+  let extra=[];
+  try{ extra=JSON.parse(localStorage.getItem('xfjs_complaints')||'[]'); }catch(e){ extra=[]; }
+  return [...extra, ...COMPLAINT_SEED];
+}
+function complaintStatusTag(s){
+  const map={
+    pending:['待处理','#FFF5E5','#9A6500'],
+    accepted:['已受理','#E3F1F9','#006DAD'],
+    resolved:['已处理 · 属实','#E8FCF4','#0F766E'],
+    rejected:['已驳回','#F1F2F3','#475569']
+  };
+  const [t,bg,c]=map[s]||map.pending;
+  return `<span style="flex:0 0 auto;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;background:${bg};color:${c};">${t}</span>`;
+}
+function renderMyComplaints(){
+  const box=document.getElementById('myComplaintList');
+  if(!box) return;
+  const list=getMyComplaints();
+  if(!list.length){
+    box.innerHTML=`<div style="text-align:center;padding:48px 0;color:var(--text-3);font-size:13px;">暂无投诉记录<br/><span style="font-size:12px;">在「即问即答」对问题或回答点“🚩 投诉”即可发起</span></div>`;
+    return;
+  }
+  box.innerHTML=list.map(c=>`
+    <div style="border:1px solid var(--border-light);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#fff;">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
+        <div style="font-weight:600;font-size:14px;color:var(--text-1);line-height:1.5;">🚩 ${c.target}</div>
+        ${complaintStatusTag(c.status)}
+      </div>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <span style="padding:2px 8px;border-radius:4px;font-size:12px;background:#F1F2F3;color:#475569;">${c.type}</span>
+        <span style="font-size:12px;color:var(--text-3);">${c.time}</span>
+      </div>
+      <p style="font-size:13px;color:var(--text-2);margin-top:8px;line-height:1.6;">${c.desc}</p>
+      ${c.reply?`<div style="margin-top:10px;background:var(--bg);border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--text-2);line-height:1.6;"><b style="color:var(--text-1);">管理员回复：</b>${c.reply}</div>`:`<div style="margin-top:10px;font-size:12px;color:var(--text-3);">管理员处理中，结果将在此显示</div>`}
+    </div>`).join('');
+}
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){ if(typeof closeStarApplyForm==='function')closeStarApplyForm(); if(typeof closeStarHistoryDetail==='function')closeStarHistoryDetail(); }
 });
 </script>
+
+
+
+<!-- ===== 拆分页导航（设计师预览版 · 自动注入）：页内业务逻辑不变，点击改为跳转对应拆分 HTML ===== -->
+<script>
+(function(){
+  var TAB_FILES = {"overview":"profile.html","mycourses":"profile-mycourses.html","progress":"profile-progress.html","stars":"profile-stars.html","complaints":"profile-complaints.html"};     /* tabId -> file */
+  var MODAL_FILES = {"qaDetailModal":"profile-qa-detail.html","resDetailModal":"profile-resource-detail.html","resPreviewModal":"profile-res-preview.html","pointsModal":"profile-points.html","reqDetailModal":"profile-req-detail.html","myCourseDetailModal":"profile-mycourse-detail.html","hourDetailModal":"profile-hour-detail.html","newHourOverlay":"profile-new-hour.html","editHourOverlay":"profile-edit-hour.html","starApplyOverlay":"profile-star-apply.html","starHistoryOverlay":"profile-star-history.html"}; /* 浮层元素id -> file */
+  var LANDING = "profile.html";
+  var TAB_ATTRS = ["data-tab","data-stab","data-ptab","data-lib-tab"];
+  var VIS = ["show","open","active","visible"];
+  function _clickTab(t){
+    if(!t) return;
+    var sel = TAB_ATTRS.map(function(a){return '['+a+'="'+t+'"]';}).join(',');
+    var b = document.querySelector(sel);
+    if(b){ b.click(); }
+  }
+  function _visClass(el){ return VIS.some(function(c){return el.classList.contains(c);}); }
+  function _activate(){ try{ pSwitchTab("overview"); }catch(e){ if(window.console)console.warn('activate',e); } }
+  function _installModalNav(){
+    Object.keys(MODAL_FILES).forEach(function(id){
+      var el = document.getElementById(id); if(!el) return;
+      var was = _visClass(el);
+      var mo = new MutationObserver(function(){
+        var now = _visClass(el);
+        if(now && !was){ location.href = MODAL_FILES[id]; }
+        was = now;
+      });
+      mo.observe(el, {attributes:true, attributeFilter:["class","style"]});
+    });
+  }
+  function _installTabNav(){
+    if(!Object.keys(TAB_FILES).length) return;
+    document.addEventListener("click", function(e){
+      var node = e.target;
+      while(node && node.nodeType===1){
+        for(var i=0;i<TAB_ATTRS.length;i++){
+          if(node.hasAttribute(TAB_ATTRS[i])){
+            var v = node.getAttribute(TAB_ATTRS[i]);
+            if(TAB_FILES[v]){ e.preventDefault(); e.stopPropagation(); location.href = TAB_FILES[v]; return; }
+          }
+        }
+        node = node.parentNode;
+      }
+    }, true);
+    if(typeof pSwitchTab!=="undefined"){ window.pSwitchTab=function(t){ var f=TAB_FILES[t]; if(f){location.href=f;return;} }; }
+  }
+  window.addEventListener("load", function(){
+    setTimeout(function(){ _activate(); setTimeout(function(){ _installModalNav(); _installTabNav(); }, 150); }, 60);
+  });
+})();
+</script>
+
 </body>
 </html>

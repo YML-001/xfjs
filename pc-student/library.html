@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -357,6 +357,7 @@ tbody tr:hover{background:#FAFBFD;}
         <button data-tab="collect">需求征集 <span class="tab-cnt" id="tc-collect">0</span></button>
         <button data-tab="mine">我上传的 <span class="tab-cnt" id="tc-mine">3</span></button>
         <button data-tab="demand">我提的需求 <span class="tab-cnt" id="tc-demand">2</span></button>
+        <button data-tab="feedback">我的反馈 <span class="tab-cnt" id="tc-feedback">0</span></button>
       </div>
     </div>
 
@@ -466,7 +467,7 @@ tbody tr:hover{background:#FAFBFD;}
           <select class="f-select" id="mine-minor"><option value="">全部</option><option>课件 PPT</option><option>笔记讲义</option><option>往年真题</option><option>电子书</option></select>
         </div>
         <div class="field"><label>状态</label>
-          <select class="f-select" id="mine-status"><option value="">全部</option><option value="published">已发布</option><option value="down">已下架</option></select>
+          <select class="f-select" id="mine-status"><option value="">全部</option><option value="pending">待审核</option><option value="published">已发布</option><option value="rejected">已驳回</option><option value="down">已下架</option></select>
         </div>
         <div class="spacer"></div>
         <button class="btn-qr" onclick="resetFilter('mine')">重置</button>
@@ -512,6 +513,13 @@ tbody tr:hover{background:#FAFBFD;}
       </div>
     </div>
 
+    <div class="tab-pane" id="tab-feedback">
+      <div class="res-grid" id="fb-tbody"></div>
+      <div class="lib-cards-foot">
+        <span class="t-count" id="fb-count">共 0 条</span>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -529,7 +537,7 @@ tbody tr:hover{background:#FAFBFD;}
       </div>
       <div style="background:var(--primary-50);border:1px solid #BFDDF6;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:12px;color:var(--primary-dark);line-height:1.6;display:flex;gap:8px;align-items:flex-start;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-        提交后将<strong>直接发布</strong>至资料库，无需审核。请确保内容合规，不违反版权规定。
+        提交后将进入<strong>管理员审核</strong>，审核通过后对外公开（可在「我上传的」查看审核状态）。请确保内容合规，不违反版权规定。
       </div>
       <div class="f-row">
         <div class="f-item"><label>资料标题 <span class="req">*</span></label><input id="up-title" placeholder="请输入标题" /></div>
@@ -573,7 +581,7 @@ tbody tr:hover{background:#FAFBFD;}
       <button class="btn-stu btn-ghost-stu" onclick="closeModal('uploadModal')">取消</button>
       <button class="btn-stu btn-primary-stu" onclick="submitUpload()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        立即发布
+        提交审核
       </button>
     </div>
   </div>
@@ -754,8 +762,10 @@ const LIB_DATA=[
 
 // 我上传的
 const MINE_DATA=[
+  {id:100,title:'线性代数 期中模拟卷（自整理）',major:'课程科目类',minor:'往年真题',ft:'pdf',uploadTime:'2026-05-29',downloads:0,likes:0,status:'pending'},
   {id:2,title:'大学英语六级写作高分模版精讲',major:'课程科目类',minor:'课件 PPT',ft:'ppt',uploadTime:'2026-05-12',downloads:980,likes:210,status:'published'},
   {id:8,title:'大学物理 · 电磁学复习笔记',major:'课程科目类',minor:'笔记讲义',ft:'doc',uploadTime:'2026-05-13',downloads:890,likes:234,status:'published'},
+  {id:101,title:'考研英语真题（含第三方解析）',major:'学涯规划类',minor:'往年真题',ft:'pdf',uploadTime:'2026-05-05',downloads:0,likes:0,status:'rejected',rejectReason:'疑似含未授权的第三方解析内容，请上传原创或已授权资料'},
   {id:99,title:'高等数学B 期末备考资料包',major:'课程科目类',minor:'往年真题',ft:'pdf',uploadTime:'2026-04-28',downloads:320,likes:78,status:'down'},
 ];
 
@@ -782,8 +792,11 @@ let collectIdSeed=7;
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function ftBadge(ft){const c={pdf:'ft-pdf',ppt:'ft-ppt',doc:'ft-doc',xls:'ft-xls'}[ft]||'ft-pdf';return`<span class="ft-badge ${c}">${ft.toUpperCase()}</span>`;}
 function ftIC(ft,size){const c={pdf:'ft-pdf',ppt:'ft-ppt',doc:'ft-doc',xls:'ft-xls'}[ft]||'ft-pdf';const s=size||36;return`<div class="rel-file-ic ${c}" style="width:${s}px;height:${s}px;">${ft.toUpperCase()}</div>`;}
-function statusTag(st){return st==='published'?'<span class="tag-stu tag-green">已发布</span>':'<span class="tag-stu tag-grey">已下架</span>';}
+function statusTag(st){const m={published:{c:'tag-green',l:'已发布'},pending:{c:'tag-orange',l:'待审核'},rejected:{c:'tag-red',l:'已驳回'},down:{c:'tag-grey',l:'已下架'}};const d=m[st]||{c:'tag-grey',l:st};return`<span class="tag-stu ${d.c}">${d.l}</span>`;}
 function demandStatusTag(st){const m={pending:{c:'tag-orange',l:'待处理'},notified:{c:'tag-blue',l:'已发起征集'},fulfilled:{c:'tag-green',l:'已满足'},blocked:{c:'tag-red',l:'已屏蔽'}};const d=m[st]||{c:'tag-grey',l:st};return`<span class="tag-stu ${d.c}">${d.l}</span>`;}
+
+// ============ 下载（不限次数）============
+function doDownload(name){showToast(name?'开始下载：'+name:'开始下载');return true;}
 
 // ============ 渲染：所有资料 ============
 function renderAll(){
@@ -873,6 +886,8 @@ function renderMine(){
       <span class="tag-stu tag-grey">${esc(r.major)}</span>
       <span class="tag-stu tag-blue">${esc(r.minor)}</span>
     </div>
+    ${r.status==='pending'?`<div class="rc-remark" style="color:var(--warning);">⏳ 审核中，管理员通过后将对外公开</div>`:''}
+    ${r.status==='rejected'?`<div class="rc-remark" style="color:var(--danger);">⚠ 驳回原因：${esc(r.rejectReason||'内容不符合规范')}</div>`:''}
     <div class="rc-meta">
       <span>${_metaDl()}<b>${r.downloads.toLocaleString()}</b> 下载</span>
       <span>${_metaLike()}<b>${r.likes}</b> 点赞</span>
@@ -981,7 +996,7 @@ function openUploadForCollect(id){
 
 // ============ 查询 & 重置 ============
 function queryFilter(tab){
-  if(tab==='all')renderAll();else if(tab==='hot')renderHot();else if(tab==='mine')renderMine();else if(tab==='demand')renderDemand();else if(tab==='collect')renderCollect();
+  if(tab==='all')renderAll();else if(tab==='hot')renderHot();else if(tab==='mine')renderMine();else if(tab==='demand')renderDemand();else if(tab==='collect')renderCollect();else if(tab==='feedback')renderFeedback();
   showToast('已应用筛选');
 }
 function resetFilter(tab){
@@ -1030,7 +1045,7 @@ function openResDetail(id){
     <button class="btn-stu btn-ghost-stu" onclick="showToast('已点赞')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z"/></svg>点赞</button>
     <button class="btn-stu btn-ghost-stu" onclick="closeModal('resDetailModal');openFeedback(${id})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>反馈</button>
     <button class="btn-stu btn-ghost-stu" onclick="closeModal('resDetailModal');openShareModal(${id})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>分享</button>
-    <button class="btn-stu btn-primary-stu" onclick="closeModal('resDetailModal');showToast('开始下载')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>下载（剩余 27/50）</button>`;
+    <button class="btn-stu btn-primary-stu" onclick="doDownload('${esc(item.title)}');closeModal('resDetailModal');"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>下载</button>`;
   openModal('resDetailModal');
 }
 
@@ -1088,7 +1103,7 @@ function openDemandDetail(id){
             <span>上传者：${esc(f.uploader)}</span><span>${esc(f.uploadDate)}</span><span>${esc(f.size)}</span><span>↓ ${f.downloads}</span>
           </div>
         </div>
-        <button class="act act-primary" style="height:28px;padding:0 12px;border-radius:6px;font-size:12px;display:inline-flex;align-items:center;gap:4px;color:var(--primary);border:1px solid #BFDDF6;background:var(--primary-light);cursor:pointer;" onclick="showToast('开始下载：${esc(f.name)}')">
+        <button class="act act-primary" style="height:28px;padding:0 12px;border-radius:6px;font-size:12px;display:inline-flex;align-items:center;gap:4px;color:var(--primary);border:1px solid #BFDDF6;background:var(--primary-light);cursor:pointer;" onclick="doDownload('${esc(f.name)}')">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>下载
         </button>
       </div>`).join('');
@@ -1140,11 +1155,44 @@ function openFeedback(id){
   document.getElementById('fb-desc').value='';
   openModal('fbModal');
 }
+// ============ 我的反馈（资料问题反馈闭环）============
+const FB_KEY='xfjs_resfeedback';
+const FB_SEED=[
+  {id:'FB2026003',resName:'高等数学（上）期末冲刺押题卷',type:'内容有误',desc:'第3题答案与解析不符，麻烦核对。',submitTime:'2026-05-20 10:12',status:'resolved',reply:'已联系上传者更正并重新发布，感谢反馈。',handleTime:'2026-05-21 09:30'},
+  {id:'FB2026002',resName:'大学英语四级真题（2025）',type:'无法下载',desc:'点击下载提示文件不存在。',submitTime:'2026-05-24 16:40',status:'accepted',reply:'已受理，正在排查存储链接。',handleTime:'2026-05-25 08:50'}
+];
+function fbStatusTag(st){const m={pending:{c:'tag-orange',l:'待处理'},accepted:{c:'tag-blue',l:'已受理'},resolved:{c:'tag-green',l:'已解决'},rejected:{c:'tag-red',l:'已驳回'}};const d=m[st]||{c:'tag-grey',l:st};return`<span class="tag-stu ${d.c}">${d.l}</span>`;}
+function getFeedbacks(){let saved=[];try{saved=JSON.parse(localStorage.getItem(FB_KEY)||'[]');}catch(e){saved=[];}return[...saved,...FB_SEED];}
+function saveFeedback(rec){let saved=[];try{saved=JSON.parse(localStorage.getItem(FB_KEY)||'[]');}catch(e){saved=[];}saved.unshift(rec);localStorage.setItem(FB_KEY,JSON.stringify(saved));}
+function renderFeedback(){
+  const rows=getFeedbacks();
+  const cnt=document.getElementById('tc-feedback');if(cnt)cnt.textContent=rows.length;
+  const fc=document.getElementById('fb-count');if(fc)fc.textContent='共 '+rows.length+' 条';
+  const box=document.getElementById('fb-tbody');if(!box)return;
+  box.innerHTML=rows.length?rows.map(r=>`<div class="res-card">
+    <div class="rc-head">
+      <div style="flex:1;min-width:0;">
+        <div class="rc-title" style="cursor:default;">${esc(r.resName)}</div>
+        <div class="rc-sub">${esc(r.id)} · 提交于 ${esc(r.submitTime)}</div>
+      </div>
+      ${fbStatusTag(r.status)}
+    </div>
+    <div class="rc-tags"><span class="tag-stu tag-purple">${esc(r.type)}</span></div>
+    <div class="rc-remark">${esc(r.desc)}</div>
+    ${r.reply?`<div class="rc-foot" style="display:block;background:var(--primary-light);border-radius:8px;padding:9px 12px;margin-top:4px;"><div style="font-size:12px;color:var(--primary);font-weight:600;margin-bottom:3px;">管理员回复 · ${esc(r.handleTime||'')}</div><div style="font-size:12.5px;color:var(--text-2);line-height:1.6;">${esc(r.reply)}</div></div>`:`<div class="rc-foot"><span style="font-size:12px;color:var(--text-3);">⏳ 等待管理员处理</span></div>`}
+  </div>`).join(''):emptyCard('暂无反馈记录');
+}
 function submitFeedback(){
   const desc=document.getElementById('fb-desc').value.trim();
   if(!desc){showToast('请填写问题描述');return;}
+  const resName=document.getElementById('fb-res-name').textContent||'未知资料';
+  const type=document.getElementById('fb-type').value;
+  const now=new Date();const pad=n=>String(n).padStart(2,'0');
+  const ts=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  saveFeedback({id:'FB'+Date.now().toString().slice(-8),resName,type,desc,submitTime:ts,status:'pending',reply:'',handleTime:''});
   closeModal('fbModal');
-  showToast('反馈已提交，管理员会尽快处理');
+  showToast('反馈已提交，可在「我的反馈」查看进度');
+  renderFeedback();
 }
 
 // ============ 提交上传 ============
@@ -1158,8 +1206,15 @@ function submitUpload(){
   const demandId=document.getElementById('up-demand').value;
   const c=COLLECT_DATA.find(x=>x.id===demandId);
   if(c){c.respCount=(c.respCount||0)+1;c.responded=true;renderCollect();}
+  const ftSel=(document.getElementById('up-title').value.match(/\.(pdf|ppt|pptx|doc|docx|xls|xlsx)$/i)||[])[1];
+  const ft=ftSel?({pptx:'ppt',docx:'doc',xlsx:'xls'}[ftSel.toLowerCase()]||ftSel.toLowerCase()):'pdf';
+  const newId=Date.now();
+  MINE_DATA.unshift({id:newId,title,major,minor,ft,uploadTime:new Date().toISOString().slice(0,10),downloads:0,likes:0,status:'pending'});
+  renderMine();
+  const tcMine=document.getElementById('tc-mine');if(tcMine)tcMine.textContent=MINE_DATA.length;
+  try{const k='xfjs_myuploads';let s=JSON.parse(localStorage.getItem(k)||'[]');s.unshift({title,major,minor,ext:ft.toUpperCase(),time:'刚刚'});localStorage.setItem(k,JSON.stringify(s));}catch(e){}
   closeModal('uploadModal');
-  showToast(c?'已为征集需求贡献资料！':'资料已发布！');
+  showToast(c?'已提交，将定向贡献给该征集需求，待管理员审核':'资料已提交，审核通过后将对外公开');
   window._collectTarget=null;
   const banner=document.getElementById('up-collect-banner');if(banner)banner.style.display='none';
   ['up-title','up-course','up-source','up-version','up-tags','up-intro','up-remark'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
@@ -1216,12 +1271,65 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.modal-mask').forEach(m=>{
     m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');});
   });
-  renderAll();renderHot();renderMine();renderDemand();renderCollect();
+  renderAll();renderHot();renderMine();renderDemand();renderCollect();renderFeedback();
 });
 </script>
 <script>
   renderStuSidebar('library');
   renderStuTopbar('搜索资料、关键词、上传者...');
 </script>
+
+
+
+<!-- ===== 拆分页导航（设计师预览版 · 自动注入）：页内业务逻辑不变，点击改为跳转对应拆分 HTML ===== -->
+<script>
+(function(){
+  var TAB_FILES = {"all":"library.html","hot":"library-hot.html","collect":"library-collect.html","mine":"library-mine.html","demand":"library-demand.html","feedback":"library-feedback.html"};     /* tabId -> file */
+  var MODAL_FILES = {"uploadModal":"library-upload.html","demandModal":"library-demand-form.html","resDetailModal":"library-resource-detail.html","minePreviewModal":"library-mine-preview.html","demandDetailModal":"library-demand-detail.html","shareModal":"library-share.html","fbModal":"library-feedback-form.html"}; /* 浮层元素id -> file */
+  var LANDING = "library.html";
+  var TAB_ATTRS = ["data-tab","data-stab","data-ptab","data-lib-tab"];
+  var VIS = ["show","open","active","visible"];
+  function _clickTab(t){
+    if(!t) return;
+    var sel = TAB_ATTRS.map(function(a){return '['+a+'="'+t+'"]';}).join(',');
+    var b = document.querySelector(sel);
+    if(b){ b.click(); }
+  }
+  function _visClass(el){ return VIS.some(function(c){return el.classList.contains(c);}); }
+  function _activate(){ try{ switchTab("all"); }catch(e){ if(window.console)console.warn('activate',e); } }
+  function _installModalNav(){
+    Object.keys(MODAL_FILES).forEach(function(id){
+      var el = document.getElementById(id); if(!el) return;
+      var was = _visClass(el);
+      var mo = new MutationObserver(function(){
+        var now = _visClass(el);
+        if(now && !was){ location.href = MODAL_FILES[id]; }
+        was = now;
+      });
+      mo.observe(el, {attributes:true, attributeFilter:["class","style"]});
+    });
+  }
+  function _installTabNav(){
+    if(!Object.keys(TAB_FILES).length) return;
+    document.addEventListener("click", function(e){
+      var node = e.target;
+      while(node && node.nodeType===1){
+        for(var i=0;i<TAB_ATTRS.length;i++){
+          if(node.hasAttribute(TAB_ATTRS[i])){
+            var v = node.getAttribute(TAB_ATTRS[i]);
+            if(TAB_FILES[v]){ e.preventDefault(); e.stopPropagation(); location.href = TAB_FILES[v]; return; }
+          }
+        }
+        node = node.parentNode;
+      }
+    }, true);
+    if(typeof switchTab!=="undefined"){ window.switchTab=function(t){ var f=TAB_FILES[t]; if(f){location.href=f;return;} }; }
+  }
+  window.addEventListener("load", function(){
+    setTimeout(function(){ _activate(); setTimeout(function(){ _installModalNav(); _installTabNav(); }, 150); }, 60);
+  });
+})();
+</script>
+
 </body>
 </html>

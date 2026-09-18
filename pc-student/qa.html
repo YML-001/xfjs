@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -524,6 +524,9 @@ svg{display:block;flex-shrink:0;}
     <div class="s-section-head">
       <h3>即问即答 <small>· 学业问题求解</small></h3>
       <div style="display:flex;gap:8px;">
+        <a class="btn-stu btn-ghost-stu btn-sm" href="profile.html#complaints" style="display:inline-flex;align-items:center;gap:5px;">
+          🚩 我的投诉
+        </a>
         <button class="btn-stu btn-primary-stu btn-sm" onclick="openModal('newQuestion')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           我要提问
@@ -1548,6 +1551,7 @@ function buildAnswerCards(q) {
         </div>
         <div class="ans-body">${ans.content.replace(/\n/g, '<br/>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
         ${ans.attachments && ans.attachments.length > 0 ? `<div class="attach-list" style="margin-top:8px;">${ans.attachments.map(a => `<div class="attach-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>${a}</div>`).join('')}</div>` : ''}
+        ${ans.replies && ans.replies.length > 0 ? `<div class="ans-replies" style="margin-top:10px;border-left:2px solid var(--primary-light);padding-left:12px;display:flex;flex-direction:column;gap:8px;">${ans.replies.map(r => `<div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:12px;font-weight:600;color:var(--text-1);">💬 ${r.by}</span><span style="font-size:11px;color:var(--text-3);">追问 · ${r.time}</span></div><div style="font-size:13px;color:var(--text-2);margin-top:3px;line-height:1.6;">${r.text}</div>${r.reply ? `<div style="margin-top:5px;background:var(--bg);border-radius:8px;padding:7px 10px;font-size:12.5px;color:var(--text-2);"><b style="color:var(--text-1);">${ans.answerer} 回复：</b>${r.reply}</div>` : ''}</div>`).join('')}</div>` : ''}
         <div class="ans-foot">
           <button class="like-btn ${likeClass}" id="like-btn-${ans.id}" onclick="toggleLike(${q.id},${ans.id})">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="${ans.likedByMe ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z"/></svg>
@@ -1758,6 +1762,11 @@ function submitReply(qid, ansId) {
   }
   const q = QA_DATA.find(x => x.id === qid);
   if (!q) return;
+  const ans = (q.answers || []).find(a => a.id === ansId);
+  if (ans) {
+    if (!ans.replies) ans.replies = [];
+    ans.replies.push({ by: CURRENT_USER.name, time: '刚刚', text: text.value.trim(), reply: '' });
+  }
   // 通知义工
   NOTICES.unshift({
     id: Date.now(),
@@ -1772,8 +1781,9 @@ function submitReply(qid, ansId) {
   });
   updateNoticeCount();
   showToast('追问已提交，义工将收到通知！');
-  toggleReplyForm(qid, ansId);
   if (text) text.value = '';
+  renderDetailModal(q);
+  setDetailModalFooter(q);
 }
 
 // ====================================================
@@ -1809,6 +1819,7 @@ function submitNewQuestion() {
     answers: []
   };
   QA_DATA.unshift(newQ);
+  try{const k='xfjs_myquestions';let s=JSON.parse(localStorage.getItem(k)||'[]');s.unshift({id:newQ.id,title,subject,time:'刚刚'});localStorage.setItem(k,JSON.stringify(s));}catch(e){}
   closeModal('newQuestion');
   clearNewQuestionForm();
   renderTable();
@@ -1834,12 +1845,24 @@ function openComplaint(target) {
 }
 
 function submitComplaint() {
+  const target = document.getElementById('complaintTarget').value;
   const type = document.getElementById('complaintType').value;
   const desc = document.getElementById('complaintDesc').value.trim();
   if (!type) { showToast('请选择投诉类型'); return; }
   if (!desc) { showToast('请填写投诉说明'); return; }
+  saveComplaintRecord(target, type, desc);
   closeModal('complaintModal');
-  showToast('投诉已提交，等待管理员处理');
+  showToast('投诉已提交，可在「个人中心 - 我的投诉」查看进度');
+}
+
+function saveComplaintRecord(target, type, desc) {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const time = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem('xfjs_complaints') || '[]'); } catch (e) { list = []; }
+  list.unshift({ target, type, desc, time, status: 'pending', reply: '' });
+  try { localStorage.setItem('xfjs_complaints', JSON.stringify(list.slice(0, 30))); } catch (e) {}
 }
 
 // ====================================================
@@ -2153,5 +2176,58 @@ document.addEventListener('DOMContentLoaded', () => {
 renderStuSidebar('qa');
 renderStuTopbar('搜索问题或关键词...');
 </script>
+
+
+
+<!-- ===== 拆分页导航（设计师预览版 · 自动注入）：页内业务逻辑不变，点击改为跳转对应拆分 HTML ===== -->
+<script>
+(function(){
+  var TAB_FILES = {"hot":"qa.html","new":"qa-new.html","myAnswers":"qa-myAnswers.html","myQuestions":"qa-myQuestions.html","myFavorites":"qa-myFavorites.html"};     /* tabId -> file */
+  var MODAL_FILES = {"newQuestion":"qa-ask.html","qaDetail":"qa-detail.html","complaintModal":"qa-complaint.html","shareModal":"qa-share.html","noticeModal":"qa-notice.html","volunteerListModal":"qa-volunteer-list.html","volunteerDetailModal":"qa-volunteer-detail.html"}; /* 浮层元素id -> file */
+  var LANDING = "qa.html";
+  var TAB_ATTRS = ["data-tab","data-stab","data-ptab","data-lib-tab"];
+  var VIS = ["show","open","active","visible"];
+  function _clickTab(t){
+    if(!t) return;
+    var sel = TAB_ATTRS.map(function(a){return '['+a+'="'+t+'"]';}).join(',');
+    var b = document.querySelector(sel);
+    if(b){ b.click(); }
+  }
+  function _visClass(el){ return VIS.some(function(c){return el.classList.contains(c);}); }
+  function _activate(){ try{ switchTab("hot"); }catch(e){ if(window.console)console.warn('activate',e); } }
+  function _installModalNav(){
+    Object.keys(MODAL_FILES).forEach(function(id){
+      var el = document.getElementById(id); if(!el) return;
+      var was = _visClass(el);
+      var mo = new MutationObserver(function(){
+        var now = _visClass(el);
+        if(now && !was){ location.href = MODAL_FILES[id]; }
+        was = now;
+      });
+      mo.observe(el, {attributes:true, attributeFilter:["class","style"]});
+    });
+  }
+  function _installTabNav(){
+    if(!Object.keys(TAB_FILES).length) return;
+    document.addEventListener("click", function(e){
+      var node = e.target;
+      while(node && node.nodeType===1){
+        for(var i=0;i<TAB_ATTRS.length;i++){
+          if(node.hasAttribute(TAB_ATTRS[i])){
+            var v = node.getAttribute(TAB_ATTRS[i]);
+            if(TAB_FILES[v]){ e.preventDefault(); e.stopPropagation(); location.href = TAB_FILES[v]; return; }
+          }
+        }
+        node = node.parentNode;
+      }
+    }, true);
+    if(typeof switchTab!=="undefined"){ window.switchTab=function(t){ var f=TAB_FILES[t]; if(f){location.href=f;return;} }; }
+  }
+  window.addEventListener("load", function(){
+    setTimeout(function(){ _activate(); setTimeout(function(){ _installModalNav(); _installTabNav(); }, 150); }, 60);
+  });
+})();
+</script>
+
 </body>
 </html>

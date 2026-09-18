@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -1614,5 +1614,58 @@ function pcRenderRank(tab){
 }
 pcRenderRank('week');
 </script>
+
+
+
+<!-- ===== 拆分页导航（设计师预览版 · 自动注入）：页内业务逻辑不变，点击改为跳转对应拆分 HTML ===== -->
+<script>
+(function(){
+  var TAB_FILES = {};     /* tabId -> file */
+  var MODAL_FILES = {"homeQaDetail":"home-qa-detail.html","faqOverlay":"home-faq.html","docManage":"home-doc-manage.html","docStars":"home-doc-stars.html","docRecruit":"home-doc-recruit.html","docReward":"home-doc-reward.html","enrollModal":"home-enroll-notice.html"}; /* 浮层元素id -> file */
+  var LANDING = "home.html";
+  var TAB_ATTRS = ["data-tab","data-stab","data-ptab","data-lib-tab"];
+  var VIS = ["show","open","active","visible"];
+  function _clickTab(t){
+    if(!t) return;
+    var sel = TAB_ATTRS.map(function(a){return '['+a+'="'+t+'"]';}).join(',');
+    var b = document.querySelector(sel);
+    if(b){ b.click(); }
+  }
+  function _visClass(el){ return VIS.some(function(c){return el.classList.contains(c);}); }
+  function _activate(){ try{  }catch(e){ if(window.console)console.warn('activate',e); } }
+  function _installModalNav(){
+    Object.keys(MODAL_FILES).forEach(function(id){
+      var el = document.getElementById(id); if(!el) return;
+      var was = _visClass(el);
+      var mo = new MutationObserver(function(){
+        var now = _visClass(el);
+        if(now && !was){ location.href = MODAL_FILES[id]; }
+        was = now;
+      });
+      mo.observe(el, {attributes:true, attributeFilter:["class","style"]});
+    });
+  }
+  function _installTabNav(){
+    if(!Object.keys(TAB_FILES).length) return;
+    document.addEventListener("click", function(e){
+      var node = e.target;
+      while(node && node.nodeType===1){
+        for(var i=0;i<TAB_ATTRS.length;i++){
+          if(node.hasAttribute(TAB_ATTRS[i])){
+            var v = node.getAttribute(TAB_ATTRS[i]);
+            if(TAB_FILES[v]){ e.preventDefault(); e.stopPropagation(); location.href = TAB_FILES[v]; return; }
+          }
+        }
+        node = node.parentNode;
+      }
+    }, true);
+    
+  }
+  window.addEventListener("load", function(){
+    setTimeout(function(){ _activate(); setTimeout(function(){ _installModalNav(); _installTabNav(); }, 150); }, 60);
+  });
+})();
+</script>
+
 </body>
 </html>

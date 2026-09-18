@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -625,7 +625,8 @@ svg{display:block;flex-shrink:0;}
 </style>
 <style>
 /* ==== migrated volunteer features ==== */
-.m-subtabs{display:flex;gap:8px;overflow-x:auto;padding:10px 16px 10px;-webkit-overflow-scrolling:touch;background:var(--bg);}
+.m-subtabs{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding:10px 16px 10px;-webkit-overflow-scrolling:touch;background:var(--bg);scroll-behavior:smooth;touch-action:pan-x;cursor:grab;}
+.m-subtabs.dragging{cursor:grabbing;scroll-behavior:auto;}
 .m-subtabs::-webkit-scrollbar{display:none;}
 .m-subtab{flex:0 0 auto;height:34px;padding:0 14px;border-radius:9px;border:1px solid var(--border-light);background:#fff;color:var(--text-2);font-size:13px;font-weight:500;white-space:nowrap;cursor:pointer;font-family:inherit;}
 .m-subtab.active{background:var(--primary);color:#fff;border-color:var(--primary);}
@@ -1094,6 +1095,7 @@ input.eg:focus,textarea.eg:focus{color:var(--text-1);}
             <button class="m-subtab" data-ptab="mycourses" onclick="pSwitchTab('mycourses')">我的课程</button>
             <button class="m-subtab" data-ptab="progress" onclick="pSwitchTab('progress')">时长 & 积分</button>
             <button class="m-subtab" data-ptab="stars" onclick="pSwitchTab('stars')">星级申报</button>
+            <button class="m-subtab" data-ptab="complaints" onclick="pSwitchTab('complaints')">我的投诉</button>
           </div>
         </div><!-- /.profile-sticky -->
 
@@ -1132,6 +1134,35 @@ input.eg:focus,textarea.eg:focus{color:var(--text-1);}
                 <div style="font-size:13px;font-weight:600;color:var(--success);margin-top:2px;">✓ 审核通过 · 四星级</div>
               </div>
               <a class="btn-block sm" href="volunteer-apply.html" style="width:auto;padding:0 16px;">再次申请</a>
+            </div>
+          </div>
+
+          <!-- 我的辅学打卡 -->
+          <div class="pro-section">
+            <h4>我的辅学打卡 <a href="checkin-records.html">打卡记录</a></h4>
+            <div style="display:flex;gap:10px;margin-bottom:12px;">
+              <div style="flex:1;text-align:center;padding:10px 6px;background:var(--success-bg);border-radius:10px;">
+                <strong style="font-size:18px;font-weight:700;color:var(--success);display:block;">9</strong>
+                <span style="font-size:11px;color:var(--text-3);">本月正常</span>
+              </div>
+              <div style="flex:1;text-align:center;padding:10px 6px;background:var(--warning-bg);border-radius:10px;">
+                <strong style="font-size:18px;font-weight:700;color:var(--warning);display:block;">1</strong>
+                <span style="font-size:11px;color:var(--text-3);">迟到</span>
+              </div>
+              <div style="flex:1;text-align:center;padding:10px 6px;background:var(--danger-bg);border-radius:10px;">
+                <strong style="font-size:18px;font-weight:700;color:var(--danger);display:block;">1</strong>
+                <span style="font-size:11px;color:var(--text-3);">缺卡</span>
+              </div>
+            </div>
+            <div class="ov-book" onclick="location.href='checkin.html'">
+              <div class="bic" style="background:linear-gradient(135deg,#C4B5F0,#7C5BC1);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><polyline points="9 10 11 12 15 8"/></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <h6 style="font-size:13px;font-weight:600;">知新馆辅学值班打卡</h6>
+                <p style="font-size:11px;color:var(--text-3);margin-top:3px;">08:30–09:00 · 知新馆（校本部）· 围栏 120 米</p>
+              </div>
+              <span class="c-tag" style="flex-shrink:0;">去打卡</span>
             </div>
           </div>
 
@@ -1547,6 +1578,16 @@ input.eg:focus,textarea.eg:focus{color:var(--text-1);}
               </div>
             </div>
           </div><!-- /#pane-stars -->
+<div class="m-ppane" id="mppane-complaints">
+            <div style="padding:14px 16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                <h4 style="font-size:15px;font-weight:700;color:var(--text-1);">我的投诉</h4>
+                <a href="qa.html" style="font-size:12px;color:var(--primary);font-weight:500;">去即问即答 →</a>
+              </div>
+              <p style="font-size:12px;color:var(--text-3);margin:4px 0 12px;line-height:1.6;">您在「即问即答」对问题或回答提交的投诉及处理进度，结果会由管理员在此回复。</p>
+              <div id="mComplaintList"></div>
+            </div>
+          </div><!-- /#mppane-complaints -->
         </div>
       </div>
       <nav class="tabbar"></nav>
@@ -2252,8 +2293,53 @@ function closeStarHistoryDetail(){ closeOverlay('starHistoryOverlay'); }
 function pSwitchTab(name){
   document.querySelectorAll('.m-subtab').forEach(b=>b.classList.toggle('active', b.dataset.ptab===name));
   document.querySelectorAll('.m-ppane').forEach(p=>p.classList.toggle('active', p.id==='mppane-'+name));
+  if(name==='complaints') renderMyComplaints();
   if(history.replaceState) history.replaceState(null,'','#'+name);
   const pages=document.querySelector('.pages'); if(pages) pages.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ===== 我的投诉（即问即答投诉记录）=====
+const COMPLAINT_SEED=[
+  {target:'王彦哲 的回答',type:'无效回答',desc:'回答内容与所提问题无关，未能解决疑问。',time:'2026-05-20 14:30',status:'resolved',reply:'经核实情况属实，已对该回答作下架处理，感谢您的反馈。'},
+  {target:'「高等数学·洛必达法则适用条件」',type:'内容错误',desc:'问题描述中的公式有误，容易误导其他同学。',time:'2026-05-25 09:10',status:'accepted',reply:''},
+  {target:'李梦琪 的回答',type:'不当言论',desc:'回答中含有不文明用语。',time:'2026-05-28 20:05',status:'pending',reply:''}
+];
+function getMyComplaints(){
+  let extra=[];
+  try{ extra=JSON.parse(localStorage.getItem('xfjs_complaints')||'[]'); }catch(e){ extra=[]; }
+  return [...extra, ...COMPLAINT_SEED];
+}
+function complaintStatusTag(s){
+  const map={
+    pending:['待处理','#FFF5E5','#9A6500'],
+    accepted:['已受理','#E3F1F9','#006DAD'],
+    resolved:['已处理 · 属实','#E8FCF4','#0F766E'],
+    rejected:['已驳回','#F1F2F3','#475569']
+  };
+  const [t,bg,c]=map[s]||map.pending;
+  return `<span style="flex:0 0 auto;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;background:${bg};color:${c};">${t}</span>`;
+}
+function renderMyComplaints(){
+  const box=document.getElementById('mComplaintList');
+  if(!box) return;
+  const list=getMyComplaints();
+  if(!list.length){
+    box.innerHTML=`<div style="text-align:center;padding:40px 0;color:var(--text-3);font-size:13px;">暂无投诉记录<br/><span style="font-size:12px;">在「即问即答」对问题或回答点“🚩 投诉”即可发起</span></div>`;
+    return;
+  }
+  box.innerHTML=list.map(c=>`
+    <div style="border:1px solid var(--border-light);border-radius:12px;padding:12px 14px;margin-bottom:10px;background:#fff;">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">
+        <div style="font-weight:600;font-size:13.5px;color:var(--text-1);line-height:1.5;">🚩 ${c.target}</div>
+        ${complaintStatusTag(c.status)}
+      </div>
+      <div style="margin-top:7px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <span style="padding:2px 8px;border-radius:4px;font-size:11px;background:#F1F2F3;color:#475569;">${c.type}</span>
+        <span style="font-size:11px;color:var(--text-3);">${c.time}</span>
+      </div>
+      <p style="font-size:12.5px;color:var(--text-2);margin-top:7px;line-height:1.6;">${c.desc}</p>
+      ${c.reply?`<div style="margin-top:9px;background:var(--bg);border-radius:8px;padding:9px 11px;font-size:12px;color:var(--text-2);line-height:1.6;"><b style="color:var(--text-1);">管理员回复：</b>${c.reply}</div>`:`<div style="margin-top:9px;font-size:11.5px;color:var(--text-3);">管理员处理中，结果将在此显示</div>`}
+    </div>`).join('');
 }
 // ===== 概览：预约/报名 筛选 =====
 function mFilterBook(type,el){
@@ -2270,10 +2356,137 @@ function mSwitchQaTab(tab,el){
   document.getElementById('mQaQ').style.display=tab==='q'?'flex':'none';
   document.getElementById('mQaA').style.display=tab==='a'?'flex':'none';
 }
+
+// ===== 接真实数据：报名/预约 + 提问 + 上传（经 localStorage 共享）=====
+function _lsGet(k){try{return JSON.parse(localStorage.getItem(k)||'[]');}catch(e){return [];}}
+function mRenderDynamic(){
+  const bl=document.getElementById('mBookList');
+  if(bl){
+    let html='';
+    _lsGet('xfjs_enrolled').forEach(e=>{
+      html+=`<div class="ov-book" data-type="course" onclick="showToast('${(e.title||'').replace(/'/g,'')}')">
+        <div class="bic ci-math"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div style="flex:1;min-width:0;"><h6 style="font-size:13px;font-weight:600;">${e.title||'辅学课程'}</h6><p style="font-size:11px;color:var(--text-3);margin-top:3px;">${e.time||''} · ${e.place||''}</p></div>
+        <span class="c-tag success" style="flex-shrink:0;">已报名</span>
+      </div>`;
+    });
+    _lsGet('xfjs_bookings').forEach(b=>{
+      const meta={approved:{cls:'success',l:'已批准'},pending:{cls:'warning',l:'待审批'},rejected:{cls:'danger',l:'已驳回'},ended:{cls:'grey',l:'已结束'}}[b.status]||{cls:'warning',l:'待审批'};
+      const dtype=b.status==='ended'?'ended':'venue';
+      html+=`<div class="ov-book" data-type="${dtype}" onclick="showToast('${b.id} · ${(b.purpose||'').replace(/'/g,'')}')"${b.status==='ended'?' style="opacity:.72;"':''}>
+        <div class="bic" style="background:var(--primary);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div style="flex:1;min-width:0;"><h6 style="font-size:13px;font-weight:600;">${b.venue||'场地'} · 场地预约</h6><p style="font-size:11px;color:var(--text-3);margin-top:3px;">${b.date||''} ${b.time||''} · ${b.purpose||''}</p></div>
+        <span class="c-tag ${meta.cls}" style="flex-shrink:0;">${meta.l}</span>
+      </div>`;
+    });
+    if(html) bl.insertAdjacentHTML('afterbegin',html);
+  }
+  const qq=document.getElementById('mQaQ');
+  if(qq){
+    const qs=_lsGet('xfjs_myquestions');
+    if(qs.length){
+      const html=qs.map(q=>`<div class="ov-qa" onclick="location.href='qa.html'">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;"><h6 style="font-size:13px;font-weight:500;line-height:1.5;flex:1;">${(q.title||'').replace(/</g,'&lt;')}</h6><span class="c-tag warning" style="flex-shrink:0;">待回答</span></div>
+        <p style="font-size:11px;color:var(--text-3);margin-top:6px;">提问于 ${q.time||'刚刚'} · 0 个回答</p>
+      </div>`).join('');
+      qq.insertAdjacentHTML('afterbegin',html);
+    }
+  }
+  const ups=_lsGet('xfjs_myuploads');
+  if(ups.length){
+    const grid=document.querySelector('#mppane-overview .pro-section:last-of-type [style*="grid-template-columns"]');
+    if(grid){
+      const html=ups.map(u=>`<div class="res-card" onclick="showToast('${(u.title||'').replace(/'/g,'')}')">
+        <div class="ftype ftype-pdf">${u.ext||'PDF'}</div>
+        <h5>${(u.title||'').replace(/</g,'&lt;')}</h5>
+        <div class="meta"><span style="font-size:10px;color:var(--text-3);">${u.major||'资料'}</span><span class="c-tag warning" style="font-size:9px;">待审核</span></div>
+      </div>`).join('');
+      grid.insertAdjacentHTML('afterbegin',html);
+    }
+  }
+}
 document.addEventListener('DOMContentLoaded',()=>{
   const h=(location.hash||'').replace('#','');
-  if(['mycourses','progress','stars','overview'].includes(h)) pSwitchTab(h);
+  if(['mycourses','progress','stars','overview','complaints'].includes(h)) pSwitchTab(h);
+  renderMyComplaints();
+  mRenderDynamic();
+  enableHDragScroll(document.querySelector('.m-subtabs'));
 });
+
+// 让横向 Tab 条支持鼠标拖拽 / 滚轮 / 触摸 左右滑动
+function enableHDragScroll(el){
+  if(!el) return;
+  el.addEventListener('wheel',e=>{
+    if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){ el.scrollLeft+=e.deltaY; e.preventDefault(); }
+  },{passive:false});
+  let down=false,startX=0,startL=0,moved=false;
+  el.addEventListener('pointerdown',e=>{ down=true;moved=false;startX=e.clientX;startL=el.scrollLeft; });
+  el.addEventListener('pointermove',e=>{
+    if(!down) return;
+    const dx=e.clientX-startX;
+    if(Math.abs(dx)>4){ moved=true; el.classList.add('dragging'); }
+    el.scrollLeft=startL-dx;
+  });
+  const end=()=>{ down=false; el.classList.remove('dragging'); };
+  el.addEventListener('pointerup',end);
+  el.addEventListener('pointercancel',end);
+  el.addEventListener('pointerleave',end);
+  // 拖拽时屏蔽误触发的点击
+  el.addEventListener('click',e=>{ if(moved){ e.stopPropagation(); e.preventDefault(); } },true);
+}
 </script>
+
+
+
+<!-- ===== 拆分页导航（设计师预览版 · 自动注入）：页内业务逻辑不变，点击改为跳转对应拆分 HTML ===== -->
+<script>
+(function(){
+  var TAB_FILES = {"overview":"profile.html","mycourses":"profile-mycourses.html","progress":"profile-progress.html","stars":"profile-stars.html","complaints":"profile-complaints.html"};     /* tabId -> file */
+  var MODAL_FILES = {"reqDetailOverlay":"profile-req-detail.html","myCourseDetailOverlay":"profile-mycourse-detail.html","hourDetailOverlay":"profile-hour-detail.html","newHourOverlay":"profile-new-hour.html","starApplyOverlay":"profile-star-apply.html","starHistoryOverlay":"profile-star-history.html","pointsPanel":"profile-points.html"}; /* 浮层元素id -> file */
+  var LANDING = "profile.html";
+  var TAB_ATTRS = ["data-tab","data-stab","data-ptab","data-lib-tab"];
+  var VIS = ["show","open","active","visible"];
+  function _clickTab(t){
+    if(!t) return;
+    var sel = TAB_ATTRS.map(function(a){return '['+a+'="'+t+'"]';}).join(',');
+    var b = document.querySelector(sel);
+    if(b){ b.click(); }
+  }
+  function _visClass(el){ return VIS.some(function(c){return el.classList.contains(c);}); }
+  function _activate(){ try{ pSwitchTab("overview"); }catch(e){ if(window.console)console.warn('activate',e); } }
+  function _installModalNav(){
+    Object.keys(MODAL_FILES).forEach(function(id){
+      var el = document.getElementById(id); if(!el) return;
+      var was = _visClass(el);
+      var mo = new MutationObserver(function(){
+        var now = _visClass(el);
+        if(now && !was){ location.href = MODAL_FILES[id]; }
+        was = now;
+      });
+      mo.observe(el, {attributes:true, attributeFilter:["class","style"]});
+    });
+  }
+  function _installTabNav(){
+    if(!Object.keys(TAB_FILES).length) return;
+    document.addEventListener("click", function(e){
+      var node = e.target;
+      while(node && node.nodeType===1){
+        for(var i=0;i<TAB_ATTRS.length;i++){
+          if(node.hasAttribute(TAB_ATTRS[i])){
+            var v = node.getAttribute(TAB_ATTRS[i]);
+            if(TAB_FILES[v]){ e.preventDefault(); e.stopPropagation(); location.href = TAB_FILES[v]; return; }
+          }
+        }
+        node = node.parentNode;
+      }
+    }, true);
+    if(typeof pSwitchTab!=="undefined"){ window.pSwitchTab=function(t){ var f=TAB_FILES[t]; if(f){location.href=f;return;} }; }
+  }
+  window.addEventListener("load", function(){
+    setTimeout(function(){ _activate(); setTimeout(function(){ _installModalNav(); _installTabNav(); }, 150); }, 60);
+  });
+})();
+</script>
+
 </body>
 </html>

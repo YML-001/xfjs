@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -582,7 +582,7 @@ svg{display:block;flex-shrink:0;}
               <span style="background:rgba(255,255,255,.18);padding:3px 10px;border-radius:4px;">数学</span>
               <span style="background:rgba(255,255,255,.18);padding:3px 10px;border-radius:4px;">辅学课程</span>
             </div>
-            <h2 style="font-size:20px;font-weight:600;margin-top:10px;position:relative;z-index:1;">高等数学A · 微分方程专题精讲</h2>
+            <h2 id="cdTitle" style="font-size:20px;font-weight:600;margin-top:10px;position:relative;z-index:1;">高等数学A · 微分方程专题精讲</h2>
             <p style="font-size:12px;opacity:.85;margin-top:6px;position:relative;z-index:1;line-height:1.6;">系统讲解一阶/二阶常微分方程，配合期末真题精讲，重点突破学习难点</p>
             <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;opacity:.85;position:relative;z-index:1;">
               <div style="display:flex;align-items:center;gap:5px;">
@@ -632,9 +632,9 @@ svg{display:block;flex-shrink:0;}
     </div>
     <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;padding:10px 16px 24px;border-top:1px solid var(--border-light);display:flex;gap:10px;align-items:center;z-index:10;">
       <div style="flex:1;">
-        <strong style="font-size:14px;color:var(--primary);">仅剩 6 个名额</strong>
+        <strong id="cdSeats" style="font-size:14px;color:var(--primary);">仅剩 6 个名额</strong>
       </div>
-      <button class="btn-block" style="width:auto;padding:0 32px;" onclick="openSignupNotice()">立即报名</button>
+      <button class="btn-block" id="cdSignupBtn" style="width:auto;padding:0 32px;" onclick="openSignupNotice()">立即报名</button>
     </div>
   </div>
 </div>
@@ -784,14 +784,105 @@ function closeSignupNotice(){
   document.getElementById('signupNotice').classList.remove('show');
 }
 
+// ===== 报名闭环（写入共享报名记录）=====
+const ENROLL_KEY='xfjs_enrolled';
+const CD_COURSE_ID='C-WD-001';
+function getEnrolled(){let s=[];try{s=JSON.parse(localStorage.getItem(ENROLL_KEY)||'[]');}catch(e){s=[];}return s;}
+function isEnrolled(){return getEnrolled().some(e=>e.id===CD_COURSE_ID);}
+function refreshSignupState(){
+  const btn=document.getElementById('cdSignupBtn');
+  const seats=document.getElementById('cdSeats');
+  if(!btn)return;
+  if(isEnrolled()){
+    btn.textContent='取消报名';
+    btn.style.background='#fff';
+    btn.style.color='var(--danger)';
+    btn.style.border='1px solid var(--danger)';
+    btn.setAttribute('onclick','cancelSignup()');
+    if(seats){seats.textContent='✓ 已报名';seats.style.color='var(--success)';}
+  }else{
+    btn.textContent='立即报名';
+    btn.style.background='';
+    btn.style.color='';
+    btn.style.border='';
+    btn.setAttribute('onclick','openSignupNotice()');
+    if(seats){seats.textContent='仅剩 6 个名额';seats.style.color='var(--primary)';}
+  }
+}
 function confirmSignup(){
   closeSignupNotice();
-  showToast('已成功报名！');
-  setTimeout(()=>history.back(), 800);
+  const title=(document.getElementById('cdTitle')||{}).textContent||'辅学课程';
+  let s=getEnrolled();
+  if(!s.some(e=>e.id===CD_COURSE_ID)){
+    const now=new Date();const pad=n=>String(n).padStart(2,'0');
+    s.unshift({id:CD_COURSE_ID,title:title.trim(),time:'4/30 周一 10:00-12:00',place:'知新馆 301',teacher:'授课义工',enrollDate:`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`,status:'enrolled'});
+    localStorage.setItem(ENROLL_KEY,JSON.stringify(s));
+  }
+  refreshSignupState();
+  showToast('已成功报名！可在「个人中心-我的报名」查看');
 }
+function cancelSignup(){
+  let s=getEnrolled().filter(e=>e.id!==CD_COURSE_ID);
+  localStorage.setItem(ENROLL_KEY,JSON.stringify(s));
+  refreshSignupState();
+  showToast('已取消报名');
+}
+document.addEventListener('DOMContentLoaded',refreshSignupState);
 
 </script>
 <script>renderStatusBar(false);</script>
+
+
+
+<!-- ===== 拆分页导航（设计师预览版 · 自动注入）：页内业务逻辑不变，点击改为跳转对应拆分 HTML ===== -->
+<script>
+(function(){
+  var TAB_FILES = {};     /* tabId -> file */
+  var MODAL_FILES = {"signupNotice":"course-detail-signup-notice.html"}; /* 浮层元素id -> file */
+  var LANDING = "course-detail.html";
+  var TAB_ATTRS = ["data-tab","data-stab","data-ptab","data-lib-tab"];
+  var VIS = ["show","open","active","visible"];
+  function _clickTab(t){
+    if(!t) return;
+    var sel = TAB_ATTRS.map(function(a){return '['+a+'="'+t+'"]';}).join(',');
+    var b = document.querySelector(sel);
+    if(b){ b.click(); }
+  }
+  function _visClass(el){ return VIS.some(function(c){return el.classList.contains(c);}); }
+  function _activate(){ try{  }catch(e){ if(window.console)console.warn('activate',e); } }
+  function _installModalNav(){
+    Object.keys(MODAL_FILES).forEach(function(id){
+      var el = document.getElementById(id); if(!el) return;
+      var was = _visClass(el);
+      var mo = new MutationObserver(function(){
+        var now = _visClass(el);
+        if(now && !was){ location.href = MODAL_FILES[id]; }
+        was = now;
+      });
+      mo.observe(el, {attributes:true, attributeFilter:["class","style"]});
+    });
+  }
+  function _installTabNav(){
+    if(!Object.keys(TAB_FILES).length) return;
+    document.addEventListener("click", function(e){
+      var node = e.target;
+      while(node && node.nodeType===1){
+        for(var i=0;i<TAB_ATTRS.length;i++){
+          if(node.hasAttribute(TAB_ATTRS[i])){
+            var v = node.getAttribute(TAB_ATTRS[i]);
+            if(TAB_FILES[v]){ e.preventDefault(); e.stopPropagation(); location.href = TAB_FILES[v]; return; }
+          }
+        }
+        node = node.parentNode;
+      }
+    }, true);
+    
+  }
+  window.addEventListener("load", function(){
+    setTimeout(function(){ _activate(); setTimeout(function(){ _installModalNav(); _installTabNav(); }, 150); }, 60);
+  });
+})();
+</script>
 
 </body>
 </html>

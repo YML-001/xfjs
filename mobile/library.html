@@ -323,6 +323,7 @@ svg{display:block;flex-shrink:0;}
               <button class="lib-tab" data-tab="collect">需求征集 <span class="tc" id="tc-collect">0</span></button>
               <button class="lib-tab" data-tab="mine">我上传的 <span class="tc" id="tc-mine">3</span></button>
               <button class="lib-tab" data-tab="demand">我提的需求 <span class="tc" id="tc-demand">2</span></button>
+              <button class="lib-tab" data-tab="feedback">我的反馈 <span class="tc" id="tc-feedback">0</span></button>
             </div>
           </div>
           <!-- Filter bar -->
@@ -357,6 +358,10 @@ svg{display:block;flex-shrink:0;}
           <div class="tab-pane" id="tab-demand">
             <div class="res-list" id="demand-list"></div>
           </div>
+          <!-- Tab: 我的反馈 -->
+          <div class="tab-pane" id="tab-feedback">
+            <div class="res-list" id="feedback-list"></div>
+          </div>
 
         </div>
       </div>
@@ -389,7 +394,7 @@ svg{display:block;flex-shrink:0;}
         </div>
         <div style="background:var(--primary-50);border:1px solid #BFDDF6;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:var(--primary-dark);line-height:1.6;display:flex;gap:6px;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          提交后<strong>直接发布</strong>至资料库，无需审核，请确保内容合规。
+          提交后进入<strong>管理员审核</strong>，通过后对外公开（可在「我上传的」查看状态），请确保内容合规。
         </div>
         <div class="m-form-group">
           <div class="m-form-row"><label>资料标题 <span class="req">*</span></label><input id="up-title" placeholder="请输入标题" /></div>
@@ -426,7 +431,7 @@ svg{display:block;flex-shrink:0;}
         <button class="btn-outline" onclick="closeSheet('uploadSheet')">取消</button>
         <button class="btn-primary-s" onclick="submitUpload()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          立即发布
+          提交审核
         </button>
       </div>
     </div>
@@ -634,8 +639,10 @@ const LIB_DATA=[
   {id:8,title:'大学物理 · 电磁学复习笔记',major:'课程科目类',minor:'笔记讲义',course:'大学物理',uploader:'王诗韵',ft:'doc',size:'3.4MB',downloads:890,likes:234,uploadTime:'2026-05-13',timeLabel:'今天',status:'published',intro:'电场、磁场、电磁感应章节梳理与公式汇总。',source:'王诗韵',version:'v1.0',keywords:['物理','电磁'],remarks:''},
 ];
 const MINE_DATA=[
+  {id:100,title:'线性代数 期中模拟卷（自整理）',major:'课程科目类',minor:'往年真题',ft:'pdf',uploadTime:'2026-05-29',downloads:0,likes:0,status:'pending'},
   {id:2,title:'大学英语六级写作高分模版精讲',major:'课程科目类',minor:'课件 PPT',ft:'ppt',uploadTime:'2026-05-12',downloads:980,likes:210,status:'published'},
   {id:8,title:'大学物理 · 电磁学复习笔记',major:'课程科目类',minor:'笔记讲义',ft:'doc',uploadTime:'2026-05-13',downloads:890,likes:234,status:'published'},
+  {id:101,title:'考研英语真题（含第三方解析）',major:'学涯规划类',minor:'往年真题',ft:'pdf',uploadTime:'2026-05-05',downloads:0,likes:0,status:'rejected',rejectReason:'疑似含未授权的第三方解析内容'},
   {id:99,title:'高等数学B 期末备考资料包',major:'课程科目类',minor:'往年真题',ft:'pdf',uploadTime:'2026-04-28',downloads:320,likes:78,status:'down'},
 ];
 let DEMAND_DATA=[
@@ -669,7 +676,10 @@ let tempFilter={};
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function ftIC(ft,size){const s=size||40;const c={pdf:'ft-pdf',ppt:'ft-ppt',doc:'ft-doc',xls:'ft-xls'}[ft]||'ft-pdf';return`<div class="ft-ic ${c}" style="width:${s}px;height:${s}px;">${ft.toUpperCase()}</div>`;}
-function statusTagXs(st){return st==='published'?'<span class="tag-xs t-green">已发布</span>':'<span class="tag-xs t-grey">已下架</span>';}
+function statusTagXs(st){const m={published:{c:'t-green',l:'已发布'},pending:{c:'t-orange',l:'待审核'},rejected:{c:'t-red',l:'已驳回'},down:{c:'t-grey',l:'已下架'}};const d=m[st]||{c:'t-grey',l:st};return`<span class="tag-xs ${d.c}">${d.l}</span>`;}
+
+// ===== 下载（不限次数）=====
+function doDownload(name){showToast(name?'开始下载：'+name:'开始下载');return true;}
 function demandTagXs(st){const m={pending:{c:'t-orange',l:'待处理'},notified:{c:'t-blue',l:'已发起征集'},fulfilled:{c:'t-green',l:'已满足'},blocked:{c:'t-red',l:'已屏蔽'}};const d=m[st]||{c:'t-grey',l:st};return`<span class="tag-xs ${d.c}">${d.l}</span>`;}
 
 // ===== Render All =====
@@ -752,6 +762,8 @@ function renderMine(){
           <span class="tag-xs t-blue">${esc(r.major)}</span>
           ${statusTagXs(r.status)}
         </div>
+        ${r.status==='pending'?`<div style="font-size:11px;color:var(--warning);margin-top:4px;">⏳ 审核中，通过后对外公开</div>`:''}
+        ${r.status==='rejected'?`<div style="font-size:11px;color:var(--danger);margin-top:4px;">⚠ 驳回：${esc(r.rejectReason||'内容不符合规范')}</div>`:''}
         <div class="rc-meta">
           <div class="rc-stats">
             <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>${r.downloads.toLocaleString()}</span>
@@ -881,7 +893,7 @@ function openResDetail(id){
     <button class="btn-outline" onclick="closeSheet('resDetailSheet');openShareSheet(${id})">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>分享
     </button>
-    <button class="btn-primary-s" onclick="closeSheet('resDetailSheet');showToast('开始下载')">
+    <button class="btn-primary-s" onclick="doDownload('${esc(item.title)}');closeSheet('resDetailSheet');">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>下载
     </button>`;
   openSheet('resDetailSheet');
@@ -939,7 +951,7 @@ function openDemandDetail(id){
           <div class="rf-name">${esc(f.name)}</div>
           <div class="rf-meta">${esc(f.uploader)} · ${esc(f.size)} · ↓${f.downloads}</div>
         </div>
-        <button class="rf-dl" onclick="showToast('开始下载')">
+        <button class="rf-dl" onclick="doDownload('${esc(f.name)}')">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>下载
         </button>
       </div>`).join('');
@@ -995,8 +1007,42 @@ function openFeedback(id){
 function submitFeedback(){
   const desc=document.getElementById('fb-desc').value.trim();
   if(!desc){showToast('请填写问题描述');return;}
+  const resName=document.getElementById('fb-res-name').textContent||'未知资料';
+  const type=document.getElementById('fb-type').value;
+  const now=new Date();const pad=n=>String(n).padStart(2,'0');
+  const ts=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  saveFeedback({id:'FB'+Date.now().toString().slice(-8),resName,type,desc,submitTime:ts,status:'pending',reply:'',handleTime:''});
   closeSheet('feedbackSheet');
-  showToast('反馈已提交，管理员会尽快处理');
+  showToast('反馈已提交，可在「我的反馈」查看进度');
+  renderFeedback();
+}
+
+// ===== 我的反馈（资料问题反馈闭环）=====
+const FB_KEY='xfjs_resfeedback';
+const FB_SEED=[
+  {id:'FB2026003',resName:'高等数学（上）期末冲刺押题卷',type:'内容有误',desc:'第3题答案与解析不符，麻烦核对。',submitTime:'2026-05-20 10:12',status:'resolved',reply:'已联系上传者更正并重新发布，感谢反馈。',handleTime:'2026-05-21 09:30'},
+  {id:'FB2026002',resName:'大学英语四级真题（2025）',type:'无法下载',desc:'点击下载提示文件不存在。',submitTime:'2026-05-24 16:40',status:'accepted',reply:'已受理，正在排查存储链接。',handleTime:'2026-05-25 08:50'}
+];
+function fbStatusTagXs(st){const m={pending:{c:'t-orange',l:'待处理'},accepted:{c:'t-blue',l:'已受理'},resolved:{c:'t-green',l:'已解决'},rejected:{c:'t-red',l:'已驳回'}};const d=m[st]||{c:'t-grey',l:st};return`<span class="tag-xs ${d.c}">${d.l}</span>`;}
+function getFeedbacks(){let saved=[];try{saved=JSON.parse(localStorage.getItem(FB_KEY)||'[]');}catch(e){saved=[];}return[...saved,...FB_SEED];}
+function saveFeedback(rec){let saved=[];try{saved=JSON.parse(localStorage.getItem(FB_KEY)||'[]');}catch(e){saved=[];}saved.unshift(rec);localStorage.setItem(FB_KEY,JSON.stringify(saved));}
+function renderFeedback(){
+  const rows=getFeedbacks();
+  const cnt=document.getElementById('tc-feedback');if(cnt)cnt.textContent=rows.length;
+  const el=document.getElementById('feedback-list');if(!el)return;
+  el.innerHTML=rows.length?rows.map(r=>`
+    <div class="res-card" style="align-items:flex-start;">
+      <div style="width:40px;height:40px;border-radius:10px;background:#FDECEC;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E0524D" stroke-width="1.8"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="rc-body">
+        <div class="rc-title">${esc(r.resName)}</div>
+        <div class="rc-tags"><span class="tag-xs t-purple">${esc(r.type)}</span>${fbStatusTagXs(r.status)}</div>
+        <div style="font-size:12.5px;color:var(--text-2,#555);line-height:1.6;margin:4px 0;">${esc(r.desc)}</div>
+        ${r.reply?`<div style="background:#EAF4FB;border-radius:8px;padding:8px 10px;margin-top:2px;"><div style="font-size:11px;color:#2D7DC4;font-weight:600;margin-bottom:2px;">管理员回复 · ${esc(r.handleTime||'')}</div><div style="font-size:12px;color:var(--text-2,#555);line-height:1.55;">${esc(r.reply)}</div></div>`:`<div style="font-size:11.5px;color:var(--text-3,#999);">⏳ 等待管理员处理</div>`}
+        <div class="rc-meta"><span class="rc-time">${esc(r.id)} · ${esc(r.submitTime)}</span></div>
+      </div>
+    </div>`).join(''):`<div class="empty-card"><p>暂无反馈记录</p></div>`;
 }
 
 // ===== Filter Sheet =====
@@ -1130,8 +1176,13 @@ function submitUpload(){
   const demandId=document.getElementById('up-demand').value;
   const c=COLLECT_DATA.find(x=>x.id===demandId);
   if(c){c.respCount=(c.respCount||0)+1;renderCollect();}
+  const newId=Date.now();
+  MINE_DATA.unshift({id:newId,title,major,minor,ft:'pdf',uploadTime:new Date().toISOString().slice(0,10),downloads:0,likes:0,status:'pending'});
+  if(typeof renderMine==='function')renderMine();
+  const tcMine=document.getElementById('tc-mine');if(tcMine)tcMine.textContent=MINE_DATA.length;
+  try{const k='xfjs_myuploads';let s=JSON.parse(localStorage.getItem(k)||'[]');s.unshift({title,major,minor,ext:'PDF',time:'刚刚'});localStorage.setItem(k,JSON.stringify(s));}catch(e){}
   closeSheet('uploadSheet');
-  showToast(c?'已为征集需求贡献资料！':'资料已发布！');
+  showToast(c?'已提交，将定向贡献给该征集，待审核':'资料已提交，审核通过后将对外公开');
   window._collectTarget=null;
   const banner=document.getElementById('up-collect-banner');if(banner)banner.style.display='none';
   ['up-title','up-course','up-source','up-version','up-tags','up-intro','up-remark'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
@@ -1171,6 +1222,7 @@ function renderCurrentTab(){
   else if(currentTab==='collect')renderCollect();
   else if(currentTab==='mine')renderMine();
   else if(currentTab==='demand')renderDemand();
+  else if(currentTab==='feedback')renderFeedback();
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -1179,7 +1231,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(!btn)return;
     switchTab(btn.getAttribute('data-tab'));
   });
-  renderAll();renderHot();renderMine();renderDemand();renderCollect();
+  renderAll();renderHot();renderMine();renderDemand();renderCollect();renderFeedback();
   updateFilterChips();
 });
 </script>
@@ -1217,5 +1269,58 @@ document.addEventListener('DOMContentLoaded',()=>{
     }, { passive: false });
   })();
 </script>
+
+
+
+<!-- ===== 拆分页导航（设计师预览版 · 自动注入）：页内业务逻辑不变，点击改为跳转对应拆分 HTML ===== -->
+<script>
+(function(){
+  var TAB_FILES = {"all":"library.html","hot":"library-hot.html","collect":"library-collect.html","mine":"library-mine.html","demand":"library-demand.html","feedback":"library-feedback.html"};     /* tabId -> file */
+  var MODAL_FILES = {"uploadSheet":"library-upload.html","demandSheet":"library-demand-form.html","filterSheet":"library-filter.html","resDetailSheet":"library-resource-detail.html","minePreviewSheet":"library-mine-preview.html","dmDetailSheet":"library-demand-detail.html","shareSheet":"library-share.html","feedbackSheet":"library-feedback-form.html"}; /* 浮层元素id -> file */
+  var LANDING = "library.html";
+  var TAB_ATTRS = ["data-tab","data-stab","data-ptab","data-lib-tab"];
+  var VIS = ["show","open","active","visible"];
+  function _clickTab(t){
+    if(!t) return;
+    var sel = TAB_ATTRS.map(function(a){return '['+a+'="'+t+'"]';}).join(',');
+    var b = document.querySelector(sel);
+    if(b){ b.click(); }
+  }
+  function _visClass(el){ return VIS.some(function(c){return el.classList.contains(c);}); }
+  function _activate(){ try{ switchTab("all"); }catch(e){ if(window.console)console.warn('activate',e); } }
+  function _installModalNav(){
+    Object.keys(MODAL_FILES).forEach(function(id){
+      var el = document.getElementById(id); if(!el) return;
+      var was = _visClass(el);
+      var mo = new MutationObserver(function(){
+        var now = _visClass(el);
+        if(now && !was){ location.href = MODAL_FILES[id]; }
+        was = now;
+      });
+      mo.observe(el, {attributes:true, attributeFilter:["class","style"]});
+    });
+  }
+  function _installTabNav(){
+    if(!Object.keys(TAB_FILES).length) return;
+    document.addEventListener("click", function(e){
+      var node = e.target;
+      while(node && node.nodeType===1){
+        for(var i=0;i<TAB_ATTRS.length;i++){
+          if(node.hasAttribute(TAB_ATTRS[i])){
+            var v = node.getAttribute(TAB_ATTRS[i]);
+            if(TAB_FILES[v]){ e.preventDefault(); e.stopPropagation(); location.href = TAB_FILES[v]; return; }
+          }
+        }
+        node = node.parentNode;
+      }
+    }, true);
+    if(typeof switchTab!=="undefined"){ window.switchTab=function(t){ var f=TAB_FILES[t]; if(f){location.href=f;return;} }; }
+  }
+  window.addEventListener("load", function(){
+    setTimeout(function(){ _activate(); setTimeout(function(){ _installModalNav(); _installTabNav(); }, 150); }, 60);
+  });
+})();
+</script>
+
 </body>
 </html>

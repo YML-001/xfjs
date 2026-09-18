@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1080" viewBox="0 0 1440 1080" font-family="-apple-system,'PingFang SC','Microsoft YaHei',sans-serif">
+  <title>PC 学生端 · 宝藏资料库</title>
+  <desc>资料检索 · 学涯七篇 · 推荐 + 热门 · 1:1 高保真矢量稿</desc>
+  <defs>
+    <linearGradient id="lsb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F5F8FC"/></linearGradient>
+    <linearGradient id="lhe" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7C5CFF"/><stop offset="1" stop-color="#3087CC"/></linearGradient>
+    <linearGradient id="lc1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3087CC"/><stop offset="1" stop-color="#006DAD"/></linearGradient>
+    <linearGradient id="lc2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8A3D"/><stop offset="1" stop-color="#FF6B6B"/></linearGradient>
+    <linearGradient id="lc3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00C4B6"/><stop offset="1" stop-color="#10B981"/></linearGradient>
+    <linearGradient id="lc4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7C5CFF"/><stop offset="1" stop-color="#5B3FE0"/></linearGradient>
+    <linearGradient id="lc5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFCB47"/><stop offset="1" stop-color="#FF8A3D"/></linearGradient>
+    <linearGradient id="lc6" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3087CC"/><stop offset="1" stop-color="#7C5CFF"/></linearGradient>
+    <linearGradient id="lc7" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6B6B"/><stop offset="1" stop-color="#7C5CFF"/></linearGradient>
+    <filter id="cs5" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#0A4A78" flood-opacity="0.06"/></filter>
+  </defs>
+
+  <rect width="1440" height="1080" fill="#F5F8FC"/>
+
+  <g id="sidebar">
+    <rect x="0" y="0" width="220" height="1080" fill="url(#lsb)"/>
+    <line x1="220" y1="0" x2="220" y2="1080" stroke="#E5EAF1"/>
+    <rect x="20" y="22" width="36" height="36" rx="10" fill="#7C5CFF"/>
+    <path d="M28 38 L36 30 L46 40 L36 50 Z" fill="#FFFFFF" fill-opacity="0.9"/>
+    <text x="64" y="38" font-size="15" font-weight="600" fill="#1A2A3A">学风建设</text>
+    <text x="64" y="54" font-size="10" fill="#6B7280">学生端 · 林雅雯</text>
+
+    <text x="60" y="125" font-size="13" fill="#6B7280">首页</text>
+    <text x="60" y="158" font-size="13" fill="#6B7280">知新选课</text>
+    <text x="60" y="191" font-size="13" fill="#6B7280">即问即答</text>
+
+    <rect x="14" y="208" width="192" height="40" rx="10" fill="#EFEAFB"/>
+    <rect x="14" y="208" width="3" height="40" rx="2" fill="#7C5CFF"/>
+    <rect x="32" y="220" width="14" height="16" rx="2" fill="none" stroke="#7C5CFF" stroke-width="1.6"/>
+    <line x1="36" y1="225" x2="42" y2="225" stroke="#7C5CFF" stroke-width="1.6"/>
+    <line x1="36" y1="229" x2="42" y2="229" stroke="#7C5CFF" stroke-width="1.6"/>
+    <line x1="36" y1="233" x2="42" y2="233" stroke="#7C5CFF" stroke-width="1.6"/>
+    <text x="60" y="233" font-size="13" font-weight="600" fill="#7C5CFF">宝藏资料库</text>
+
+    <text x="60" y="278" font-size="13" fill="#6B7280">场地预约</text>
+    <text x="60" y="311" font-size="13" fill="#6B7280">个人中心</text>
+
+    <g id="my-collect">
+      <rect x="14" y="346" width="192" height="220" rx="14" fill="url(#lhe)"/>
+      <text x="32" y="372" font-size="11" font-weight="600" fill="#FFFFFF">我的资料柜</text>
+      <text x="32" y="388" font-size="10" fill="#FFFFFF" fill-opacity="0.7">收藏 + 下载 + 投稿</text>
+      <line x1="32" y1="400" x2="188" y2="400" stroke="#FFFFFF" stroke-opacity="0.18"/>
+      <text x="32" y="424" font-size="10" fill="#FFFFFF" fill-opacity="0.7">下载</text>
+      <text x="170" y="424" text-anchor="end" font-size="14" font-weight="700" fill="#FFFFFF">36</text>
+      <text x="32" y="450" font-size="10" fill="#FFFFFF" fill-opacity="0.7">收藏</text>
+      <text x="170" y="450" text-anchor="end" font-size="14" font-weight="700" fill="#FFFFFF">12</text>
+      <text x="32" y="476" font-size="10" fill="#FFFFFF" fill-opacity="0.7">投稿</text>
+      <text x="170" y="476" text-anchor="end" font-size="14" font-weight="700" fill="#FFFFFF">3</text>
+      <line x1="32" y1="492" x2="188" y2="492" stroke="#FFFFFF" stroke-opacity="0.18"/>
+      <rect x="32" y="510" width="156" height="36" rx="10" fill="#FFFFFF"/>
+      <text x="110" y="532" text-anchor="middle" font-size="11" font-weight="600" fill="#7C5CFF">+ 上传我的资料</text>
+    </g>
+
+    <g id="cat-quick">
+      <text x="32" y="600" font-size="10" fill="#9CA3AF" letter-spacing="1">学涯七篇</text>
+      <rect x="14" y="612" width="192" height="32" rx="8" fill="#FFFFFF" stroke="#E5EAF1"/>
+      <circle cx="32" cy="628" r="6" fill="#3087CC"/>
+      <text x="48" y="632" font-size="11" fill="#1A2A3A">学习方法</text>
+      <text x="194" y="632" text-anchor="end" font-size="10" fill="#9CA3AF">782</text>
+
+      <rect x="14" y="650" width="192" height="32" rx="8" fill="#FFFFFF" stroke="#E5EAF1"/>
+      <circle cx="32" cy="666" r="6" fill="#FF8A3D"/>
+      <text x="48" y="670" font-size="11" fill="#1A2A3A">考试技巧</text>
+      <text x="194" y="670" text-anchor="end" font-size="10" fill="#9CA3AF">684</text>
+
+      <rect x="14" y="688" width="192" height="32" rx="8" fill="#FFFFFF" stroke="#E5EAF1"/>
+      <circle cx="32" cy="704" r="6" fill="#00C4B6"/>
+      <text x="48" y="708" font-size="11" fill="#1A2A3A">竞赛指导</text>
+      <text x="194" y="708" text-anchor="end" font-size="10" fill="#9CA3AF">512</text>
+
+      <rect x="14" y="726" width="192" height="32" rx="8" fill="#FFFFFF" stroke="#E5EAF1"/>
+      <circle cx="32" cy="742" r="6" fill="#7C5CFF"/>
+      <text x="48" y="746" font-size="11" fill="#1A2A3A">考研经验</text>
+      <text x="194" y="746" text-anchor="end" font-size="10" fill="#9CA3AF">628</text>
+
+      <rect x="14" y="764" width="192" height="32" rx="8" fill="#FFFFFF" stroke="#E5EAF1"/>
+      <circle cx="32" cy="780" r="6" fill="#FFCB47"/>
+      <text x="48" y="784" font-size="11" fill="#1A2A3A">出国留学</text>
+      <text x="194" y="784" text-anchor="end" font-size="10" fill="#9CA3AF">386</text>
+
+      <rect x="14" y="802" width="192" height="32" rx="8" fill="#FFFFFF" stroke="#E5EAF1"/>
+      <circle cx="32" cy="818" r="6" fill="#FF6B6B"/>
+      <text x="48" y="822" font-size="11" fill="#1A2A3A">职业规划</text>
+      <text x="194" y="822" text-anchor="end" font-size="10" fill="#9CA3AF">468</text>
+
+      <rect x="14" y="840" width="192" height="32" rx="8" fill="#FFFFFF" stroke="#E5EAF1"/>
+      <circle cx="32" cy="856" r="6" fill="#10B981"/>
+      <text x="48" y="860" font-size="11" fill="#1A2A3A">心理调适</text>
+      <text x="194" y="860" text-anchor="end" font-size="10" fill="#9CA3AF">700</text>
+    </g>
+
+    <rect x="14" y="1004" width="192" height="56" rx="12" fill="#FFFFFF" stroke="#E5EAF1"/>
+    <circle cx="38" cy="1032" r="16" fill="#FF8A3D"/>
+    <text x="38" y="1037" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">林</text>
+    <text x="62" y="1028" font-size="12" font-weight="600" fill="#1A2A3A">林雅雯</text>
+    <text x="62" y="1044" font-size="10" fill="#6B7280">五星 · 高数辅学组</text>
+  </g>
+
+  <g id="topbar">
+    <rect x="220" y="0" width="1220" height="64" fill="#FFFFFF"/>
+    <rect x="220" y="63" width="1220" height="1" fill="#E5EAF1"/>
+    <text x="244" y="32" font-size="11" fill="#6B7280">首页 / 宝藏资料库</text>
+    <text x="244" y="50" font-size="16" font-weight="600" fill="#1A2A3A">宝藏资料库 · 学涯路上的精选资源</text>
+    <rect x="900" y="20" width="240" height="32" rx="16" fill="#F5F8FC"/>
+    <circle cx="918" cy="36" r="5" stroke="#9CA3AF" stroke-width="1.5" fill="none"/>
+    <text x="934" y="40" font-size="11" fill="#9CA3AF">搜索资料标题 / 标签 / 作者…</text>
+
+    <rect x="1240" y="14" width="180" height="44" rx="22" fill="#F5F8FC"/>
+    <circle cx="1260" cy="36" r="14" fill="#FF8A3D"/>
+    <text x="1260" y="41" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="600">林</text>
+    <text x="1282" y="32" font-size="12" font-weight="600" fill="#1A2A3A">林雅雯 · 五星</text>
+    <text x="1282" y="46" font-size="10" fill="#6B7280">软件工程 2401</text>
+  </g>
+
+  <g id="hero">
+    <rect x="244" y="84" width="1172" height="200" rx="16" fill="url(#lhe)" filter="url(#cs5)"/>
+    <circle cx="1300" cy="184" r="160" fill="#FFFFFF" fill-opacity="0.06"/>
+    <circle cx="1380" cy="100" r="60" fill="#FFFFFF" fill-opacity="0.08"/>
+    <text x="280" y="124" font-size="11" fill="#FFFFFF" fill-opacity="0.7" letter-spacing="1">TreasureLib · 宝藏资料库</text>
+    <text x="280" y="170" font-size="28" font-weight="700" fill="#FFFFFF">学涯七篇 · 6,820 份精选资料</text>
+    <text x="280" y="196" font-size="13" fill="#FFFFFF" fill-opacity="0.85">学习方法 · 考试技巧 · 竞赛指导 · 考研经验 · 出国留学 · 职业规划 · 心理调适</text>
+
+    <rect x="280" y="220" width="600" height="44" rx="22" fill="#FFFFFF"/>
+    <circle cx="304" cy="242" r="8" stroke="#9CA3AF" stroke-width="1.6" fill="none"/>
+    <line x1="310" y1="248" x2="316" y2="254" stroke="#9CA3AF" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="324" y="247" font-size="12" fill="#9CA3AF">输入关键词检索资料库 · 例：考研真题、雅思口语…</text>
+    <rect x="816" y="226" width="56" height="32" rx="16" fill="#7C5CFF"/>
+    <text x="844" y="246" text-anchor="middle" font-size="11" font-weight="500" fill="#FFFFFF">检索</text>
+
+    <text x="280" y="290" font-size="10" fill="#FFFFFF" fill-opacity="0.6">热门词：</text>
+    <rect x="324" y="276" width="56" height="20" rx="10" fill="#FFFFFF" fill-opacity="0.2"/>
+    <text x="352" y="290" text-anchor="middle" font-size="10" fill="#FFFFFF">考研</text>
+    <rect x="386" y="276" width="56" height="20" rx="10" fill="#FFFFFF" fill-opacity="0.2"/>
+    <text x="414" y="290" text-anchor="middle" font-size="10" fill="#FFFFFF">雅思</text>
+    <rect x="448" y="276" width="60" height="20" rx="10" fill="#FFFFFF" fill-opacity="0.2"/>
+    <text x="478" y="290" text-anchor="middle" font-size="10" fill="#FFFFFF">高数</text>
+    <rect x="514" y="276" width="68" height="20" rx="10" fill="#FFFFFF" fill-opacity="0.2"/>
+    <text x="548" y="290" text-anchor="middle" font-size="10" fill="#FFFFFF">求职简历</text>
+  </g>
+
+  <g id="filter-bar">
+    <rect x="244" y="306" width="1172" height="56" rx="12" fill="#FFFFFF" filter="url(#cs5)"/>
+    <text x="266" y="330" font-size="11" fill="#6B7280">类型</text>
+    <rect x="266" y="338" width="48" height="20" rx="10" fill="#7C5CFF"/>
+    <text x="290" y="352" text-anchor="middle" font-size="10" fill="#FFFFFF">全部</text>
+    <rect x="320" y="338" width="48" height="20" rx="10" fill="#FCE7E7"/>
+    <text x="344" y="352" text-anchor="middle" font-size="10" fill="#FF6B6B">PDF</text>
+    <rect x="374" y="338" width="48" height="20" rx="10" fill="#FFF1E5"/>
+    <text x="398" y="352" text-anchor="middle" font-size="10" fill="#FF8A3D">PPT</text>
+    <rect x="428" y="338" width="48" height="20" rx="10" fill="#E8F2FB"/>
+    <text x="452" y="352" text-anchor="middle" font-size="10" fill="#3087CC">DOC</text>
+    <rect x="482" y="338" width="48" height="20" rx="10" fill="#E0F7F4"/>
+    <text x="506" y="352" text-anchor="middle" font-size="10" fill="#00C4B6">XLS</text>
+    <rect x="536" y="338" width="48" height="20" rx="10" fill="#EFEAFB"/>
+    <text x="560" y="352" text-anchor="middle" font-size="10" fill="#7C5CFF">视频</text>
+
+    <line x1="608" y1="320" x2="608" y2="356" stroke="#E5EAF1"/>
+    <text x="630" y="330" font-size="11" fill="#6B7280">学院</text>
+    <rect x="630" y="338" width="100" height="20" rx="6" fill="#F5F8FC"/>
+    <text x="640" y="352" font-size="10" fill="#1A2A3A">不限学院</text>
+
+    <text x="750" y="330" font-size="11" fill="#6B7280">标签</text>
+    <rect x="750" y="338" width="100" height="20" rx="6" fill="#F5F8FC"/>
+    <text x="760" y="352" font-size="10" fill="#1A2A3A">不限标签</text>
+
+    <text x="1140" y="352" font-size="11" fill="#6B7280">排序</text>
+    <rect x="1176" y="338" width="100" height="20" rx="6" fill="#F5F8FC"/>
+    <text x="1186" y="352" font-size="10" fill="#1A2A3A">最新上传</text>
+    <rect x="1286" y="334" width="60" height="28" rx="6" fill="#F5F8FC"/>
+    <text x="1316" y="352" text-anchor="middle" font-size="11" fill="#1A2A3A">网格</text>
+    <rect x="1356" y="334" width="48" height="28" rx="6" fill="#7C5CFF"/>
+    <text x="1380" y="352" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="500">列表</text>
+  </g>
+
+  <g id="featured">
+    <text x="244" y="394" font-size="14" font-weight="600" fill="#1A2A3A">本周精选 · 学涯七篇</text>
+    <text x="1416" y="394" text-anchor="end" font-size="11" fill="#7C5CFF">查看全部 →</text>
+
+    <g id="ft-1" filter="url(#cs5)">
+      <rect x="244" y="406" width="278" height="288" rx="14" fill="#FFFFFF"/>
+      <rect x="244" y="406" width="278" height="160" rx="14" fill="url(#lc1)"/>
+      <rect x="244" y="556" width="278" height="10" fill="#FFFFFF"/>
+      <text x="383" y="478" text-anchor="middle" font-size="16" font-weight="700" fill="#FFFFFF">高数考研真题</text>
+      <text x="383" y="500" text-anchor="middle" font-size="12" fill="#FFFFFF" fill-opacity="0.85">2020 — 2024 真题精解</text>
+      <rect x="258" y="420" width="40" height="22" rx="4" fill="#FF6B6B"/>
+      <text x="278" y="436" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">PDF</text>
+      <rect x="448" y="420" width="60" height="22" rx="11" fill="#FFFFFF" fill-opacity="0.25"/>
+      <text x="478" y="436" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="500">置顶推荐</text>
+
+      <text x="266" y="600" font-size="14" font-weight="600" fill="#1A2A3A">高数考研真题精解 2024</text>
+      <text x="266" y="618" font-size="10" fill="#9CA3AF">学涯七篇 · 考研经验 · 32MB · 5 章节</text>
+      <line x1="266" y1="634" x2="500" y2="634" stroke="#F0F4F9"/>
+
+      <text x="266" y="654" font-size="11" fill="#6B7280">下载</text>
+      <text x="296" y="654" font-size="11" font-weight="600" fill="#3087CC">1,458</text>
+      <text x="350" y="654" font-size="11" fill="#6B7280">收藏</text>
+      <text x="378" y="654" font-size="11" font-weight="600" fill="#FF8A3D">286</text>
+      <text x="420" y="654" font-size="11" fill="#FFCB47">★</text>
+      <text x="432" y="654" font-size="11" font-weight="600" fill="#1A2A3A">4.9</text>
+
+      <circle cx="280" cy="676" r="10" fill="#3087CC"/>
+      <text x="280" y="680" text-anchor="middle" font-size="9" fill="#FFFFFF" font-weight="600">陈</text>
+      <text x="296" y="680" font-size="10" fill="#1A2A3A">陈宇航 · 商学院</text>
+      <rect x="430" y="668" width="76" height="24" rx="12" fill="#7C5CFF"/>
+      <text x="468" y="684" text-anchor="middle" font-size="10" font-weight="500" fill="#FFFFFF">立即下载</text>
+    </g>
+
+    <g id="ft-2" filter="url(#cs5)">
+      <rect x="538" y="406" width="278" height="288" rx="14" fill="#FFFFFF"/>
+      <rect x="538" y="406" width="278" height="160" rx="14" fill="url(#lc2)"/>
+      <rect x="538" y="556" width="278" height="10" fill="#FFFFFF"/>
+      <text x="677" y="478" text-anchor="middle" font-size="16" font-weight="700" fill="#FFFFFF">雅思口语 800 题</text>
+      <text x="677" y="500" text-anchor="middle" font-size="12" fill="#FFFFFF" fill-opacity="0.85">高频话题 · 范文模板</text>
+      <rect x="552" y="420" width="40" height="22" rx="4" fill="#FF8A3D"/>
+      <text x="572" y="436" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">PPT</text>
+
+      <text x="560" y="600" font-size="14" font-weight="600" fill="#1A2A3A">雅思口语 800 题精讲</text>
+      <text x="560" y="618" font-size="10" fill="#9CA3AF">学涯七篇 · 出国留学 · 18MB · 8 模块</text>
+      <line x1="560" y1="634" x2="794" y2="634" stroke="#F0F4F9"/>
+
+      <text x="560" y="654" font-size="11" fill="#6B7280">下载</text>
+      <text x="590" y="654" font-size="11" font-weight="600" fill="#3087CC">1,286</text>
+      <text x="644" y="654" font-size="11" fill="#6B7280">收藏</text>
+      <text x="672" y="654" font-size="11" font-weight="600" fill="#FF8A3D">198</text>
+      <text x="714" y="654" font-size="11" fill="#FFCB47">★</text>
+      <text x="726" y="654" font-size="11" font-weight="600" fill="#1A2A3A">4.8</text>
+
+      <circle cx="574" cy="676" r="10" fill="#FFCB47"/>
+      <text x="574" y="680" text-anchor="middle" font-size="9" fill="#FFFFFF" font-weight="600">王</text>
+      <text x="590" y="680" font-size="10" fill="#1A2A3A">王思琪 · 外国语</text>
+      <rect x="724" y="668" width="76" height="24" rx="12" fill="#7C5CFF"/>
+      <text x="762" y="684" text-anchor="middle" font-size="10" font-weight="500" fill="#FFFFFF">立即下载</text>
+    </g>
+
+    <g id="ft-3" filter="url(#cs5)">
+      <rect x="832" y="406" width="278" height="288" rx="14" fill="#FFFFFF"/>
+      <rect x="832" y="406" width="278" height="160" rx="14" fill="url(#lc3)"/>
+      <rect x="832" y="556" width="278" height="10" fill="#FFFFFF"/>
+      <text x="971" y="478" text-anchor="middle" font-size="16" font-weight="700" fill="#FFFFFF">C 语言错题集</text>
+      <text x="971" y="500" text-anchor="middle" font-size="12" fill="#FFFFFF" fill-opacity="0.85">200 道高频陷阱</text>
+      <rect x="846" y="420" width="40" height="22" rx="4" fill="#3087CC"/>
+      <text x="866" y="436" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">DOC</text>
+
+      <text x="854" y="600" font-size="14" font-weight="600" fill="#1A2A3A">C 语言常见错题集</text>
+      <text x="854" y="618" font-size="10" fill="#9CA3AF">专业资料 · 计算机 · 12MB · 4 章节</text>
+      <line x1="854" y1="634" x2="1088" y2="634" stroke="#F0F4F9"/>
+
+      <text x="854" y="654" font-size="11" fill="#6B7280">下载</text>
+      <text x="884" y="654" font-size="11" font-weight="600" fill="#3087CC">986</text>
+      <text x="930" y="654" font-size="11" fill="#6B7280">收藏</text>
+      <text x="958" y="654" font-size="11" font-weight="600" fill="#FF8A3D">142</text>
+      <text x="1004" y="654" font-size="11" fill="#FFCB47">★</text>
+      <text x="1016" y="654" font-size="11" font-weight="600" fill="#1A2A3A">4.7</text>
+
+      <circle cx="868" cy="676" r="10" fill="#7C5CFF"/>
+      <text x="868" y="680" text-anchor="middle" font-size="9" fill="#FFFFFF" font-weight="600">郭</text>
+      <text x="884" y="680" font-size="10" fill="#1A2A3A">郭子轩 · 计算机</text>
+      <rect x="1018" y="668" width="76" height="24" rx="12" fill="#7C5CFF"/>
+      <text x="1056" y="684" text-anchor="middle" font-size="10" font-weight="500" fill="#FFFFFF">立即下载</text>
+    </g>
+
+    <g id="ft-4" filter="url(#cs5)">
+      <rect x="1126" y="406" width="290" height="288" rx="14" fill="#FFFFFF"/>
+      <rect x="1126" y="406" width="290" height="160" rx="14" fill="url(#lc4)"/>
+      <rect x="1126" y="556" width="290" height="10" fill="#FFFFFF"/>
+      <text x="1271" y="478" text-anchor="middle" font-size="16" font-weight="700" fill="#FFFFFF">心理调适指南</text>
+      <text x="1271" y="500" text-anchor="middle" font-size="12" fill="#FFFFFF" fill-opacity="0.85">考前焦虑应对手册</text>
+      <rect x="1140" y="420" width="40" height="22" rx="4" fill="#FF6B6B"/>
+      <text x="1160" y="436" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">PDF</text>
+
+      <text x="1148" y="600" font-size="14" font-weight="600" fill="#1A2A3A">心理调适指南合辑</text>
+      <text x="1148" y="618" font-size="10" fill="#9CA3AF">学涯七篇 · 心理调适 · 8.6MB · 12 篇</text>
+      <line x1="1148" y1="634" x2="1394" y2="634" stroke="#F0F4F9"/>
+
+      <text x="1148" y="654" font-size="11" fill="#6B7280">下载</text>
+      <text x="1178" y="654" font-size="11" font-weight="600" fill="#3087CC">724</text>
+      <text x="1220" y="654" font-size="11" fill="#6B7280">收藏</text>
+      <text x="1248" y="654" font-size="11" font-weight="600" fill="#FF8A3D">98</text>
+      <text x="1284" y="654" font-size="11" fill="#FFCB47">★</text>
+      <text x="1296" y="654" font-size="11" font-weight="600" fill="#1A2A3A">4.6</text>
+
+      <circle cx="1162" cy="676" r="10" fill="#FF8A3D"/>
+      <text x="1162" y="680" text-anchor="middle" font-size="9" fill="#FFFFFF" font-weight="600">林</text>
+      <text x="1178" y="680" font-size="10" fill="#1A2A3A">林雅雯 · 软件工程</text>
+      <rect x="1318" y="668" width="76" height="24" rx="12" fill="#7C5CFF"/>
+      <text x="1356" y="684" text-anchor="middle" font-size="10" font-weight="500" fill="#FFFFFF">立即下载</text>
+    </g>
+  </g>
+
+  <g id="hot-list">
+    <text x="244" y="734" font-size="14" font-weight="600" fill="#1A2A3A">本周热度 Top · 列表视图</text>
+    <text x="1416" y="734" text-anchor="end" font-size="11" fill="#7C5CFF">查看更多 →</text>
+
+    <g id="row" filter="url(#cs5)">
+      <rect x="244" y="746" width="1172" height="280" rx="14" fill="#FFFFFF"/>
+
+      <g id="hot-1">
+        <rect x="244" y="746" width="1172" height="56" fill="#FFFFFF"/>
+        <line x1="244" y1="802" x2="1416" y2="802" stroke="#F0F4F9"/>
+        <text x="266" y="780" font-size="13" font-weight="700" fill="#FF6B6B">01</text>
+        <rect x="294" y="760" width="36" height="36" rx="8" fill="url(#lc1)"/>
+        <rect x="298" y="766" width="28" height="14" rx="2" fill="#FFFFFF" fill-opacity="0.3"/>
+        <text x="312" y="787" text-anchor="middle" font-size="9" fill="#FFFFFF" font-weight="700">PDF</text>
+        <text x="346" y="772" font-size="13" font-weight="600" fill="#1A2A3A">高数考研真题精解 2024</text>
+        <text x="346" y="789" font-size="10" fill="#9CA3AF">考研经验 · 陈宇航 · 32MB · 2 天前更新</text>
+        <rect x="900" y="766" width="56" height="20" rx="10" fill="#FFFAEB"/>
+        <text x="928" y="780" text-anchor="middle" font-size="10" fill="#D89000">考研</text>
+        <rect x="962" y="766" width="56" height="20" rx="10" fill="#FCE7E7"/>
+        <text x="990" y="780" text-anchor="middle" font-size="10" fill="#FF6B6B">高数</text>
+        <text x="1080" y="780" font-size="11" fill="#3087CC" font-weight="600">⬇ 1,458</text>
+        <text x="1156" y="780" font-size="11" fill="#FF8A3D">★ 4.9</text>
+        <rect x="1232" y="762" width="56" height="28" rx="14" fill="#F5F8FC"/>
+        <text x="1260" y="780" text-anchor="middle" font-size="11" fill="#7C5CFF">收藏</text>
+        <rect x="1296" y="762" width="64" height="28" rx="14" fill="#7C5CFF"/>
+        <text x="1328" y="780" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="500">下载</text>
+      </g>
+
+      <g id="hot-2">
+        <rect x="244" y="802" width="1172" height="56" fill="#F8FAFD"/>
+        <line x1="244" y1="858" x2="1416" y2="858" stroke="#F0F4F9"/>
+        <text x="266" y="836" font-size="13" font-weight="700" fill="#FF8A3D">02</text>
+        <rect x="294" y="816" width="36" height="36" rx="8" fill="url(#lc2)"/>
+        <rect x="298" y="822" width="28" height="14" rx="2" fill="#FFFFFF" fill-opacity="0.3"/>
+        <text x="312" y="843" text-anchor="middle" font-size="9" fill="#FFFFFF" font-weight="700">PPT</text>
+        <text x="346" y="828" font-size="13" font-weight="600" fill="#1A2A3A">雅思口语 800 题精讲</text>
+        <text x="346" y="845" font-size="10" fill="#9CA3AF">出国留学 · 王思琪 · 18MB · 5 天前更新</text>
+        <rect x="900" y="822" width="56" height="20" rx="10" fill="#FFF1E5"/>
+        <text x="928" y="836" text-anchor="middle" font-size="10" fill="#FF8A3D">雅思</text>
+        <rect x="962" y="822" width="56" height="20" rx="10" fill="#EFEAFB"/>
+        <text x="990" y="836" text-anchor="middle" font-size="10" fill="#7C5CFF">口语</text>
+        <text x="1080" y="836" font-size="11" fill="#3087CC" font-weight="600">⬇ 1,286</text>
+        <text x="1156" y="836" font-size="11" fill="#FF8A3D">★ 4.8</text>
+        <rect x="1232" y="818" width="56" height="28" rx="14" fill="#F5F8FC"/>
+        <text x="1260" y="836" text-anchor="middle" font-size="11" fill="#7C5CFF">收藏</text>
+        <rect x="1296" y="818" width="64" height="28" rx="14" fill="#7C5CFF"/>
+        <text x="1328" y="836" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="500">下载</text>
+      </g>
+
+      <g id="hot-3">
+        <rect x="244" y="858" width="1172" height="56" fill="#FFFFFF"/>
+        <line x1="244" y1="914" x2="1416" y2="914" stroke="#F0F4F9"/>
+        <text x="266" y="892" font-size="13" font-weight="700" fill="#FFCB47">03</text>
+        <rect x="294" y="872" width="36" height="36" rx="8" fill="url(#lc3)"/>
+        <text x="312" y="899" text-anchor="middle" font-size="9" fill="#FFFFFF" font-weight="700">DOC</text>
+        <text x="346" y="884" font-size="13" font-weight="600" fill="#1A2A3A">C 语言常见错题集</text>
+        <text x="346" y="901" font-size="10" fill="#9CA3AF">专业资料 · 郭子轩 · 12MB · 1 周前更新</text>
+        <rect x="900" y="878" width="56" height="20" rx="10" fill="#E8F2FB"/>
+        <text x="928" y="892" text-anchor="middle" font-size="10" fill="#3087CC">C 语言</text>
+        <rect x="962" y="878" width="56" height="20" rx="10" fill="#E0F7F4"/>
+        <text x="990" y="892" text-anchor="middle" font-size="10" fill="#00C4B6">编程</text>
+        <text x="1080" y="892" font-size="11" fill="#3087CC" font-weight="600">⬇ 986</text>
+        <text x="1156" y="892" font-size="11" fill="#FF8A3D">★ 4.7</text>
+        <rect x="1232" y="874" width="56" height="28" rx="14" fill="#F5F8FC"/>
+        <text x="1260" y="892" text-anchor="middle" font-size="11" fill="#7C5CFF">收藏</text>
+        <rect x="1296" y="874" width="64" height="28" rx="14" fill="#7C5CFF"/>
+        <text x="1328" y="892" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="500">下载</text>
+      </g>
+
+      <g id="hot-4">
+        <rect x="244" y="914" width="1172" height="56" fill="#F8FAFD"/>
+        <line x1="244" y1="970" x2="1416" y2="970" stroke="#F0F4F9"/>
+        <text x="266" y="948" font-size="13" font-weight="700" fill="#9CA3AF">04</text>
+        <rect x="294" y="928" width="36" height="36" rx="8" fill="url(#lc5)"/>
+        <text x="312" y="955" text-anchor="middle" font-size="9" fill="#FFFFFF" font-weight="700">XLS</text>
+        <text x="346" y="940" font-size="13" font-weight="600" fill="#1A2A3A">大学职业规划手册</text>
+        <text x="346" y="957" font-size="10" fill="#9CA3AF">职业规划 · 张俊豪 · 4.2MB · 2 周前更新</text>
+        <rect x="900" y="934" width="56" height="20" rx="10" fill="#FFFAEB"/>
+        <text x="928" y="948" text-anchor="middle" font-size="10" fill="#D89000">职业</text>
+        <rect x="962" y="934" width="56" height="20" rx="10" fill="#E0F7F4"/>
+        <text x="990" y="948" text-anchor="middle" font-size="10" fill="#00C4B6">规划</text>
+        <text x="1080" y="948" font-size="11" fill="#3087CC" font-weight="600">⬇ 582</text>
+        <text x="1156" y="948" font-size="11" fill="#FF8A3D">★ 4.5</text>
+        <rect x="1232" y="930" width="56" height="28" rx="14" fill="#F5F8FC"/>
+        <text x="1260" y="948" text-anchor="middle" font-size="11" fill="#7C5CFF">收藏</text>
+        <rect x="1296" y="930" width="64" height="28" rx="14" fill="#7C5CFF"/>
+        <text x="1328" y="948" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="500">下载</text>
+      </g>
+
+      <g id="hot-5">
+        <rect x="244" y="970" width="1172" height="56" fill="#FFFFFF"/>
+        <text x="266" y="1004" font-size="13" font-weight="700" fill="#9CA3AF">05</text>
+        <rect x="294" y="984" width="36" height="36" rx="8" fill="url(#lc7)"/>
+        <text x="312" y="1011" text-anchor="middle" font-size="9" fill="#FFFFFF" font-weight="700">PDF</text>
+        <text x="346" y="996" font-size="13" font-weight="600" fill="#1A2A3A">数学建模竞赛真题集</text>
+        <text x="346" y="1013" font-size="10" fill="#9CA3AF">竞赛指导 · 孙若兰 · 24MB · 4 天前更新</text>
+        <rect x="900" y="990" width="56" height="20" rx="10" fill="#E8F2FB"/>
+        <text x="928" y="1004" text-anchor="middle" font-size="10" fill="#3087CC">数模</text>
+        <rect x="962" y="990" width="56" height="20" rx="10" fill="#EFEAFB"/>
+        <text x="990" y="1004" text-anchor="middle" font-size="10" fill="#7C5CFF">竞赛</text>
+        <text x="1080" y="1004" font-size="11" fill="#3087CC" font-weight="600">⬇ 468</text>
+        <text x="1156" y="1004" font-size="11" fill="#FF8A3D">★ 4.4</text>
+        <rect x="1232" y="986" width="56" height="28" rx="14" fill="#F5F8FC"/>
+        <text x="1260" y="1004" text-anchor="middle" font-size="11" fill="#7C5CFF">收藏</text>
+        <rect x="1296" y="986" width="64" height="28" rx="14" fill="#7C5CFF"/>
+        <text x="1328" y="1004" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="500">下载</text>
+      </g>
+    </g>
+  </g>
+
+  <g id="canvas-meta" font-size="9" fill="#9CA3AF">
+    <text x="244" y="1062">学风建设系统 · PC 学生端 · 宝藏资料库</text>
+    <text x="1416" y="1062" text-anchor="end">1440 × 1080 · 矢量稿</text>
+  </g>
+</svg>

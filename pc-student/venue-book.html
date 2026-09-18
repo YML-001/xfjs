@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -445,14 +445,14 @@ svg{display:block;flex-shrink:0;}
       <!-- 预约信息 -->
       <div style="font-size:13px;font-weight:600;margin:20px 0 12px;">预约信息</div>
       <div class="f-row">
-        <div class="f-item"><label>预约日期 <span class="req">*</span></label><input type="date" value="2026-04-28" /></div>
-        <div class="f-item"><label>预约人数</label><input type="number" value="20" /></div>
+        <div class="f-item"><label>预约日期 <span class="req">*</span></label><input type="date" id="venueDate" value="2026-04-28" /></div>
+        <div class="f-item"><label>预约人数</label><input type="number" id="venueCount" value="20" /></div>
       </div>
       <div class="f-row">
-        <div class="f-item"><label>开始时间 <span class="req">*</span></label><input type="time" value="10:00" /></div>
-        <div class="f-item"><label>结束时间 <span class="req">*</span></label><input type="time" value="12:00" /></div>
+        <div class="f-item"><label>开始时间 <span class="req">*</span></label><input type="time" id="venueStart" value="10:00" /></div>
+        <div class="f-item"><label>结束时间 <span class="req">*</span></label><input type="time" id="venueEnd" value="12:00" /></div>
       </div>
-      <div class="f-item" style="margin-bottom:16px;"><label>用途说明 <span class="req">*</span></label><textarea rows="3" placeholder="请说明使用场地的具体目的...">高数 A 微分方程辅学课程，预计参与学生 20-25 人</textarea></div>
+      <div class="f-item" style="margin-bottom:16px;"><label>用途说明 <span class="req">*</span></label><textarea id="venuePurpose" rows="3" placeholder="请说明使用场地的具体目的...">高数 A 微分方程辅学课程，预计参与学生 20-25 人</textarea></div>
       <div class="f-actions">
         <button class="btn-stu btn-primary-stu" onclick="openVenueNotice()">提交预约</button>
       </div>
@@ -490,61 +490,9 @@ svg{display:block;flex-shrink:0;}
     <div class="panel-stu">
       <h4>
         我的预约记录
-        <span style="font-size:12px;color:var(--text-3);font-weight:400;">共 4 条</span>
+        <span id="bkCount" style="font-size:12px;color:var(--text-3);font-weight:400;">共 4 条</span>
       </h4>
-      <div class="bk-cards">
-        <div class="bk-card">
-          <div class="bk-top">
-            <div class="bk-venue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>知新馆 301</div>
-            <span class="tag-stu" style="background:var(--success-bg);color:var(--success);">已批准</span>
-          </div>
-          <div class="bk-rows">
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>04-30 · 14:00–16:00</div>
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>微分方程小组讨论</div>
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>12 人</div>
-          </div>
-          <div class="bk-foot"><span class="bk-id">VB-2026-012</span><span>申请于 04-28</span></div>
-        </div>
-
-        <div class="bk-card">
-          <div class="bk-top">
-            <div class="bk-venue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>知新馆 205</div>
-            <span class="tag-stu" style="background:var(--warning-bg);color:var(--warning);">待审批</span>
-          </div>
-          <div class="bk-rows">
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>05-02 · 19:00–21:00</div>
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>英语六级辅学</div>
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>20 人</div>
-          </div>
-          <div class="bk-foot"><span class="bk-id">VB-2026-011</span><span>申请于 04-29</span></div>
-        </div>
-
-        <div class="bk-card">
-          <div class="bk-top">
-            <div class="bk-venue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>56度中南 · 活动室</div>
-            <span class="tag-stu" style="background:var(--success-bg);color:var(--success);">已批准</span>
-          </div>
-          <div class="bk-rows">
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>04-22 · 14:00–18:00</div>
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>辅学义工春季分享会</div>
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>35 人</div>
-          </div>
-          <div class="bk-foot"><span class="bk-id">VB-2026-008</span><span>申请于 04-18</span></div>
-        </div>
-
-        <div class="bk-card">
-          <div class="bk-top">
-            <div class="bk-venue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>知新馆 102 · 报告厅</div>
-            <span class="tag-stu">已结束</span>
-          </div>
-          <div class="bk-rows">
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>04-10 · 19:00–21:00</div>
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>考研数学一专题讲座</div>
-            <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>60 人</div>
-          </div>
-          <div class="bk-foot"><span class="bk-id">VB-2026-003</span><span>申请于 04-07</span></div>
-        </div>
-      </div>
+      <div class="bk-cards" id="bkList"></div>
     </div>
 
   </main>
@@ -690,7 +638,55 @@ function openVenueNotice(){
   },1000);
 }
 function closeVenueNotice(){ clearInterval(_venueTimer); closeModal('venueNoticeModal'); }
-function confirmVenue(){ closeVenueNotice(); showToast('已提交场地预约，等待审批'); }
+
+// ===== 我的预约记录（场地预约闭环）=====
+const BK_KEY='xfjs_bookings';
+const BK_SEED=[
+  {id:'VB-2026-012',venue:'知新馆 301',date:'04-30',time:'14:00–16:00',purpose:'微分方程小组讨论',count:12,applyDate:'04-28',status:'approved'},
+  {id:'VB-2026-011',venue:'知新馆 205',date:'05-02',time:'19:00–21:00',purpose:'英语六级辅学',count:20,applyDate:'04-29',status:'pending'},
+  {id:'VB-2026-008',venue:'56度中南 · 活动室',date:'04-22',time:'14:00–18:00',purpose:'辅学义工春季分享会',count:35,applyDate:'04-18',status:'approved'},
+  {id:'VB-2026-003',venue:'知新馆 102 · 报告厅',date:'04-10',time:'19:00–21:00',purpose:'考研数学一专题讲座',count:60,applyDate:'04-07',status:'ended'}
+];
+function bkStatusTag(st){
+  const m={approved:{bg:'var(--success-bg)',c:'var(--success)',l:'已批准'},pending:{bg:'var(--warning-bg)',c:'var(--warning)',l:'待审批'},rejected:{bg:'var(--danger-bg,#FDECEC)',c:'var(--danger,#E0524D)',l:'已驳回'},ended:{bg:'',c:'',l:'已结束'}};
+  const d=m[st]||{bg:'',c:'',l:st};
+  return `<span class="tag-stu"${d.bg?` style="background:${d.bg};color:${d.c};"`:''}>${d.l}</span>`;
+}
+function getBookings(){let saved=[];try{saved=JSON.parse(localStorage.getItem(BK_KEY)||'[]');}catch(e){saved=[];}return[...saved,...BK_SEED];}
+function saveBooking(rec){let saved=[];try{saved=JSON.parse(localStorage.getItem(BK_KEY)||'[]');}catch(e){saved=[];}saved.unshift(rec);localStorage.setItem(BK_KEY,JSON.stringify(saved));}
+function renderBookings(){
+  const rows=getBookings();
+  const cnt=document.getElementById('bkCount');if(cnt)cnt.textContent='共 '+rows.length+' 条';
+  const box=document.getElementById('bkList');if(!box)return;
+  box.innerHTML=rows.map(r=>`<div class="bk-card">
+    <div class="bk-top">
+      <div class="bk-venue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${r.venue}</div>
+      ${bkStatusTag(r.status)}
+    </div>
+    <div class="bk-rows">
+      <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${r.date} · ${r.time}</div>
+      <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>${r.purpose}</div>
+      <div class="bk-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>${r.count} 人</div>
+    </div>
+    <div class="bk-foot"><span class="bk-id">${r.id}</span><span>申请于 ${r.applyDate}</span></div>
+  </div>`).join('');
+}
+function confirmVenue(){
+  closeVenueNotice();
+  const sel=document.querySelector('#venueList .course-row.selected .text h5');
+  const venue=sel?sel.textContent.split('·')[0].trim():'知新馆';
+  const dateRaw=(document.getElementById('venueDate')||{}).value||'';
+  const start=(document.getElementById('venueStart')||{}).value||'';
+  const end=(document.getElementById('venueEnd')||{}).value||'';
+  const count=parseInt((document.getElementById('venueCount')||{}).value,10)||0;
+  const purpose=((document.getElementById('venuePurpose')||{}).value||'').trim()||'辅学活动';
+  const mmdd=dateRaw?dateRaw.slice(5):'';
+  const now=new Date();const pad=n=>String(n).padStart(2,'0');
+  const applyDate=`${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  saveBooking({id:'VB-'+now.getFullYear()+'-'+Date.now().toString().slice(-3),venue,date:mmdd,time:`${start}–${end}`,purpose,count,applyDate,status:'pending'});
+  showToast('已提交场地预约，可在「我的预约记录」查看审批进度');
+  renderBookings();
+}
 
 // Chips
 document.addEventListener('DOMContentLoaded',()=>{
@@ -705,12 +701,65 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.modal-mask').forEach(m=>{
     m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');});
   });
+  renderBookings();
 });
 
 </script>
 <script>
   renderStuSidebar('venue');
   renderStuTopbar('搜索场地、时间...');
+</script>
+
+
+
+<!-- ===== 拆分页导航（设计师预览版 · 自动注入）：页内业务逻辑不变，点击改为跳转对应拆分 HTML ===== -->
+<script>
+(function(){
+  var TAB_FILES = {};     /* tabId -> file */
+  var MODAL_FILES = {"venueNoticeModal":"venue-book-venue-notice.html"}; /* 浮层元素id -> file */
+  var LANDING = "venue-book.html";
+  var TAB_ATTRS = ["data-tab","data-stab","data-ptab","data-lib-tab"];
+  var VIS = ["show","open","active","visible"];
+  function _clickTab(t){
+    if(!t) return;
+    var sel = TAB_ATTRS.map(function(a){return '['+a+'="'+t+'"]';}).join(',');
+    var b = document.querySelector(sel);
+    if(b){ b.click(); }
+  }
+  function _visClass(el){ return VIS.some(function(c){return el.classList.contains(c);}); }
+  function _activate(){ try{  }catch(e){ if(window.console)console.warn('activate',e); } }
+  function _installModalNav(){
+    Object.keys(MODAL_FILES).forEach(function(id){
+      var el = document.getElementById(id); if(!el) return;
+      var was = _visClass(el);
+      var mo = new MutationObserver(function(){
+        var now = _visClass(el);
+        if(now && !was){ location.href = MODAL_FILES[id]; }
+        was = now;
+      });
+      mo.observe(el, {attributes:true, attributeFilter:["class","style"]});
+    });
+  }
+  function _installTabNav(){
+    if(!Object.keys(TAB_FILES).length) return;
+    document.addEventListener("click", function(e){
+      var node = e.target;
+      while(node && node.nodeType===1){
+        for(var i=0;i<TAB_ATTRS.length;i++){
+          if(node.hasAttribute(TAB_ATTRS[i])){
+            var v = node.getAttribute(TAB_ATTRS[i]);
+            if(TAB_FILES[v]){ e.preventDefault(); e.stopPropagation(); location.href = TAB_FILES[v]; return; }
+          }
+        }
+        node = node.parentNode;
+      }
+    }, true);
+    
+  }
+  window.addEventListener("load", function(){
+    setTimeout(function(){ _activate(); setTimeout(function(){ _installModalNav(); _installTabNav(); }, 150); }, 60);
+  });
+})();
 </script>
 
 </body>
